@@ -1,57 +1,31 @@
-# Pio – yoga, Thai yoga massage, movement & voice
+# attunr monorepo
 
-Bilingual (English / Polish) personal site, built with Next.js (App Router) and deployed on Vercel.
+Three independent websites deployed from one repo.
 
-## Pages
+| App | Path | What it is |
+| --- | --- | --- |
+| Yoga | `apps/yoga` | Pio – yoga, Thai yoga massage, program, video (see `apps/yoga/README.md`) |
+| Tangent | `apps/tangent` | Senior engineering and business analysis for startups (Plan 3) |
+| Helpful Machines | `apps/helpful-machines` | AI and IT for small businesses (Plan 2) |
 
-| Path | What it is |
-| --- | --- |
-| `/en`, `/pl` | Home: story, training, classes, Thai yoga massage, other disciplines, contact |
-| `/[locale]/program` | Guided transformation program (yoga, yin yoga, dynamic fascia release) |
-| `/[locale]/video` | Video program with a free consultation; shows "coming soon" until enabled |
-| `/[locale]/checkout/success`, `/cancel` | Stripe Checkout return pages (not indexed) |
+Shared code lives in `packages/` (`@repo/web` core logic, `@repo/config` tooling, `@repo/ui` design system in Plan 2).
 
-Visiting `/` redirects to `/pl` or `/en` based on the browser language (and remembers the choice from the language switch in a cookie).
-
-All copy lives in `content/en.ts` and `content/pl.ts`. Edit text there; the Polish file must have the same shape as the English one (TypeScript checks this).
-
-## Local development
+## Setup
 
 ```bash
-npm install
-cp .env.example .env.local   # fill in what you have
-npm run dev
+corepack enable pnpm
+pnpm install
+pnpm --filter yoga dev        # one app
+pnpm test                     # all unit tests
+pnpm typecheck && pnpm build  # everything
 ```
 
-## Environment variables
+## Deploying on Vercel
 
-See `.env.example`. On Vercel: Project → Settings → Environment Variables.
+One Vercel project per app, all pointing at this repo:
 
-- `NEXT_PUBLIC_SITE_URL` – the public domain (used for canonical URLs, hreflang and the sitemap). Update it when you add a custom domain.
-- `NEXT_PUBLIC_CONTACT_EMAIL` – shown on the contact section.
-- `NEXT_PUBLIC_BOOKING_URL` – Calendly or Cal.com link for the free consultation. Without it, booking buttons scroll to the contact section.
+- **Root Directory:** `apps/<app>`. Vercel detects pnpm and the workspace automatically.
+- **Ignored Build Step:** comes from `apps/<app>/vercel.json` (`npx turbo-ignore`), so an app only rebuilds when it or a package it uses changed.
+- **Environment variables:** per project. Each app's `.env.example` lists them.
 
-## Stripe (video program)
-
-The checkout is built but switched off until you're ready:
-
-1. In Stripe, create a product "Video program" with a one-time price in your base currency (e.g. EUR or PLN). Copy the price ID (`price_…`).
-2. Turn on **Adaptive Pricing** (Stripe Dashboard → Settings → Payments → Adaptive Pricing). Customers then see and pay in their local currency automatically, so one price covers all currencies.
-3. Set `STRIPE_SECRET_KEY`, `STRIPE_PRICE_VIDEO_PROGRAM`, and `NEXT_PUBLIC_VIDEO_PROGRAM_ENABLED=true` on Vercel, then redeploy.
-4. Add a webhook endpoint in Stripe pointing to `https://YOUR-DOMAIN/api/stripe/webhook` for the event `checkout.session.completed`, and set `STRIPE_WEBHOOK_SECRET` to its signing secret.
-5. Finish the `TODO` in `app/api/stripe/webhook/route.ts` to email buyers their access (video links + consultation booking link).
-
-## SEO and analytics
-
-Built in:
-
-- Static pre-rendering of every page, self-hosted fonts (`next/font`), AVIF/WebP images, security headers.
-- Per-page titles and descriptions, canonical URLs, `hreflang` alternates (en, pl, x-default), Open Graph and Twitter tags.
-- `sitemap.xml` (with language alternates) and `robots.txt`.
-- JSON-LD structured data (Person with credentials and offers; Service for the program).
-- Vercel Analytics and Speed Insights (enable both in the Vercel project dashboard).
-
-**Semrush:** Semrush crawls the public site, so Site Audit and Position Tracking work as soon as it's live; add the domain as a project in Semrush. For deeper data, connect Google Search Console and Google Analytics to Semrush:
-
-- Verify the domain in Google Search Console (DNS record on the domain, or set `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`). Bing and Yandex have their own variables.
-- Set `NEXT_PUBLIC_GTM_ID` and add GA4 (and any ad pixels) inside Google Tag Manager, so new tags never need a code change.
+Design spec: `docs/superpowers/specs/2026-10-11-multi-brand-monorepo-design.md`.
