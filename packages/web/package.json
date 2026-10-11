@@ -1,0 +1,39 @@
+{
+  "name": "@repo/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./locale": "./src/locale.ts",
+    "./site": "./src/site.ts",
+    "./experiments": "./src/experiments.ts",
+    "./routing": "./src/routing/decide.ts",
+    "./middleware": "./src/routing/middleware.ts",
+    "./seo": "./src/seo.ts",
+    "./json-ld": "./src/json-ld.ts",
+    "./contact": "./src/contact/index.ts",
+    "./color-mode": "./src/color-mode.ts",
+    "./csp": "./src/csp.ts",
+    "./consent": "./src/consent.ts",
+    "./content-rules": "./src/content-rules.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.1.5"
+  },
+  "peerDependencies": {
+    "next": "^15.5.0"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "@types/node": "^22.15.0",
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
