@@ -344,7 +344,7 @@ export const pl: Content = {
   },
   consent: {
     label: "Zgoda na pliki cookie",
-    text: "Używamy analityki przyjaznej prywatności, żeby ulepszać tę stronę. Czy się zgadzasz?",
+    text: "Używamy analityki szanującej prywatność. Czy zgadzasz się na analityczne pliki cookie?",
     accept: "Akceptuję",
     decline: "Odrzucam",
     policy: "Polityka prywatności",
@@ -364,7 +364,7 @@ export const pl: Content = {
         heading: "Jakie dane zbieramy",
         paragraphs: [
           "Gdy wysyłasz wiadomość, otrzymujemy Twoje imię, e-mail, nazwę firmy i treść wiadomości. Używamy ich wyłącznie do odpowiedzi.",
-          "Za Twoją zgodą korzystamy z analityki PostHog, żeby zrozumieć, jak używana jest strona: wyświetlone strony, kliknięcia i przybliżona lokalizacja (kraj). PostHog przechowuje dane w UE.",
+          "Korzystamy z analityki PostHog, żeby zrozumieć, jak używana jest strona: wyświetlone strony, kliknięcia i przybliżona lokalizacja (kraj). Dopóki nie wyrazisz zgody, analityka działa bez plików cookie i bez zapisywania czegokolwiek w Twojej przeglądarce. PostHog przechowuje dane w UE.",
         ],
       },
       {

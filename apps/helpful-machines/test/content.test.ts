@@ -61,6 +61,13 @@ describe("Helpful Machines content", () => {
     }
   });
 
+  it("Polish privacy text matches what analytics really does before consent", () => {
+    // Before consent PostHog still runs, cookieless (memory persistence); only storage waits for consent.
+    const privacy = JSON.stringify(pl.privacy);
+    expect(privacy).toContain("bez plików cookie");
+    expect(privacy).not.toContain("Za Twoją zgodą korzystamy z analityki");
+  });
+
   it("keeps the pricing teaser placeholder", () => {
     expect(en.pricing.teaser.body).toContain("{price}");
     expect(pl.pricing.teaser.body).toContain("{price}");

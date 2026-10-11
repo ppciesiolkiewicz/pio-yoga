@@ -32,7 +32,7 @@ export function NavLinks({
               onClick={onNavigate}
               className={cn(
                 "inline-flex min-h-11 items-center rounded-card px-3 font-bold no-underline hover:underline hover:underline-offset-8",
-                active && "underline decoration-accent decoration-4 underline-offset-8",
+                active && "underline decoration-accent-text decoration-4 underline-offset-8",
               )}
             >
               {item.label}

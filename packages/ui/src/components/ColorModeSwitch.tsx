@@ -1,7 +1,7 @@
 "use client";
 
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 import { COLOR_MODE_KEY, resolveColorMode, type ColorModePreference } from "@repo/web/color-mode";
 
 export type ColorModeLabels = { group: string; light: string; dark: string; system: string };
@@ -28,7 +28,15 @@ const icons: Record<ColorModePreference, ReactNode> = {
   ),
 };
 
+/*
+ * One shared preference for every switch on the page (header + mobile menu) and every tab:
+ * stored in localStorage, announced with a window event, synced across tabs by "storage".
+ */
+const CHANGE_EVENT = "hm:colormode";
+let blockedStoragePref: ColorModePreference | null = null; // used only when localStorage throws
+
 function readStored(): ColorModePreference {
+  if (blockedStoragePref) return blockedStoragePref;
   try {
     const value = localStorage.getItem(COLOR_MODE_KEY);
     return value === "light" || value === "dark" ? value : "system";
@@ -37,11 +45,31 @@ function readStored(): ColorModePreference {
   }
 }
 
-export function ColorModeSwitch({ labels }: { labels: ColorModeLabels }) {
-  // null until mounted, so server and first client render match (no hydration mismatch).
-  const [pref, setPref] = useState<ColorModePreference | null>(null);
+function writeStored(value: ColorModePreference) {
+  try {
+    if (value === "system") localStorage.removeItem(COLOR_MODE_KEY);
+    else localStorage.setItem(COLOR_MODE_KEY, value);
+  } catch {
+    blockedStoragePref = value; // storage blocked: the choice still applies for this page view
+  }
+  window.dispatchEvent(new Event(CHANGE_EVENT));
+}
 
-  useEffect(() => setPref(readStored()), []);
+function subscribe(onChange: () => void) {
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === null || event.key === COLOR_MODE_KEY) onChange();
+  };
+  window.addEventListener(CHANGE_EVENT, onChange);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener(CHANGE_EVENT, onChange);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+export function ColorModeSwitch({ labels }: { labels: ColorModeLabels }) {
+  // Server snapshot is null, so server and first client render match (no hydration mismatch).
+  const pref = useSyncExternalStore<ColorModePreference | null>(subscribe, readStored, () => null);
 
   useEffect(() => {
     if (pref === null) return;
@@ -59,13 +87,7 @@ export function ColorModeSwitch({ labels }: { labels: ColorModeLabels }) {
 
   const choose = (value: string) => {
     if (value !== "light" && value !== "dark" && value !== "system") return; // "" = deselect; ignore
-    setPref(value);
-    try {
-      if (value === "system") localStorage.removeItem(COLOR_MODE_KEY);
-      else localStorage.setItem(COLOR_MODE_KEY, value);
-    } catch {
-      // storage blocked: the choice still applies for this page view
-    }
+    writeStored(value);
   };
 
   return (

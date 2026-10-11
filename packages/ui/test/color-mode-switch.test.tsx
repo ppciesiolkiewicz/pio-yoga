@@ -71,3 +71,41 @@ describe("ColorModeSwitch", () => {
     }
   });
 });
+
+describe("ColorModeSwitch shared state", () => {
+  const fireOsChange = () => {
+    const lists = (window.matchMedia as unknown as Mock).mock.results.map((r) => r.value);
+    for (const list of lists) {
+      const removed = new Set((list.removeEventListener as Mock).mock.calls.map((c) => c[1]));
+      for (const [event, handler] of (list.addEventListener as Mock).mock.calls) {
+        // Only listeners still attached, like a real MediaQueryList.
+        if (event === "change" && !removed.has(handler)) act(() => (handler as () => void)());
+      }
+    }
+  };
+
+  it("keeps every switch in sync, and an explicit choice beats later OS changes", async () => {
+    render(
+      <>
+        <ColorModeSwitch labels={labels} />
+        <ColorModeSwitch labels={{ ...labels, group: "Menu colour mode" }} />
+      </>,
+    );
+    const [, menuDark] = screen.getAllByLabelText("Dark");
+    await userEvent.click(menuDark!);
+    for (const item of screen.getAllByLabelText("Dark")) expect(item.getAttribute("data-state")).toBe("on");
+    setSystemDark(false);
+    fireOsChange();
+    expect(root().dataset.theme).toBe("dark");
+  });
+
+  it("follows a choice made in another tab", () => {
+    render(<ColorModeSwitch labels={labels} />);
+    act(() => {
+      localStorage.setItem("colorMode", "dark");
+      window.dispatchEvent(new StorageEvent("storage", { key: "colorMode", newValue: "dark" }));
+    });
+    expect(state("Dark")).toBe("on");
+    expect(root().dataset.theme).toBe("dark");
+  });
+});

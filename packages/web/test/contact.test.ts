@@ -115,13 +115,13 @@ describe("createContactHandler (no-JS form)", () => {
     const { handler, sent } = setup();
     const res = await handler(form(valid));
     expect(res.status).toBe(303);
-    expect(res.headers.get("location")).toBe("https://attunr.com/pl/contact?sent=1");
+    expect(res.headers.get("location")).toBe("https://attunr.com/pl/contact?sent=1#contact-sent");
     expect(sent).toHaveLength(1);
   });
   it("redirects to the english contact page with an error", async () => {
     const { handler } = setup();
     const res = await handler(form({ ...valid, locale: "en", email: "bad" }));
-    expect(res.headers.get("location")).toBe("https://attunr.com/contact?error=validation");
+    expect(res.headers.get("location")).toBe("https://attunr.com/contact?error=validation#contact-error-validation");
   });
   it("accepts a submission without the JS timestamp", async () => {
     const { handler, sent } = setup();

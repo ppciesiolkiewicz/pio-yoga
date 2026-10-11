@@ -64,10 +64,12 @@ function Field({
 
 export function ContactForm({ locale, labels, email, action = "/api/contact" }: { locale: Locale; labels: ContactFormLabels; email: string; action?: string }) {
   const [renderedAt, setRenderedAt] = useState("");
+  const [hydrated, setHydrated] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const alertRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setHydrated(true);
     setRenderedAt(String(Date.now()));
     const query = new URLSearchParams(window.location.search);
     const error = query.get("error");
@@ -109,8 +111,31 @@ export function ContactForm({ locale, labels, email, action = "/api/contact" }: 
   const fieldEntries = Object.entries(fields) as [FieldKey, string][];
   const showEmail = status.kind === "error" && (status.error === "unavailable" || status.error === "send_failed");
 
+  const emailFallback = (
+    <p className="mt-2">
+      {labels.emailFallback}{" "}
+      <a href={`mailto:${email}`} className="font-bold underline underline-offset-4">
+        {email}
+      </a>
+    </p>
+  );
+
   return (
     <form method="post" action={action} onSubmit={onSubmit} className="grid gap-5">
+      {/* Without JS the API redirects to ?sent=1#contact-sent (or #contact-error-<key>); :target reveals the message. */}
+      {!hydrated && (
+        <>
+          <p id="contact-sent" role="status" className="hidden rounded-card border-2 border-line bg-highlight/40 p-4 font-bold target:block">
+            {labels.sent}
+          </p>
+          {ERROR_KEYS.map((key) => (
+            <div key={key} id={`contact-error-${key}`} role="alert" className="hidden rounded-card border-2 border-line bg-surface p-4 target:block">
+              <p className="font-bold">{labels.errors[key]}</p>
+              {(key === "unavailable" || key === "send_failed") && emailFallback}
+            </div>
+          ))}
+        </>
+      )}
       {status.kind === "sent" && (
         <p role="status" className="rounded-card border-2 border-line bg-highlight/40 p-4 font-bold">
           {labels.sent}
@@ -130,14 +155,7 @@ export function ContactForm({ locale, labels, email, action = "/api/contact" }: 
               ))}
             </ul>
           )}
-          {showEmail && (
-            <p className="mt-2">
-              {labels.emailFallback}{" "}
-              <a href={`mailto:${email}`} className="font-bold underline underline-offset-4">
-                {email}
-              </a>
-            </p>
-          )}
+          {showEmail && emailFallback}
         </div>
       )}
       <input type="hidden" name="locale" value={locale} />

@@ -30,6 +30,13 @@ describe("NavLinks", () => {
     expect(screen.getByRole("link", { name: "Usługi" }).getAttribute("aria-current")).toBe("page");
     expect(screen.getByRole("link", { name: "Cennik" }).getAttribute("aria-current")).toBeNull();
   });
+  it("draws the current-page underline in a colour with ≥3:1 contrast (accent-text, not accent)", () => {
+    pathname = "/pl/services";
+    render(<NavLinks items={items} buckets={buckets} />);
+    const classes = screen.getByRole("link", { name: "Usługi" }).className.split(/\s+/);
+    expect(classes).toContain("decoration-accent-text");
+    expect(classes).not.toContain("decoration-accent");
+  });
   it("works with public paths too", () => {
     pathname = "/pl/pricing";
     render(<NavLinks items={items} buckets={buckets} />);

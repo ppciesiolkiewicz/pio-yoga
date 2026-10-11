@@ -52,6 +52,10 @@
   - Radix is still used for Dialog (mobile menu) and ToggleGroup (colour mode).
 - **No `asChild`/Slot buttons:** links styled as buttons use `ButtonLink` instead. This avoids passing server elements through a client Slot.
 - **Public contact email:** a new `NEXT_PUBLIC_CONTACT_EMAIL` (shown on the site), separate from the private `CONTACT_TO_EMAIL` recipient.
+- **Performance budget (decided during the build):** the spec's "≤ 70 KB first-load JS" is impossible on the Next 15 App Router, whose shared framework runtime alone is about 102 kB gzipped. New budget: **app-specific JS ≤ 30 KB gzipped per page**, plus Lighthouse mobile ≥ 95 (measured in Plan 4). Today the app adds about 27 kB (Radix 18.5, next/link 4.3, layout 4.3), and PostHog loads lazily.
+- **Root 404 (decided in the review fix pass):** Next renders server-side 404s with the root layout and the root `not-found`. So `app/layout.tsx` is a pass-through, `app/not-found.tsx` is a full branded document (shared `components/Document.tsx`), and the middleware sends unknown paths there (`isKnownPath`). It can't know the market, so it's English with a Polish line and both home links.
+- **Exposure event:** PostHog's own `$feature_flag_called` (plus `$feature/<key>` super properties) replaces the spec's `experiment_exposure`, so PostHog experiments read it natively. PostHog's flag evaluation is disabled (`advanced_disable_feature_flags`) so it can't overwrite the middleware's assignment.
+- **Not built yet:** header `LocaleSwitch` behind `showLocaleSwitch` (the footer language link covers it), per-market "enabled pages", and social links in `site.config`. None are needed on Helpful Machines today.
 
 ---
 

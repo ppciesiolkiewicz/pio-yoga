@@ -46,7 +46,9 @@ export function createContactHandler(o: {
 
     const respond = ({ status, body, query }: Outcome): Response => {
       if (isJson) return Response.json(body, { status });
-      const location = new URL(`${locale === "pl" ? "/pl" : ""}/contact?${query}`, req.url);
+      // The #anchor reveals the matching message in the static page via CSS :target (works without JS).
+      const anchor = query === "sent=1" ? "contact-sent" : `contact-error-${query.slice("error=".length)}`;
+      const location = new URL(`${locale === "pl" ? "/pl" : ""}/contact?${query}#${anchor}`, req.url);
       return new Response(null, { status: 303, headers: { Location: location.toString() } });
     };
 

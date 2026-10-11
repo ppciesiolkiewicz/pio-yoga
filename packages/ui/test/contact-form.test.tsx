@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ContactForm, type ContactFormLabels } from "../src/components/ContactForm";
@@ -120,5 +121,19 @@ describe("ContactForm with JavaScript", () => {
     window.history.replaceState({}, "", "/contact?error=rate_limited");
     render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
     expect((await screen.findByRole("alert")).textContent).toContain(labels.errors.rate_limited);
+  });
+});
+
+describe("ContactForm without JavaScript (static HTML)", () => {
+  it("ships every result message, revealed by the redirect's #anchor", () => {
+    const html = renderToString(<ContactForm locale="pl" labels={labels} email="hello@attunr.com" />);
+    expect(html).toMatch(/id="contact-sent"[^>]*class="[^"]*target:block/);
+    expect(html).toContain(labels.sent);
+    for (const key of Object.keys(labels.errors)) expect(html).toContain(`id="contact-error-${key}"`);
+    expect(html).toContain("mailto:hello@attunr.com");
+  });
+  it("removes the static messages once JavaScript takes over", async () => {
+    const { container } = render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
+    await waitFor(() => expect(container.querySelector("#contact-sent")).toBeNull());
   });
 });
