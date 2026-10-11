@@ -7,7 +7,7 @@ import { decideRoute, EXP_COOKIE, LOCALE_COOKIE } from "./decide";
  *   export default createRoutingMiddleware({ experiments });
  *   export const config = { matcher: ["/((?!api|_next|_vercel|ingest|og|.*\\..*).*)"] };
  */
-export function createRoutingMiddleware(opts: { experiments: Experiments; random?: () => number }) {
+export function createRoutingMiddleware(opts: { experiments: Experiments; random?: () => number; isKnownPath?: (rest: string) => boolean }) {
   return function middleware(req: NextRequest): NextResponse {
     const decision = decideRoute({
       pathname: req.nextUrl.pathname,
@@ -17,6 +17,7 @@ export function createRoutingMiddleware(opts: { experiments: Experiments; random
       cookies: { locale: req.cookies.get(LOCALE_COOKIE)?.value, exp: req.cookies.get(EXP_COOKIE)?.value },
       experiments: opts.experiments,
       random: opts.random,
+      isKnownPath: opts.isKnownPath,
     });
     if (decision.kind === "pass") return NextResponse.next();
 

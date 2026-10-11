@@ -3,6 +3,8 @@ import { defaultLocale, isLocale, localizedPath, splitLocale, type Locale } from
 
 export const LOCALE_COOKIE = "NEXT_LOCALE";
 export const EXP_COOKIE = "exp";
+/** An internal path no route matches: Next serves the app's root not-found page (status 404). */
+export const NOT_FOUND_PATH = "/_not-found-route";
 const YEAR = 31_536_000;
 const EXP_MAX_AGE = 90 * 86_400;
 
@@ -16,6 +18,8 @@ export type RouteInput = {
   cookies: { locale?: string; exp?: string };
   experiments: Experiments;
   random?: () => number;
+  /** Locale-less public paths the app serves. Unknown paths get the root 404. Omit to allow all. */
+  isKnownPath?: (rest: string) => boolean;
 };
 export type RouteDecision =
   | { kind: "pass" }
@@ -94,11 +98,12 @@ export function decideRoute(input: RouteInput): RouteDecision {
     setCookies.push({ name: LOCALE_COOKIE, value: locale, maxAge: YEAR });
   }
 
-  // 5. Bucketing + rewrite to the pre-rendered bucket.
+  // 5. Bucketing + rewrite to the pre-rendered bucket (or to the root 404 for unknown paths).
   const { assignment, changed } = assign(experiments, input.cookies.exp, input.random ?? Math.random);
   if (changed) {
     const value = serializeAssignment(assignment);
     setCookies.push({ name: EXP_COOKIE, value, maxAge: value ? EXP_MAX_AGE : 0 });
   }
+  if (input.isKnownPath && !input.isKnownPath(rest)) return { kind: "rewrite", pathname: NOT_FOUND_PATH, setCookies };
   return { kind: "rewrite", pathname: internalPath(bucketFor(experiments, assignment, locale), locale, rest), setCookies };
 }

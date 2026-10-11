@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { defineExperiments } from "../src/experiments";
-import { decideRoute, isBot, isSkipped, type RouteInput } from "../src/routing/decide";
+import { decideRoute, isBot, isSkipped, NOT_FOUND_PATH, type RouteInput } from "../src/routing/decide";
 
 const experiments = defineExperiments({
   hero: { variants: { control: "boring-bits", "easy-mode": "easy-mode" }, weights: [50, 50], markets: ["en", "pl"] },
@@ -183,4 +183,27 @@ describe("decideRoute", () => {
       pathname: "/default/en",
       setCookies: [{ name: "exp", value: "", maxAge: 0 }],
     }));
+});
+
+describe("unknown paths", () => {
+  const known = new Set(["/", "/services", "/services/custom-apps-websites"]);
+  const isKnownPath = (rest: string) => known.has(rest);
+  it("rewrites unknown paths to the unmatched 404 route so Next serves the root not-found page", () => {
+    expect(run({ pathname: "/services/nope", cookies: { exp: "hero:control" }, isKnownPath })).toEqual({
+      kind: "rewrite",
+      pathname: NOT_FOUND_PATH,
+      setCookies: [],
+    });
+    expect(run({ pathname: "/pl/nope", cookies: { exp: "hero:control", locale: "pl" }, isKnownPath })).toMatchObject({
+      pathname: NOT_FOUND_PATH,
+    });
+  });
+  it("still serves known paths and still assigns buckets", () =>
+    expect(run({ pathname: "/pl/services/custom-apps-websites", isKnownPath })).toEqual({
+      kind: "rewrite",
+      pathname: "/control/pl/services/custom-apps-websites",
+      setCookies: [localeCookie("pl"), expCookie("hero:control")],
+    }));
+  it("treats every path as known when no checker is given", () =>
+    expect(run({ pathname: "/whatever", cookies: { exp: "hero:control" } })).toMatchObject({ pathname: "/control/en/whatever" }));
 });

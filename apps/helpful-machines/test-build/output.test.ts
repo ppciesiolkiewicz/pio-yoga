@@ -78,6 +78,15 @@ describe("Helpful Machines build output", () => {
     expect(html("control", "pl", "/services/spreadsheets-data")).toContain('"@type":"Service"');
   });
 
+  it("renders a branded, bilingual 404 page (not an empty error shell)", () => {
+    const page = readFileSync(join(root, "_not-found.html"), "utf8");
+    expect(page).not.toContain("__next_error__");
+    expect(page).toMatch(/<html[^>]*data-design="helpful-machines"/);
+    expect(page).toMatch(/<h1[^>]*>[^<]*Page not found/);
+    expect(page).toContain("Nie znaleziono strony");
+    expect(page).toContain('href="/pl"');
+  });
+
   it("follows the copy rule in rendered Polish pages", () => {
     expect(html("control", "pl", "/")).toContain("Dedykowane aplikacje");
   });

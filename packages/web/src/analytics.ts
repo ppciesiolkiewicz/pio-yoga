@@ -11,6 +11,9 @@ export function posthogConfig(locale: Locale, consent: Consent | null) {
     capture_pageleave: true,
     autocapture: false,
     disable_session_recording: true,
+    // Variants come from the edge middleware. PostHog's own /flags result would overwrite
+    // $feature/<key> on every event and corrupt the experiment.
+    advanced_disable_feature_flags: true,
   };
 }
 

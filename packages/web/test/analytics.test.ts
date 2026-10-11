@@ -11,7 +11,10 @@ describe("posthogConfig", () => {
       capture_pageleave: true,
       autocapture: false,
       disable_session_recording: true,
+      advanced_disable_feature_flags: true,
     }));
+  it("never lets PostHog assign experiment variants (the edge middleware does)", () =>
+    expect(posthogConfig("pl", "granted").advanced_disable_feature_flags).toBe(true));
   it("stays in memory on /pl until consent", () => {
     expect(posthogConfig("pl", null).persistence).toBe("memory");
     expect(posthogConfig("pl", "denied").persistence).toBe("memory");
