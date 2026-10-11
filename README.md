@@ -6,7 +6,7 @@ Three independent websites deployed from one repo.
 | --- | --- | --- |
 | Yoga | `apps/yoga` | Pio – yoga, Thai yoga massage, program, video (see `apps/yoga/README.md`) |
 | Tangent | `apps/tangent` | Senior engineering and business analysis for startups (Plan 3) |
-| Helpful Machines | `apps/helpful-machines` | AI and IT for small businesses (Plan 2) |
+| Helpful Machines | `apps/helpful-machines` | AI and IT for small businesses (see `apps/helpful-machines/README.md`) |
 
 Shared code lives in `packages/` (`@repo/web` core logic, `@repo/config` tooling, `@repo/ui` design system in Plan 2).
 

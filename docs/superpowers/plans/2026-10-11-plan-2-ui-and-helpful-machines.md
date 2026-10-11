@@ -4962,6 +4962,8 @@ const fileFor = (bucket: string, locale: string, path: string) =>
   join(root, bucket, path === "/" ? `${locale}.html` : `${locale}${path}.html`);
 const html = (bucket: string, locale: string, path: string) => readFileSync(fileFor(bucket, locale, path), "utf8");
 const canonical = (page: string) => page.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+/** Next prints the root as "https://x.com" and we build "https://x.com/"; they're the same URL. */
+const same = (url: string | undefined) => (url ? new URL(url).href : url);
 const siteUrl = resolveSiteUrl();
 
 function htmlFiles(dir: string): string[] {
@@ -4996,7 +4998,7 @@ describe("Helpful Machines build output", () => {
   it("gives every bucket the same public canonical", () => {
     for (const locale of locales) for (const path of ["/", "/services", "/services/custom-apps-websites", "/contact"]) {
       const expected = absoluteUrl(siteUrl, localizedPath(locale, path));
-      for (const bucket of buckets) expect(canonical(html(bucket, locale, path)), `${bucket}/${locale}${path}`).toBe(expected);
+      for (const bucket of buckets) expect(same(canonical(html(bucket, locale, path))), `${bucket}/${locale}${path}`).toBe(same(expected));
     }
   });
 
