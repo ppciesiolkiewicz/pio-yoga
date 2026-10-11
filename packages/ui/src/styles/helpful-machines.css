@@ -1,0 +1,64 @@
+:root[data-design="helpful-machines"] {
+  --bg: #fff6ea;
+  --surface: #ffffff;
+  --ink: #1e1a15;
+  --muted: #5a5146;
+  --line: #1e1a15;
+  --accent: #ff5a36;
+  --accent-text: #b8350d;
+  --accent-ink: #1e1a15;
+  --highlight: #ffc94a;
+  --focus: #1e1a15;
+  --radius: 12px;
+  --cta-shadow: 4px 4px 0 #ff5a36;
+  --card-shadow: 4px 4px 0 #1e1a15;
+  --font-display-family: var(--font-bricolage);
+  --font-body-family: var(--font-bricolage);
+  color-scheme: light;
+}
+
+:root[data-design="helpful-machines"][data-theme="dark"] {
+  --bg: #17140f;
+  --surface: #221d16;
+  --ink: #fff3e2;
+  --muted: #cdbfaa;
+  --line: #fff3e2;
+  --accent: #ff6b4a;
+  --accent-text: #ff9a80;
+  --accent-ink: #17140f;
+  --highlight: #8c3b27;
+  --focus: #ffc94a;
+  --cta-shadow: 4px 4px 0 #ff6b4a;
+  --card-shadow: 4px 4px 0 #ff6b4a;
+  color-scheme: dark;
+}
+
+/* No-JS fallback: the colour-mode script never ran, so follow the OS. */
+@media (prefers-color-scheme: dark) {
+  :root[data-design="helpful-machines"]:not([data-theme]) {
+    --bg: #17140f;
+    --surface: #221d16;
+    --ink: #fff3e2;
+    --muted: #cdbfaa;
+    --line: #fff3e2;
+    --accent: #ff6b4a;
+    --accent-text: #ff9a80;
+  --accent-ink: #17140f;
+    --highlight: #8c3b27;
+    --focus: #ffc94a;
+    --cta-shadow: 4px 4px 0 #ff6b4a;
+    --card-shadow: 4px 4px 0 #ff6b4a;
+    color-scheme: dark;
+  }
+}
+
+/* Highlighter sweep on headline words. */
+[data-design="helpful-machines"] .hm-highlight {
+  color: inherit;
+  background: linear-gradient(transparent 60%, var(--highlight) 60%) no-repeat 0 0 / 100% 100%;
+  animation: hm-sweep 0.7s 0.2s ease-out both;
+}
+@keyframes hm-sweep {
+  from { background-size: 0% 100%; }
+  to { background-size: 100% 100%; }
+}
