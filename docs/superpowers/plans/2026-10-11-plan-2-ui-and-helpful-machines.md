@@ -5140,4 +5140,4 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 - [ ] **Step 8: Hand back**
 
-Report the test counts, the smoke results and the commits. Remind the user of the placeholders (prices, ABN/NIP, Polish review, legal review), the Vercel setup and the PostHog experiment setup. Don't push.
+Report the test counts, the smoke results and the commits. Remind the user of the placeholders (prices, NIP, Polish review, legal review), the Vercel setup and the PostHog experiment setup. Don't push.
