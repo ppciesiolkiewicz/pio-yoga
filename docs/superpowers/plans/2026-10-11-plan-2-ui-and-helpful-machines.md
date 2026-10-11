@@ -2765,12 +2765,13 @@ export const experiments = defineExperiments({
 
 `apps/helpful-machines/content/services.ts`:
 ```ts
+/** "Find what works" (business analysis) leads: it's the entry point to everything else. */
 export const serviceSlugs = [
+  "find-what-works",
   "ai-assistants-automation",
   "custom-apps-websites",
   "spreadsheets-data",
   "migrations-integrations",
-  "find-what-works",
 ] as const;
 export type ServiceSlug = (typeof serviceSlugs)[number];
 
@@ -2811,11 +2812,11 @@ export const markets: Record<Locale, Market> = {
 export const en = {
   meta: {
     siteDescription:
-      "Helpful Machines sets up AI, custom apps and tidy data for small businesses, in plain English and at small-business prices. Free first chat.",
+      "Helpful Machines finds what's slowing your small business down and fixes it, with AI, custom apps, tidy data or a better process. Plain English, small-business prices. Free first chat.",
     home: {
       title: "Helpful Machines · AI and custom apps for small businesses",
       description:
-        "Helpful Machines sets up AI, custom apps and tidy data for small businesses, in plain English and at small-business prices. Free first chat.",
+        "Helpful Machines finds what's slowing your small business down and fixes it, with AI, custom apps, tidy data or a better process. Plain English, small-business prices. Free first chat.",
     },
     services: {
       title: "Services · AI, custom apps, spreadsheets and integrations",
@@ -2863,25 +2864,28 @@ export const en = {
     colorMode: { group: "Colour mode", light: "Light", dark: "Dark", system: "System" },
   },
   hero: {
-    eyebrow: "AI and IT help for small businesses",
+    eyebrow: "Practical tech help for small businesses",
     title: {
       control: ["AI that actually ", "does the boring bits", "."],
       "easy-mode": ["Put your business on ", "easy mode", "."],
     },
-    lead: "We set up AI assistants, custom apps and tidy data for small businesses, in plain English and at small-business prices.",
+    lead: "We look at how your business actually runs, find what's costing you time and money, and fix it, with AI, custom apps, tidy data or simply a better process. Plain English, small-business prices.",
     secondary: "See what we do",
     note: "30 minutes · no jargon · no obligation",
     chipsLabel: "What we help with",
     chips: ["AI assistants", "Spreadsheets", "Custom apps", "Integrations"],
   },
   fixes: {
-    eyebrow: "What we fix",
-    title: "Sound familiar?",
+    eyebrow: "How we help",
+    title: "We find what's slowing you down, then fix it.",
     items: [
-      { pain: "You answer the same customer emails every day.", fix: "An AI assistant drafts the replies; you check and send." },
-      { pain: "Your business runs on a spreadsheet only one person understands.", fix: "We tidy it into something everyone can use, or build a simple custom app." },
-      { pain: "You type the same data into three different systems.", fix: "We connect them, so it's entered once." },
-      { pain: "You know AI could help but don't know where to start.", fix: "In a free chat we find the one or two changes worth making first." },
+      {
+        pain: "Too much of your week goes on admin.",
+        fix: "We map where the time goes and remove the busywork, with automation, AI or a simpler way of working.",
+      },
+      { pain: "Your tools don't talk to each other.", fix: "We connect them, or replace them with something that fits how you work." },
+      { pain: "Your numbers live in spreadsheets nobody trusts.", fix: "We tidy your data so decisions get easier." },
+      { pain: "You're not sure which tech is worth paying for.", fix: "We tell you honestly, including when the answer is \"nothing\"." },
     ],
   },
   services: {
@@ -3209,11 +3213,11 @@ import type { Content } from "./en";
 export const pl: Content = {
   meta: {
     siteDescription:
-      "Helpful Machines wdraża AI, dedykowane aplikacje i porządek w danych dla małych firm, prostym językiem i w cenach dla małych firm. Pierwsza rozmowa za darmo.",
+      "Helpful Machines znajduje to, co spowalnia Twoją małą firmę, i to naprawia: za pomocą AI, dedykowanych aplikacji, porządku w danych albo lepszego procesu. Prostym językiem, w cenach dla małych firm. Pierwsza rozmowa za darmo.",
     home: {
       title: "Helpful Machines · AI i dedykowane aplikacje dla małych firm",
       description:
-        "Helpful Machines wdraża AI, dedykowane aplikacje i porządek w danych dla małych firm, prostym językiem i w cenach dla małych firm. Pierwsza rozmowa za darmo.",
+        "Helpful Machines znajduje to, co spowalnia Twoją małą firmę, i to naprawia: za pomocą AI, dedykowanych aplikacji, porządku w danych albo lepszego procesu. Prostym językiem, w cenach dla małych firm. Pierwsza rozmowa za darmo.",
     },
     services: {
       title: "Usługi · AI, dedykowane aplikacje, arkusze i integracje",
@@ -3262,28 +3266,28 @@ export const pl: Content = {
     colorMode: { group: "Tryb kolorów", light: "Jasny", dark: "Ciemny", system: "Systemowy" },
   },
   hero: {
-    eyebrow: "AI i wsparcie IT dla małych firm",
+    eyebrow: "Praktyczna pomoc technologiczna dla małych firm",
     title: {
       control: ["AI, które naprawdę ", "robi nudną robotę", "."],
       "easy-mode": ["Przełącz swoją firmę na ", "tryb łatwy", "."],
     },
-    lead: "Wdrażamy asystentów AI, dedykowane aplikacje i porządek w danych dla małych firm, prostym językiem i w cenach dla małych firm.",
+    lead: "Sprawdzamy, jak naprawdę działa Twoja firma, znajdujemy to, co kosztuje Cię czas i pieniądze, i naprawiamy to: za pomocą AI, dedykowanych aplikacji, porządku w danych albo po prostu lepszego sposobu pracy. Prostym językiem, w cenach dla małych firm.",
     secondary: "Zobacz, co robimy",
     note: "30 minut · bez żargonu · bez zobowiązań",
     chipsLabel: "W czym pomagamy",
     chips: ["Asystenci AI", "Arkusze", "Dedykowane aplikacje", "Integracje"],
   },
   fixes: {
-    eyebrow: "Co naprawiamy",
-    title: "Brzmi znajomo?",
+    eyebrow: "Jak pomagamy",
+    title: "Znajdujemy to, co Cię spowalnia, i to naprawiamy.",
     items: [
-      { pain: "Codziennie odpowiadasz na te same maile od klientów.", fix: "Asystent AI przygotowuje odpowiedzi, a Ty tylko je sprawdzasz i wysyłasz." },
       {
-        pain: "Firma działa na arkuszu, który rozumie tylko jedna osoba.",
-        fix: "Porządkujemy go tak, żeby każdy mógł z niego korzystać, albo budujemy prostą aplikację na zamówienie.",
+        pain: "Za dużo czasu w tygodniu zjada administracja.",
+        fix: "Sprawdzamy, gdzie ucieka czas, i usuwamy zbędną pracę: automatyzacją, AI albo prostszym sposobem działania.",
       },
-      { pain: "Te same dane wpisujesz do trzech różnych systemów.", fix: "Łączymy je, żeby wystarczyło wpisać dane raz." },
-      { pain: "Wiesz, że AI mogłoby pomóc, ale nie wiesz, od czego zacząć.", fix: "Na bezpłatnej rozmowie znajdziemy jedną lub dwie zmiany, od których warto zacząć." },
+      { pain: "Twoje narzędzia ze sobą nie współpracują.", fix: "Łączymy je albo zastępujemy czymś, co pasuje do Twojego sposobu pracy." },
+      { pain: "Liczby są w arkuszach, którym nikt nie ufa.", fix: "Porządkujemy dane, żeby decyzje były łatwiejsze." },
+      { pain: "Nie wiesz, za jaką technologię warto płacić.", fix: "Mówimy uczciwie, także wtedy, gdy odpowiedź brzmi: za żadną." },
     ],
   },
   services: {
@@ -3670,11 +3674,11 @@ describe("routes", () => {
   it("lists 9 static pages and 5 service pages", () => {
     expect(staticPaths).toHaveLength(9);
     expect(servicePaths).toEqual([
+      "/services/find-what-works",
       "/services/ai-assistants-automation",
       "/services/custom-apps-websites",
       "/services/spreadsheets-data",
       "/services/migrations-integrations",
-      "/services/find-what-works",
     ]);
     expect(allPaths).toHaveLength(14);
   });
