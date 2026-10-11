@@ -1022,7 +1022,7 @@ const state = (name: string) => screen.getByLabelText(name).getAttribute("data-s
 describe("ColorModeSwitch", () => {
   it("is a labelled group with 44px targets", () => {
     render(<ColorModeSwitch labels={labels} />);
-    expect(screen.getByRole("group", { name: "Colour mode" })).toBeTruthy();
+    expect(screen.getByRole("radiogroup", { name: "Colour mode" })).toBeTruthy();
     expect(screen.getByLabelText("Light").className).toContain("size-11");
   });
 
@@ -1292,7 +1292,7 @@ describe("MobileMenu", () => {
     await userEvent.click(screen.getByRole("button", { name: "Menu" }));
     const dialog = screen.getByRole("dialog", { name: "Menu" });
     expect(within(dialog).getByRole("link", { name: "Usługi" })).toBeTruthy();
-    expect(within(dialog).getByRole("group", { name: "Tryb kolorów" })).toBeTruthy();
+    expect(within(dialog).getByRole("radiogroup", { name: "Tryb kolorów" })).toBeTruthy();
     expect(within(dialog).getByRole("link", { name: "Umów bezpłatną rozmowę" })).toBeTruthy();
     await userEvent.click(within(dialog).getByRole("button", { name: "Zamknij menu" }));
     expect(screen.queryByRole("dialog")).toBeNull();
