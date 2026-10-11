@@ -35,8 +35,17 @@ describe("isBot", () => {
     "Mozilla/5.0 (compatible; SemrushBot/7~bl)",
     "Mozilla/5.0 (compatible; AhrefsBot/7.0)",
     "LinkedInBot/1.0",
-    "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) Chrome-Lighthouse",
+    "Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)",
+    "TelegramBot (like TwitterBot)",
+    "Mozilla/5.0 (compatible; Pinterestbot/1.0; +http://www.pinterest.com/bot.html)",
   ])("bot: %s", (ua) => expect(isBot(ua)).toBe(true));
+  it.each([
+    "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 Chrome/131 Mobile Safari/537.36 Chrome-Lighthouse",
+    "Mozilla/5.0 (Linux; Android 11; CUBOT P50) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36",
+    "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120.0 Mobile Safari/537.36 [Pinterest/Android]",
+    "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120.0 Mobile Safari/537.36 Telegram-Android/10.6.2",
+    "Mozilla/5.0 (Macintosh) AppleWebKit/537.36 Chrome/120.0 Electron/27 Safari/537.36 Slack/4.35.126",
+  ])("not a bot (audits, phones, in-app browsers): %s", (ua) => expect(isBot(ua)).toBe(false));
   it("headless browsers used by our E2E tests are not bots", () =>
     expect(isBot("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 HeadlessChrome/131.0.0.0 Safari/537.36")).toBe(false));
   it("real browsers and a missing UA are not bots", () => {
@@ -94,9 +103,17 @@ describe("decideRoute", () => {
     expect(run({ country: "pl" })).toMatchObject({ kind: "redirect", location: "/pl" });
   });
 
-  it("does not geo-redirect once a locale was chosen", () => {
-    expect(run({ country: "PL", cookies: { locale: "en", exp: "hero:control" } })).toMatchObject({ kind: "rewrite", pathname: "/control/en" });
-    expect(run({ country: "PL", cookies: { locale: "pl", exp: "hero:control" } })).toMatchObject({ kind: "rewrite", pathname: "/control/en" });
+  it("does not geo-redirect once english was chosen", () =>
+    expect(run({ country: "PL", cookies: { locale: "en", exp: "hero:control" } })).toMatchObject({ kind: "rewrite", pathname: "/control/en" }));
+
+  it("sends returning visitors who chose polish back to /pl, from anywhere", () => {
+    expect(run({ pathname: "/services", country: "PL", cookies: { locale: "pl", exp: "hero:control" } })).toEqual({
+      kind: "redirect",
+      status: 307,
+      location: "/pl/services",
+      setCookies: [],
+    });
+    expect(run({ country: "AU", cookies: { locale: "pl", exp: "hero:control" } })).toMatchObject({ kind: "redirect", location: "/pl" });
   });
 
   it("does not loop on /pl for visitors in Poland", () =>

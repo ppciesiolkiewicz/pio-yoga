@@ -105,7 +105,7 @@ Missing optional variables degrade gracefully. With no Cal URL, CTAs link to `/c
 
 1. **Skip** `/api/*`, `/_next/*`, `/ingest/*`, static files, OG image routes, and known bots and crawlers (user-agent check). Bots get the requested URL, with no redirect, and every experiment at `control`.
 2. **Explicit choice:** a `NEXT_LOCALE` cookie (1 year) is respected. Visiting a `/pl/...` URL, or clicking a language link, sets it.
-3. **Geo:** if there's no cookie, `x-vercel-ip-country === "PL"`, and the path has no `/pl` prefix → **307** redirect to `/pl` + path, keeping the query string.
+3. **Preferred market:** the `NEXT_LOCALE` cookie wins. With no cookie, `x-vercel-ip-country === "PL"` means Polish. If the preferred market is Polish and the path has no `/pl` prefix → **307** redirect to `/pl` + path, keeping the query string. So returning visitors who chose Polish also land on `/pl` from bare English URLs; `?locale=en` (cookie = en) is the way out.
 4. **Bucketing:** read or set the `exp` cookie (one weighted random variant per active experiment, 90 days, `SameSite=Lax`, first-party, no personal data).
 5. **Rewrite** to the pre-rendered bucket route (Section 5). The browser URL doesn't change.
 

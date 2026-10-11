@@ -6,7 +6,7 @@ const DEFAULT_SITE_URL = "https://attunr.com";
  * instead of shipping broken canonicals.
  */
 export function resolveSiteUrl(
-  env: Record<string, string | undefined> = process.env,
+  env: Record<string, string | undefined> = { NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL },
   fallback: string = DEFAULT_SITE_URL,
 ): string {
   const raw = env.NEXT_PUBLIC_SITE_URL?.trim();

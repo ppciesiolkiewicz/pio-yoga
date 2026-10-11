@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { resolveSiteUrl } from "../src/site";
 
@@ -16,4 +17,8 @@ describe("resolveSiteUrl", () => {
   it("treats an empty value as missing", () => expect(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "" })).toBe("https://attunr.com"));
   it("throws on a value that is not a URL", () =>
     expect(() => resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "not a url" })).toThrow(/NEXT_PUBLIC_SITE_URL/));
+  it("reads the env var as a literal so Next can inline it into client bundles", () => {
+    const source = readFileSync(new URL("../src/site.ts", import.meta.url), "utf8");
+    expect(source).toContain("process.env.NEXT_PUBLIC_SITE_URL");
+  });
 });

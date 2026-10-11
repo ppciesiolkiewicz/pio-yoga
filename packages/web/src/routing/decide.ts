@@ -25,14 +25,19 @@ export type RouteDecision =
 const SKIP_PREFIX = /^\/(api|_next|_vercel|ingest|og)(\/|$)/;
 const FILE = /\/[^/]*\.[^/]+$/;
 const METADATA_IMAGE = /(^|\/)(opengraph-image|twitter-image|icon|apple-icon)(-[^/]*)?$/;
+/**
+ * Named crawlers and link-preview fetchers, plus generic "xyzbot/1.0" and "(compatible; …bot" forms.
+ * Deliberately not matched: Lighthouse (audits must see real buckets), in-app browsers
+ * (Slack, Telegram, Pinterest apps) and phone brands containing "bot" (CUBOT).
+ */
 const BOT =
-  /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|pinterest|whatsapp|telegram|discord|slack|lighthouse|semrush|ahrefs|yandex|baidu|duckduck|petal|applebot|quora link preview|vkshare|w3c_validator/i;
+  /googlebot|bingbot|bingpreview|yandex|baiduspider|duckduckbot|applebot|petalbot|semrushbot|ahrefsbot|linkedinbot|twitterbot|slackbot|telegrambot|discordbot|pinterestbot|facebookexternalhit|whatsapp|embedly|slurp|crawler|spider|quora link preview|vkshare|w3c_validator|bot\/|compatible;[^)]*bot/i;
 
 export function isSkipped(pathname: string): boolean {
   return SKIP_PREFIX.test(pathname) || FILE.test(pathname) || METADATA_IMAGE.test(pathname);
 }
 
-/** Crawlers and link-preview fetchers. HeadlessChrome (our E2E tests) is deliberately not a bot. */
+/** Crawlers and link-preview fetchers. HeadlessChrome (our E2E tests) and Lighthouse are deliberately not bots. */
 export function isBot(userAgent: string | null): boolean {
   return !!userAgent && BOT.test(userAgent);
 }
@@ -77,9 +82,10 @@ export function decideRoute(input: RouteInput): RouteDecision {
     return { kind: "rewrite", pathname: internalPath(controlBucket(experiments), locale, rest), setCookies: [] };
   }
 
-  // 4. Geo: visitors in Poland without a stored choice go to /pl.
+  // 4. Preferred market: a stored choice wins; otherwise visitors in Poland prefer /pl.
   const cookieLocale = isLocale(input.cookies.locale) ? input.cookies.locale : null;
-  if (locale === defaultLocale && !cookieLocale && input.country?.toUpperCase() === "PL") {
+  const preferred = cookieLocale ?? (input.country?.toUpperCase() === "PL" ? "pl" : null);
+  if (locale === defaultLocale && preferred === "pl") {
     return { kind: "redirect", status: 307, location: withQuery(localizedPath("pl", rest), params), setCookies: [] };
   }
 
