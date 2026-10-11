@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isLocale, localizedPath, normalizePath, splitLocale } from "../src/locale";
+import { isLocale, localizedPath, normalizePath, splitLocale, stripInternalPrefix } from "../src/locale";
 
 describe("normalizePath", () => {
   it.each([
@@ -46,4 +46,18 @@ describe("isLocale", () => {
     expect(isLocale("de")).toBe(false);
     expect(isLocale(undefined)).toBe(false);
   });
+});
+
+describe("stripInternalPrefix", () => {
+  const buckets = ["control", "easy-mode"];
+  it("strips bucket and locale from internal paths", () => {
+    expect(stripInternalPrefix("/control/pl/services", buckets)).toEqual({ locale: "pl", rest: "/services" });
+    expect(stripInternalPrefix("/easy-mode/en", buckets)).toEqual({ locale: "en", rest: "/" });
+  });
+  it("handles public paths", () => {
+    expect(stripInternalPrefix("/pl/services/", buckets)).toEqual({ locale: "pl", rest: "/services" });
+    expect(stripInternalPrefix("/services", buckets)).toEqual({ locale: "en", rest: "/services" });
+  });
+  it("does not strip a bucket-named page without a locale after it", () =>
+    expect(stripInternalPrefix("/control", buckets)).toEqual({ locale: "en", rest: "/control" }));
 });

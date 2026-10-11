@@ -41,3 +41,18 @@ describe("findCopyViolations", () => {
     expect(findCopyViolations({ s: { t: "aplikacje" } }, "pl")).toEqual([{ path: "s.t", match: "aplikacje", index: 0 }]);
   });
 });
+
+describe("fewer false positives", () => {
+  it("allows one word between custom and app(s)", () => {
+    expect(findBareApps("Custom web apps for shops")).toEqual([]);
+    expect(findBareApps("Custom-built apps")).toEqual([]);
+  });
+  it("allows up to three words before 'na zamówienie'", () =>
+    expect(findBarePolishApps("Tworzymy aplikacji webowych i mobilnych na zamówienie.")).toEqual([]));
+  it("skips slug-like strings", () => {
+    expect(findCopyViolations({ slug: "custom-apps-websites", path: "/services/apps", pl: "dedykowane-aplikacje" }, "en")).toEqual([]);
+    expect(findCopyViolations({ pl: "dedykowane-aplikacje" }, "pl")).toEqual([]);
+  });
+  it("still flags bare apps in sentences", () =>
+    expect(findCopyViolations({ s: "Our apps rock" }, "en")).toHaveLength(1));
+});

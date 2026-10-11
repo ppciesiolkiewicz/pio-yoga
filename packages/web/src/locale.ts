@@ -35,3 +35,12 @@ export function splitLocale(pathname: string): { locale: Locale; rest: string; e
   }
   return { locale: defaultLocale, rest: path, explicitDefault: false };
 }
+
+/** Locale and locale-less rest of a pathname that may be internal (/<bucket>/<locale>/…) or public. */
+export function stripInternalPrefix(pathname: string, buckets: readonly string[]): { locale: Locale; rest: string } {
+  const path = normalizePath(pathname);
+  const [, first = "", second = "", ...more] = path.split("/");
+  if (buckets.includes(first) && isLocale(second)) return { locale: second, rest: normalizePath(more.join("/")) };
+  const { locale, rest } = splitLocale(path);
+  return { locale, rest };
+}

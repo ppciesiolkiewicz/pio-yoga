@@ -12,6 +12,7 @@
     "./seo": "./src/seo.ts",
     "./json-ld": "./src/json-ld.ts",
     "./contact": "./src/contact/index.ts",
+    "./analytics": "./src/analytics.ts",
     "./color-mode": "./src/color-mode.ts",
     "./csp": "./src/csp.ts",
     "./consent": "./src/consent.ts",

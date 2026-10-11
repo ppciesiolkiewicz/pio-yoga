@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  activeAssignment,
   allBuckets,
   assign,
   bucketFor,
@@ -124,4 +125,22 @@ describe("buckets", () => {
     expect(parseBucket(two, "control")).toBeNull();
     expect(parseBucket(none, "default")).toEqual({});
   });
+});
+
+describe("inherited keys", () => {
+  it("parseBucket rejects prototype keys", () => {
+    expect(parseBucket(one, "toString")).toBeNull();
+    expect(parseBucket(one, "constructor")).toBeNull();
+  });
+  it("bucketFor falls back to control for prototype keys", () =>
+    expect(bucketFor(one, { hero: "toString" }, "en")).toBe("control"));
+});
+
+describe("activeAssignment", () => {
+  it("keeps only experiments running in the market", () => {
+    expect(activeAssignment(two, { design: "editorial", hero: "easy-mode" }, "en")).toEqual({ design: "editorial", hero: "easy-mode" });
+    expect(activeAssignment(two, { design: "editorial", hero: "easy-mode" }, "pl")).toEqual({ hero: "easy-mode" });
+  });
+  it("drops unknown variants and experiments", () =>
+    expect(activeAssignment(one, { hero: "gone", old: "control" }, "en")).toEqual({}));
 });

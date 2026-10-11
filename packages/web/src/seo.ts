@@ -32,7 +32,8 @@ export function pageMetadata(o: {
 }): Metadata {
   const available = o.available ?? locales;
   const url = absoluteUrl(o.siteUrl, localizedPath(o.locale, o.path));
-  const images = o.ogImage ? [{ url: absoluteUrl(o.siteUrl, o.ogImage), width: 1200, height: 630 }] : undefined;
+  const imageUrl = o.ogImage && (/^https?:\/\//i.test(o.ogImage) ? o.ogImage : absoluteUrl(o.siteUrl, o.ogImage));
+  const images = imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : undefined;
   return {
     title: o.title,
     description: o.description,

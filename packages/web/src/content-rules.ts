@@ -4,10 +4,12 @@ export type Finding = { path: string; match: string; index: number };
 type Match = { match: string; index: number };
 
 const EN_APP = /(?<![\p{L}\p{N}])apps?(?![\p{L}\p{N}])/giu;
-const EN_ALLOWED_BEFORE = /(?<![\p{L}\p{N}])custom\s+$/iu;
+const EN_ALLOWED_BEFORE = /(?<![\p{L}\p{N}])custom(?:[\s-]+[\p{L}-]+)?[\s-]+$/iu;
 const PL_APP = /(?<![\p{L}\p{N}])aplikacj\p{L}*/giu;
 const PL_ALLOWED_BEFORE = /(?<![\p{L}\p{N}])dedykowan\p{L}*\s+$/iu;
-const PL_ALLOWED_AFTER = /^(\s+\p{L}+)?\s+na\s+zamówienie(?![\p{L}])/iu;
+const PL_ALLOWED_AFTER = /^(?:\s+\p{L}+){0,3}\s+na\s+zamówienie(?![\p{L}])/iu;
+/** Slugs and paths are identifiers, not copy. */
+const SLUG = /^(?:\/\S*|[a-z0-9]+(?:-[a-z0-9]+)+)$/;
 
 function scan(text: string, re: RegExp, allowed: (before: string, after: string) => boolean): Match[] {
   const out: Match[] = [];
@@ -39,5 +41,7 @@ export function collectStrings(value: unknown, path = ""): { path: string; value
 
 export function findCopyViolations(dict: unknown, locale: Locale): Finding[] {
   const find = locale === "pl" ? findBarePolishApps : findBareApps;
-  return collectStrings(dict).flatMap(({ path, value }) => find(value).map((m) => ({ path, ...m })));
+  return collectStrings(dict)
+    .filter(({ value }) => !SLUG.test(value))
+    .flatMap(({ path, value }) => find(value).map((m) => ({ path, ...m })));
 }

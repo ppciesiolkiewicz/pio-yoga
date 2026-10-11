@@ -90,7 +90,7 @@ export function bucketFor(exps: Experiments, assignment: Assignment, locale: Loc
     .map((name) => {
       const def = exps[name]!;
       const variant = assignment[name];
-      return def.markets.includes(locale) && variant && variant in def.variants ? variant : CONTROL;
+      return def.markets.includes(locale) && variant !== undefined && Object.hasOwn(def.variants, variant) ? variant : CONTROL;
     })
     .join(".");
 }
@@ -122,8 +122,19 @@ export function parseBucket(exps: Experiments, bucket: string): Assignment | nul
   for (let i = 0; i < names.length; i++) {
     const def = exps[names[i]!]!;
     const variant = parts[i]!;
-    if (!(variant in def.variants)) return null;
+    if (!Object.hasOwn(def.variants, variant)) return null;
     out[names[i]!] = variant;
+  }
+  return out;
+}
+
+/** The assignment limited to experiments running in this market, for analytics. */
+export function activeAssignment(exps: Experiments, assignment: Assignment, locale: Locale): Assignment {
+  const out: Assignment = {};
+  for (const name of sortedNames(exps)) {
+    const def = exps[name]!;
+    const variant = assignment[name];
+    if (def.markets.includes(locale) && variant !== undefined && Object.hasOwn(def.variants, variant)) out[name] = variant;
   }
   return out;
 }

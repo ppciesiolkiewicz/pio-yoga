@@ -71,3 +71,13 @@ describe("buildRobots", () => {
       sitemap: "https://attunr.com/sitemap.xml",
     }));
 });
+
+describe("pageMetadata with an absolute ogImage", () => {
+  it("passes it through unchanged", () => {
+    const meta = pageMetadata({
+      siteUrl: site, siteName: "X", locale: "en", path: "/", title: "T", description: "D",
+      ogImage: "https://cdn.example.com/og.png",
+    });
+    expect(meta.openGraph).toMatchObject({ images: [{ url: "https://cdn.example.com/og.png" }] });
+  });
+});
