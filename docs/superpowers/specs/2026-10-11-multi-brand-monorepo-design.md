@@ -35,11 +35,16 @@ Each business (Tangent, Helpful Machines) runs in two markets: **Australia** (En
 - Language switch: built but hidden by default (`showLocaleSwitch: false`). A footer language link is always visible.
 - Lead capture: Cal.com link plus a contact form (Resend email).
 - Experiments and analytics: PostHog, EU region.
-- Consent banner only on the Polish market (`/pl`); none in Australia. Each variant has its own banner design and copy.
-- Tangent tests two design variants against each other: **A dark precision** vs **B light editorial**.
-- Terminology: a **variant** is one complete design (Helpful Machines; Tangent A; Tangent B). "Style" is not used.
+- Consent banner only on the Polish market (`/pl`); none in Australia. Each design has its own consent banner (look and copy).
+- Tangent runs a `design` experiment: variant `control` = **dark precision** vs variant `editorial` = **light editorial**.
+- Terminology follows standard A/B naming (as in PostHog):
+  - **Experiment**: one test (`design` on Tangent, `hero` on Helpful Machines).
+  - **Variant**: one option within an experiment. The baseline is always `control`. The word is never used for anything else.
+  - **Bucketing**: assigning a visitor to a variant. A **bucket** is the visitor's set of assigned variants.
+  - **Design**: one complete visual look with its own tokens, light/dark modes and consent banner: Helpful Machines, Tangent dark precision, Tangent editorial. The two Tangent designs are also the variants of Tangent's `design` experiment. When a winner is chosen, the losing design is deleted.
+  - **Colour mode**: light / dark / system, separate from both.
 - Helpful Machines tests its hero headline: "AI that actually does the boring bits." vs "Put your business on easy mode."
-- Every variant has light and dark colour modes with a Light / Dark / System switch.
+- Every design has light and dark colour modes with a Light / Dark / System switch.
 - Copy rule: Helpful Machines always says **"Custom apps"**, never "Apps" alone.
 - Tooling: Turborepo + pnpm workspaces, Tailwind v4, Radix primitives.
 
@@ -94,15 +99,15 @@ Missing optional variables degrade gracefully. With no Cal URL, CTAs link to `/c
 - `pl` (Poland), served at `/pl`, `/pl/services`, `/pl/work/onchain`.
 - `<html lang>` is `en-AU` or `pl-PL`. hreflang alternates: `en-AU`, `pl-PL`, `x-default` → English.
 - `next-intl` with `localeDetection: false`. Language choice is handled by the geo logic below.
-- Every page uses `generateStaticParams` for locales (and slugs and variants) plus `setRequestLocale`, so pages stay static.
+- Every page uses `generateStaticParams` for locales (and slugs and buckets) plus `setRequestLocale`, so pages stay static.
 
 ### Middleware order (Tangent and Helpful Machines)
 
-1. **Skip** `/api/*`, `/_next/*`, `/ingest/*`, static files, OG image routes, and known bots and crawlers (user-agent check). Bots get the requested URL, with no redirect and variant `a`.
+1. **Skip** `/api/*`, `/_next/*`, `/ingest/*`, static files, OG image routes, and known bots and crawlers (user-agent check). Bots get the requested URL, with no redirect, and every experiment at `control`.
 2. **Explicit choice:** a `NEXT_LOCALE` cookie (1 year) is respected. Visiting a `/pl/...` URL, or clicking a language link, sets it.
 3. **Geo:** if there's no cookie, `x-vercel-ip-country === "PL"`, and the path has no `/pl` prefix → **307** redirect to `/pl` + path, keeping the query string.
-4. **Experiment bucket:** read or set the `hm_exp` cookie (random bucket per active experiment, 90 days, `SameSite=Lax`, first-party, no personal data).
-5. **Rewrite** to the pre-rendered variant route (Section 5). The browser URL doesn't change.
+4. **Bucketing:** read or set the `exp` cookie (one weighted random variant per active experiment, 90 days, `SameSite=Lax`, first-party, no personal data).
+5. **Rewrite** to the pre-rendered bucket route (Section 5). The browser URL doesn't change.
 
 ### Language switch
 
@@ -123,7 +128,7 @@ apps/<app>/content/
   work.ts        case-study slugs, client, sector, stack, year (copy in en/pl)
   people.ts      Tangent only: name, role (lead | collaborator), skills, photo?, links, consent flag
 apps/<app>/site.config.ts
-  brand name, logo, showLocaleSwitch, nav, default variant, social links
+  brand name, logo, showLocaleSwitch, nav, default design, social links
 apps/<app>/experiments.ts
   experiment definitions (Section 5)
 ```
@@ -142,7 +147,7 @@ apps/<app>/experiments.ts
 // apps/helpful-machines/experiments.ts
 export const experiments = {
   hero: {
-    variants: { a: "boring-bits", b: "easy-mode" },
+    variants: { control: "boring-bits", "easy-mode": "easy-mode" },
     weights: [50, 50],
     markets: ["en", "pl"],
   },
@@ -150,31 +155,32 @@ export const experiments = {
 
 // apps/tangent/experiments.ts
 export const experiments = {
-  variant: {
-    variants: { a: "dark-precision", b: "editorial" },
+  design: {
+    variants: { control: "dark-precision", editorial: "editorial" },
     weights: [50, 50],
     markets: ["en", "pl"],
   },
 } as const;
 ```
 
-- Helpful Machines `hero`, variant a: "AI that actually does the boring bits." Variant b: "Put your business on easy mode." Polish equivalents live in `pl.ts`.
-- Tangent `variant` switches the whole site's design tokens and some layout details (grid background and mono labels in A; numbered sections and serif accent words in B). Components are shared.
+- Helpful Machines `hero`: variant `control` = "AI that actually does the boring bits." Variant `easy-mode` = "Put your business on easy mode." Polish equivalents live in `pl.ts`.
+- Tangent `design`: each variant selects a whole design, meaning tokens and some layout details (grid background and mono labels in dark precision; numbered sections and serif accent words in editorial). Components are shared.
 
 ### Mechanics
 
+- Experiment and variant keys in `experiments.ts` match the PostHog experiment's feature-flag key and variant keys exactly, so results need no mapping.
 - **Build:** each app has a hidden route segment, `app/[bucket]/[locale]/...`, and every bucket × locale × page is pre-rendered. Bucket ids come from the experiment config. With one two-arm experiment per app, that's two buckets and twice the static pages.
-- **Request:** middleware assigns the bucket and rewrites `/pl/services` → `/b/pl/services` internally (the exact internal prefix is an implementation detail and is never exposed or linked).
-- **SEO safety:** one public URL per page, one canonical (no variant in it), and the sitemap lists public URLs only. Bots always get variant `a`.
+- **Request:** middleware assigns the bucket and rewrites `/pl/services` → `/<bucket>/pl/services` internally (the exact internal prefix is an implementation detail and is never exposed or linked).
+- **SEO safety:** one public URL per page, one canonical (no variant in it), and the sitemap lists public URLs only. Bots always get `control`.
 - **Ending a test:** set the winner's weight to 100 (or remove the experiment) and deploy.
-- **Low traffic:** Tangent's B2B traffic is low, so the variant test may need months to reach significance. Secondary signals are tracked so a judgement call can be made earlier.
+- **Low traffic:** Tangent's B2B traffic is low, so the `design` experiment may need months to reach significance. Secondary signals are tracked so a judgement call can be made earlier.
 
 ### Measurement (PostHog, EU region)
 
 - Loaded after the page is interactive (`requestIdleCallback`, falling back to `setTimeout`) and proxied through `/ingest/*` on the app's own domain via Next rewrites.
 - **Consent (Poland only):** the Australian market (`en`) shows **no consent banner**. PostHog runs there with normal `localStorage+cookie` persistence, which the privacy page discloses (Australian Privacy Act).
 - On `/pl/*`, PostHog starts in `persistence: "memory"` (no cookies, no localStorage) until the visitor accepts. A consent banner (Accept / Decline, equally prominent) appears on the first visit. Accepting switches to `localStorage+cookie`; declining keeps memory mode. The choice is stored in a first-party `consent` cookie (1 year) and can be changed from a footer link ("Ustawienia prywatności").
-- **Each variant has its own consent banner:** its own design (built from that variant's tokens and components, in light and dark) and its own copy in that app's `pl.ts`. Helpful Machines, Tangent A and Tangent B each get a banner that looks native to them, not a shared generic one.
+- **Each design has its own consent banner:** built from that design's tokens and components, in light and dark) and its own copy in that app's `pl.ts`. Helpful Machines, Tangent dark precision and Tangent editorial each get a banner that looks native to them, not a shared generic one.
 - Known gap, accepted: EU/UK visitors who choose the English site get no banner. Adding a geo check (`x-vercel-ip-country` in the EU/EEA/UK → banner) later is a middleware flag, not a redesign.
 - **Events:**
   - `experiment_exposure` {experiment, variant}, sent once per page view
@@ -191,13 +197,13 @@ export const experiments = {
 
 Tailwind v4 `@theme` reads CSS variables: `--bg`, `--surface`, `--ink`, `--muted`, `--line`, `--accent`, `--accent-2`, `--accent-ink`, `--radius`, `--shadow-cta`, `--font-display`, `--font-body`, `--font-mono`, `--grid` (optional background pattern).
 
-Each variant ships a light and a dark token set, selected by `data-variant` and `data-theme` on `<html>`:
+Each design ships a light and a dark token set, selected by `data-design` and `data-theme` on `<html>`:
 
-| Variant | Light | Dark |
+| Design | Light | Dark |
 | --- | --- | --- |
 | Helpful Machines | Cream `#FFF6EA`, ink `#1E1A15`, coral `#FF5A36`, highlighter `#FFC94A`, Bricolage Grotesque, 4 px offset sticker shadow on CTAs, outlined pill chips | Warm charcoal, same coral and yellow, cream ink (to be mocked and approved) |
-| Tangent A, dark precision | Off-white with a faint 28 px grid, same orange (to be mocked and approved) | Near-black `#0B0C0E` with a 28 px grid, Inter Tight + JetBrains Mono, orange `#FF7A1A` |
-| Tangent B, editorial | `#FAFAF7`, Inter Tight + Instrument Serif accent words, vermilion `#E5402A`, numbered sections | Warm ink background, same vermilion and serif accents (to be mocked and approved) |
+| Tangent dark precision (`control`) | Off-white with a faint 28 px grid, same orange (to be mocked and approved) | Near-black `#0B0C0E` with a 28 px grid, Inter Tight + JetBrains Mono, orange `#FF7A1A` |
+| Tangent editorial (`editorial`) | `#FAFAF7`, Inter Tight + Instrument Serif accent words, vermilion `#E5402A`, numbered sections | Warm ink background, same vermilion and serif accents (to be mocked and approved) |
 
 The three new mode designs are mocked in the visual companion and approved before they ship.
 
@@ -219,7 +225,7 @@ The three new mode designs are mocked in the visual companion and approved befor
 
 - Header (logo, nav, CTA, colour-mode switch, optional locale switch), mobile Dialog menu.
 - Footer (nav, contact, market language link, ABN/NIP placeholder, `/privacy`, `/terms`).
-- A 404 page in each variant's design with a real 404 status.
+- A 404 page in each design with a real 404 status.
 - `/contact`: Cal.com button (opens in a new tab, no embed) plus the contact form.
 - OG images generated per page at build time with `next/og` in brand colours.
 - `/privacy` and `/terms`: template text, marked for review.
@@ -242,7 +248,7 @@ Source for case studies and claims: Piotr's resume (2026). No metrics are invent
 
 | Route | Content |
 | --- | --- |
-| `/` | Hero (A/B headline) → what we fix (pain → fix pairs) → services → how it works (4 steps) → pricing teaser → work → FAQ → free-consult CTA |
+| `/` | Hero (`hero` experiment headline) → what we fix (pain → fix pairs) → services → how it works (4 steps) → pricing teaser → work → FAQ → free-consult CTA |
 | `/services` | Overview of the 5 services |
 | `/services/[slug]` | ai-assistants-automation, custom-apps-websites, spreadsheets-data, migrations-integrations, find-what-works |
 | `/how-it-works` | Free consult → plan and quote → build → support |
@@ -288,7 +294,7 @@ The site never mentions where Piotr lives.
 
 ## 11. Accessibility
 
-- WCAG 2.2 AA in all 6 token sets (3 variants × light/dark). Contrast is checked per token pair. Where an accent fails AA for body text (e.g. orange on near-black under 18 px, coral on cream for small text), it's used only for large text and decorative elements, or a darker or lighter shade is used for text.
+- WCAG 2.2 AA in all 6 token sets (3 designs × light/dark). Contrast is checked per token pair. Where an accent fails AA for body text (e.g. orange on near-black under 18 px, coral on cream for small text), it's used only for large text and decorative elements, or a darker or lighter shade is used for text.
 - Skip link, visible focus styles per brand, `aria-current` in nav, keyboard paths through all Radix components, labelled form fields with `aria-describedby` errors and an error summary, `lang` and `hreflang` on the language links, a labelled colour-mode switch that announces its state.
 - Touch targets ≥ 44 px. `prefers-reduced-motion` respected. Nothing auto-plays.
 
@@ -306,7 +312,7 @@ The site never mentions where Piotr lives.
   - no-JavaScript form submit
   - geo redirect with a faked `x-vercel-ip-country: PL`
   - cookie override of the geo redirect
-  - sticky variant across pages
+  - sticky variant assignment across pages
   - colour-mode persistence across reloads with no flash (checked by reading `data-theme` before hydration)
 - **`@axe-core/playwright`** on every route in light and dark: the build fails on serious or critical issues.
 - **Lighthouse CI** with the budgets in Section 10.
@@ -317,7 +323,7 @@ The site never mentions where Piotr lives.
 1. **Monorepo foundation:** pnpm + Turborepo, move yoga to `apps/yoga` (verify that build, routes and Stripe are unchanged), `packages/config`.
 2. **Shared packages:** `packages/ui` tokens and components, `packages/web` (i18n, SEO, middleware, experiments, colour mode, consent, analytics, contact).
 3. **Helpful Machines app:** pages, content (EN, then a PL draft), the hero experiment.
-4. **Tangent app:** pages, content, people, the variant experiment, new colour-mode designs approved first.
+4. **Tangent app:** pages, content, people, the `design` experiment, new colour-mode token sets approved first.
 5. **Quality pass:** a11y, Lighthouse, design critique, copy review. Then Vercel project setup docs.
 
 Each step is its own section of the implementation plan, with verification before moving on.
