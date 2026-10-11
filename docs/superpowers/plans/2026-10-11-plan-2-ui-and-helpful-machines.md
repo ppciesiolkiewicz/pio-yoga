@@ -3134,7 +3134,7 @@ export const en = {
     tagline: "Practical AI and custom apps for small businesses.",
     navLabel: "Footer",
     contactLabel: "Email",
-    legal: "ABN: to be confirmed",
+    legal: "ABN 48 737 987 261",
     privacy: "Privacy",
     terms: "Terms",
     languages: { en: "English", pl: "Polski" },
@@ -5090,7 +5090,7 @@ pnpm --filter helpful-machines build && pnpm --filter helpful-machines test:buil
 ## Before launch (placeholders)
 
 - **Prices:** `content/market.ts` (AUD and PLN starting prices).
-- **ABN / NIP:** `footer.legal` in `content/en.ts` and `content/pl.ts`.
+- **NIP:** `footer.legal` in `content/pl.ts` (the ABN is already set in `content/en.ts`).
 - **Polish copy:** `content/pl.ts` is a draft. Review it all, especially the legal pages.
 - **Legal pages:** `privacy` and `terms` in both content files are templates. Have them reviewed.
 - **Copy rule:** say "custom apps" / "dedykowane aplikacje" / "aplikacje na zamówienie", never "apps" alone. `pnpm test` enforces it.
