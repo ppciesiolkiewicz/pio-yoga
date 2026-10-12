@@ -7,6 +7,7 @@
     "./locale": "./src/locale.ts",
     "./site": "./src/site.ts",
     "./experiments": "./src/experiments.ts",
+    "./headers": "./src/headers.ts",
     "./routing": "./src/routing/decide.ts",
     "./middleware": "./src/routing/middleware.ts",
     "./seo": "./src/seo.ts",

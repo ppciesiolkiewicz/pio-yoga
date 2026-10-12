@@ -10,6 +10,8 @@
   --color-accent-ink: var(--accent-ink);
   --color-highlight: var(--highlight);
   --radius-card: var(--radius);
+  --radius-button: var(--button-radius);
+  --color-control: var(--control-border);
   --shadow-cta: var(--cta-shadow);
   --shadow-card: var(--card-shadow);
   --font-display: var(--font-display-family);

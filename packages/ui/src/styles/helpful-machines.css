@@ -10,6 +10,8 @@
   --highlight: #ffc94a;
   --focus: #1e1a15;
   --radius: 12px;
+  --button-radius: 12px;
+  --control-border: #1e1a15;
   --cta-shadow: 4px 4px 0 #ff5a36;
   --card-shadow: 4px 4px 0 #1e1a15;
   --font-display-family: var(--font-bricolage);
@@ -23,6 +25,7 @@
   --ink: #fff3e2;
   --muted: #cdbfaa;
   --line: #fff3e2;
+  --control-border: #fff3e2;
   --accent: #ff6b4a;
   --accent-text: #ff9a80;
   --accent-ink: #17140f;
@@ -41,6 +44,7 @@
     --ink: #fff3e2;
     --muted: #cdbfaa;
     --line: #fff3e2;
+  --control-border: #fff3e2;
     --accent: #ff6b4a;
     --accent-text: #ff9a80;
   --accent-ink: #17140f;

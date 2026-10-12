@@ -137,3 +137,10 @@ describe("ContactForm without JavaScript (static HTML)", () => {
     await waitFor(() => expect(container.querySelector("#contact-sent")).toBeNull());
   });
 });
+
+describe("ContactForm borders", () => {
+  it("draws inputs with the control border token (≥3:1 in every design)", () => {
+    render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
+    expect(screen.getByLabelText("Your name").className).toContain("border-control");
+  });
+});

@@ -23,7 +23,7 @@ export function Section({
   return (
     <section id={id} aria-labelledby={headingId} className={cn("py-14 sm:py-20", className)}>
       <Container>
-        {eyebrow && <p className="mb-3 text-sm font-bold uppercase tracking-widest text-accent-text">{eyebrow}</p>}
+        {eyebrow && <p data-eyebrow className="mb-3 text-sm font-bold uppercase tracking-widest text-accent-text">{eyebrow}</p>}
         <Heading
           id={headingId}
           className={cn(

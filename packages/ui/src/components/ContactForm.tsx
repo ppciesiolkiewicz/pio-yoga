@@ -31,7 +31,7 @@ type Status =
   | { kind: "sent" }
   | { kind: "error"; error: ContactErrorKey; fields: Partial<Record<FieldKey, string>> };
 
-const inputClass = "min-h-11 w-full rounded-card border-2 border-line bg-surface px-3 py-2 text-ink";
+const inputClass = "min-h-11 w-full rounded-card border-2 border-control bg-surface px-3 py-2 text-ink";
 
 function Field({
   id,

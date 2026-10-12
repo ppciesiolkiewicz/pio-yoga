@@ -79,3 +79,18 @@ describe("track", () => {
     expect(seen).toHaveBeenCalledWith({ event: "form_submitted", properties: { success: true } });
   });
 });
+
+describe("design hooks", () => {
+  it("buttons use the per-design button radius", () => {
+    expect(buttonClasses("primary")).toContain("rounded-button");
+    expect(buttonClasses("secondary")).toContain("rounded-button");
+  });
+  it("section eyebrows carry data-eyebrow for design styling", () => {
+    render(<Section id="x" eyebrow="What we do" title="T">x</Section>);
+    expect(screen.getByText("What we do").hasAttribute("data-eyebrow")).toBe(true);
+  });
+  it("chip lists carry data-chips", () => {
+    render(<ChipList items={["A"]} label="L" />);
+    expect(screen.getByRole("list", { name: "L" }).hasAttribute("data-chips")).toBe(true);
+  });
+});

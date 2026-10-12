@@ -83,3 +83,13 @@ describe("CtaBand", () => {
     expect(screen.getByRole("link", { name: "Book a free chat" }).getAttribute("data-track-location")).toBe("cta_band");
   });
 });
+
+describe("Hero visual slot", () => {
+  it("renders an optional decorative visual and marks the eyebrow", () => {
+    const { container } = render(
+      <Hero eyebrow="E" title="T" lead="L" primary={{ href: "/c", label: "Go" }} visual={<svg data-testid="v" aria-hidden="true" />} />,
+    );
+    expect(container.querySelector('[data-testid="v"]')).not.toBeNull();
+    expect(screen.getByText("E").hasAttribute("data-eyebrow")).toBe(true);
+  });
+});

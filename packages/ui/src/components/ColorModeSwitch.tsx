@@ -96,7 +96,7 @@ export function ColorModeSwitch({ labels }: { labels: ColorModeLabels }) {
       value={pref ?? "system"}
       onValueChange={choose}
       aria-label={labels.group}
-      className="inline-flex rounded-full border-2 border-line bg-surface p-0.5"
+      className="inline-flex rounded-full border-2 border-control bg-surface p-0.5"
     >
       {MODES.map((mode) => (
         <ToggleGroup.Item
