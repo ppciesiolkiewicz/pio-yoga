@@ -1,5 +1,5 @@
 import { assign, bucketFor, controlBucket, serializeAssignment, type Experiments } from "../experiments";
-import { defaultLocale, isLocale, localizedPath, splitLocale, type Locale } from "../locale";
+import { defaultLocale, isLocale, localizedPath, normalizePath, splitLocale, type Locale } from "../locale";
 
 export const LOCALE_COOKIE = "NEXT_LOCALE";
 export const EXP_COOKIE = "exp";
@@ -59,6 +59,11 @@ const withQuery = (path: string, params: URLSearchParams) => {
 export function decideRoute(input: RouteInput): RouteDecision {
   const { pathname, experiments } = input;
   if (isSkipped(pathname)) return { kind: "pass" };
+
+  // 0. One URL per page: /services/ → /services (Next's own redirect is off for PostHog's /ingest).
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    return { kind: "redirect", status: 308, location: withQuery(normalizePath(pathname), new URLSearchParams(input.search)), setCookies: [] };
+  }
 
   const { locale, rest, explicitDefault } = splitLocale(pathname);
   const params = new URLSearchParams(input.search);

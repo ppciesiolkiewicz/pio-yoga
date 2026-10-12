@@ -74,9 +74,14 @@ describe("decideRoute", () => {
       setCookies: [expCookie("hero:control")],
     }));
 
-  it("keeps /plumbing english and normalises trailing slashes", () => {
-    expect(run({ pathname: "/plumbing", cookies: { exp: "hero:control" } })).toMatchObject({ pathname: "/control/en/plumbing" });
-    expect(run({ pathname: "/services/", cookies: { exp: "hero:control" } })).toMatchObject({ pathname: "/control/en/services" });
+  it("keeps /plumbing english", () =>
+    expect(run({ pathname: "/plumbing", cookies: { exp: "hero:control" } })).toMatchObject({ pathname: "/control/en/plumbing" }));
+
+  it("redirects trailing slashes to the canonical URL (one URL per page)", () => {
+    expect(run({ pathname: "/services/" })).toEqual({ kind: "redirect", status: 308, location: "/services", setCookies: [] });
+    expect(run({ pathname: "/pl/", search: "?a=1" })).toEqual({ kind: "redirect", status: 308, location: "/pl?a=1", setCookies: [] });
+    expect(run({ pathname: "//services//" })).toMatchObject({ status: 308, location: "/services" });
+    expect(run({ pathname: "/", cookies: { exp: "hero:control" } })).toMatchObject({ kind: "rewrite" });
   });
 
   it("rewrites /pl paths and remembers the choice", () =>
