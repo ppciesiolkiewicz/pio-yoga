@@ -787,7 +787,8 @@ test.describe("contact form", () => {
     await page.goto("/contact");
     await fill(page);
     await page.getByRole("button", { name: "Send message" }).click();
-    const alert = page.getByRole("alert");
+    // Scoped to the form: Next.js adds its own (empty) role="alert" route announcer.
+    const alert = page.locator("form").getByRole("alert");
     await expect(alert).toBeFocused();
     await expect(alert.getByRole("link")).toHaveAttribute("href", "#contact-email");
     await expect(page.locator('[name="email"]')).toHaveAttribute("aria-invalid", "true");

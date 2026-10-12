@@ -38,6 +38,20 @@
       "env": [
         "NEXT_PUBLIC_SITE_URL"
       ]
+    },
+    "test:e2e": {
+      "dependsOn": [
+        "helpful-machines#build",
+        "tangent#build"
+      ],
+      "cache": false
+    },
+    "test:lighthouse": {
+      "dependsOn": [
+        "helpful-machines#build",
+        "tangent#build"
+      ],
+      "cache": false
     }
   }
 }

@@ -10,3 +10,6 @@ next-env.d.ts
 npm-debug.log*
 .superpowers/
 .turbo
+playwright-report
+test-results
+.lighthouseci

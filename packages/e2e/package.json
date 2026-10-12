@@ -1,0 +1,20 @@
+{
+  "name": "@repo/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:lighthouse": "node scripts/lighthouse.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.64.0",
+    "@repo/config": "workspace:*",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.3"
+  }
+}
