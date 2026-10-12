@@ -86,3 +86,13 @@ describe("honest framing of past work", () => {
     expect(pl.meta.services.title).toContain("przywództwo techniczne");
   });
 });
+
+describe("Polish copy review", () => {
+  it("addresses the reader consistently as Ty, with the reviewed fixes", () => {
+    const text = collectStrings(pl).map((s) => s.value).join(" ");
+    expect(text).not.toMatch(/\b(Wasz|możecie|chcecie|Polegacie|zatrudniacie)\b/);
+    expect(text).toContain("jest korzystny");
+    expect(text).toContain("dziesiątki tysięcy różnych kryptowalut");
+    expect(pl.hero.dots.users).toBe("użytkownicy");
+  });
+});

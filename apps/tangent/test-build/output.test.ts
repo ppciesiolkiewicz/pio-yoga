@@ -98,4 +98,13 @@ describe("Tangent build output", () => {
     expect(page).toMatch(/<h1[^>]*>[^<]*Page not found/);
     expect(page).toContain("Nie znaleziono strony");
   });
+
+  it("puts the brand in every page title", () => {
+    for (const locale of locales) for (const path of allPaths) {
+      expect(html("control", locale, path).match(/<title>([^<]*)<\/title>/)?.[1], `${locale}${path}`).toContain("Tangent");
+    }
+  });
+
+  it("gives the root 404 a working language link (not /pl/_not-found)", () =>
+    expect(readFileSync(join(root, "_not-found.html"), "utf8")).not.toContain("/pl/_not-found"));
 });

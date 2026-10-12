@@ -50,7 +50,7 @@ export const pl: Content = {
     secondary: "Zobacz realizacje",
     proofLabel: "Doświadczenie",
     proof: ["Ponad 10 lat budowania produktów", "Fintech i DeFi", "E-commerce", "Ochrona zdrowia", "Telekomunikacja"],
-    dots: { idea: "pomysł", market: "rynek", users: "ludzie", data: "dane", tech: "technologia", product: "produkt" },
+    dots: { idea: "pomysł", market: "rynek", users: "użytkownicy", data: "dane", tech: "technologia", product: "produkt" },
   },
   flows: {
     eyebrow: "Co robimy",
@@ -98,7 +98,7 @@ export const pl: Content = {
         ],
         outcomes: ["Krótka lista usprawnień według priorytetów", "Nakład pracy i efekt dla każdego z nich", "Jasny pierwszy krok, niezależnie od tego, kto wykona pracę"],
         faq: [
-          { question: "Czy potem musimy zlecić Wam realizację?", answer: "Nie. Przegląd jest Wasz i możecie go wykorzystać, jak chcecie." },
+          { question: "Czy potem muszę zlecić Wam realizację?", answer: "Nie. Przegląd jest Twój i możesz go wykorzystać, jak chcesz." },
           {
             question: "Jakiego dostępu potrzebujecie?",
             answer: "Zwykle kilku rozmów, dostępu do odczytu kodu i narzędzi oraz wglądu w metryki. Chętnie podpiszemy NDA.",
@@ -172,9 +172,9 @@ export const pl: Content = {
         intro:
           "Nie każdy startup potrzebuje już CTO na pełen etat, ale każdy potrzebuje dobrych decyzji technicznych. Dołączamy na kilka dni w miesiącu, żeby prowadzić architekturę, przeglądać pracę i pomagać w rekrutacji.",
         signs: [
-          "Polegacie na agencji albo freelancerach bez technicznego właściciela",
+          "Firma polega na agencji albo freelancerach bez technicznego właściciela",
           "Zbliżają się ważne decyzje techniczne",
-          "Za chwilę zatrudniacie pierwszych programistów",
+          "Za chwilę zatrudnisz pierwszych programistów",
         ],
         whatWeDo: [
           "Współtworzymy z Tobą techniczną mapę drogową",
@@ -240,7 +240,7 @@ export const pl: Content = {
         sector: "Fintech · DeFi",
         period: "2024–2026",
         title: "Płatności kartą za kryptowaluty przy minimalnym kapitale",
-        summary: "Infrastruktura płatnicza, dzięki której można kupić kartą dziesiątki tysięcy kryptowalut, z transakcjami bez opłat za gaz i inteligentnym zarządzaniem środkami.",
+        summary: "Infrastruktura płatnicza, dzięki której można kupić kartą dziesiątki tysięcy różnych kryptowalut, z transakcjami bez opłat za gaz i inteligentnym zarządzaniem środkami.",
         problem:
           "Startup płatniczy DeFi chciał, żeby ludzie płacili kartą i otrzymywali kryptowaluty we własnych portfelach, bez utrzymywania przez firmę dużego kapitału i bez mylących opłat sieciowych dla użytkowników.",
         whatChanged: [
@@ -380,7 +380,7 @@ export const pl: Content = {
     awards: [
       {
         title: "RegHack Downunder 2017 · 1. miejsce",
-        body: "Sharenergy: model lokalnego rynku energii, który korzystny jest dla gospodarstw z panelami słonecznymi i bez nich, razem z ramami prawnymi, które go umożliwiają. Stworzony w mniej niż 40 godzin.",
+        body: "Sharenergy: model lokalnego rynku energii, który jest korzystny dla gospodarstw z panelami słonecznymi i bez nich, razem z ramami prawnymi, które go umożliwiają. Stworzony w mniej niż 40 godzin.",
       },
       {
         title: "GovHack 2017 · nagroda Community Environment Data",

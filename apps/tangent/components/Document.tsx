@@ -37,6 +37,7 @@ export function Document({
   design,
   assignment,
   analyticsMarket = locale,
+  languageLink,
   children,
 }: {
   locale: Locale;
@@ -44,6 +45,8 @@ export function Document({
   assignment: Assignment;
   /** null on the root 404, where the visitor's market is unknown (analytics stays cookieless). */
   analyticsMarket?: Locale | null;
+  /** Overrides the footer language link (the root 404 has no page to switch). */
+  languageLink?: ReactNode;
   children: ReactNode;
 }) {
   const t = getContent(locale);
@@ -82,7 +85,7 @@ export function Document({
           email={{ label: t.footer.contactLabel, address: site.contactEmail }}
           legal={t.footer.legal}
           legalLinks={footerLinks(locale, t)}
-          languageLink={<LanguageLink locale={locale} buckets={buckets} labels={t.footer.languages} />}
+          languageLink={languageLink ?? <LanguageLink locale={locale} buckets={buckets} labels={t.footer.languages} />}
           extra={askConsent ? <ConsentSettingsButton label={t.consent.settings} /> : undefined}
         />
         {askConsent && <ConsentBanner labels={t.consent} policyHref={localizedPath(locale, "/privacy")} />}

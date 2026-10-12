@@ -49,7 +49,7 @@ export const pl: Content = {
     cta: "Umów bezpłatną rozmowę",
     menu: "Menu",
     close: "Zamknij menu",
-    primary: "Główna",
+    primary: "Nawigacja główna",
     skip: "Przejdź do treści",
     newTab: "(otwiera się w nowej karcie)",
     breadcrumbs: "Ścieżka nawigacji",
@@ -99,7 +99,7 @@ export const pl: Content = {
         problems: [
           "Skrzynka jest pełna tych samych pięciu pytań.",
           "Wyceny, notatki i raporty zajmują godziny.",
-          "Próbowałeś ChatGPT, ale nie zna on Twojej firmy.",
+          "ChatGPT nie zna Twojej firmy, więc jego odpowiedzi są ogólnikowe.",
         ],
         whatWeDo: [
           "Znajdujemy zadania, w których AI naprawdę oszczędza czas",
@@ -132,7 +132,7 @@ export const pl: Content = {
           "Szybkie, proste strony, które przynoszą zapytania",
           "Płatności online przez Stripe",
         ],
-        deliverables: ["Dedykowana aplikacja lub strona, która należy do Ciebie", "Hosting założony na Twoje dane", "Szkolenie i trzy miesiące poprawek w cenie"],
+        deliverables: ["Dedykowana aplikacja lub strona, która należy do Ciebie", "Hosting zarejestrowany na Ciebie", "Szkolenie i trzy miesiące poprawek w cenie"],
         faq: [
           { question: "Czy aplikacja na zamówienie będzie moja?", answer: "Tak. Kod i konta są zapisane na Ciebie." },
           { question: "Czy będzie działać na telefonach?", answer: "Tak. Wszystko, co budujemy, działa na telefonach, tabletach i komputerach." },
@@ -143,8 +143,8 @@ export const pl: Content = {
         summary: "Zamieniamy chaotyczne arkusze w jasne, wiarygodne liczby.",
         intro: "Większość małych firm działa na arkuszach. Sprawiamy, że są niezawodne, albo przenosimy najważniejsze rzeczy w bezpieczniejsze miejsce.",
         problems: ["Formuły się psują i nikt nie wie dlaczego.", "Liczby w różnych plikach się nie zgadzają.", "Przygotowanie raportu zajmuje cały dzień."],
-        whatWeDo: ["Porządkujemy i przebudowujemy arkusze", "Automatyzujemy raporty i dashboardy", "Tworzymy wspólne dane z kopią zapasową, którym można ufać"],
-        deliverables: ["Uporządkowane arkusze lub prosta baza danych", "Automatyczne raporty", "Krótkie przekazanie, żeby każdy mógł je utrzymać"],
+        whatWeDo: ["Porządkujemy i przebudowujemy arkusze", "Automatyzujemy raporty i dashboardy", "Tworzymy wspólne, regularnie archiwizowane dane, którym można ufać"],
+        deliverables: ["Uporządkowane arkusze lub prosta baza danych", "Automatyczne raporty", "Krótkie wdrożenie zespołu, żeby każdy mógł je utrzymać"],
         faq: [{ question: "Czy muszę przestać używać Excela lub Arkuszy Google?", answer: "Nie. Często najlepszym rozwiązaniem jest po prostu lepszy arkusz." }],
       },
       "migrations-integrations": {
@@ -152,7 +152,7 @@ export const pl: Content = {
         summary: "Przejdź na lepsze narzędzia i połącz te, które już masz.",
         intro: "Zmiana systemu albo połączenie kilku nie powinny oznaczać weekendów kopiowania i wklejania. Planujemy, przenosimy i sprawdzamy.",
         problems: [
-          "Utknąłeś w starym systemie, z którego firma już wyrosła.",
+          "Firma wyrosła ze starego systemu, ale trudno go porzucić.",
           "Ręcznie przepisujesz dane między narzędziami.",
           "Boisz się, że przy migracji coś zginie.",
         ],
@@ -161,7 +161,7 @@ export const pl: Content = {
           "Łączymy narzędzia takie jak Fakturownia, Shopify, Google Workspace czy Twój CRM",
           "Sprawdzamy, czy każdy rekord dotarł bezpiecznie",
         ],
-        deliverables: ["Dane przeniesione i zweryfikowane", "Narzędzia, które same się aktualizują", "Plan powrotu, na wszelki wypadek"],
+        deliverables: ["Dane przeniesione i zweryfikowane", "Narzędzia, które aktualizują się nawzajem", "Plan wycofania zmian, na wszelki wypadek"],
         faq: [{ question: "Czy firma stanie na czas migracji?", answer: "Nie. Przenosimy dane etapami i przełączamy się, gdy wszystko się zgadza." }],
       },
       "find-what-works": {
@@ -171,7 +171,7 @@ export const pl: Content = {
           "Czasem odpowiedzią jest AI, czasem dedykowana aplikacja, czasem lepszy arkusz, a czasem nic. Sprawdzamy to, zanim wydasz pieniądze.",
         problems: [
           "Każdy ma swoje zdanie, jakie narzędzie kupić.",
-          "Wydałeś pieniądze na oprogramowanie, z którego nikt nie korzysta.",
+          "Firma zapłaciła za oprogramowanie, z którego nikt nie korzysta.",
           "Chcesz rosnąć bez zatrudniania ludzi do administracji.",
         ],
         whatWeDo: [
@@ -205,7 +205,7 @@ export const pl: Content = {
       quickWin: {
         name: "Szybka poprawa",
         summary: "Jedna automatyzacja, asystent AI lub poprawka arkusza.",
-        features: ["Jedno konkretne usprawnienie", "Wdrożenie w około tydzień", "Miesiąc poprawek"],
+        features: ["Jedno konkretne usprawnienie", "Wdrożenie w ciągu około tygodnia", "Miesiąc poprawek"],
       },
       customApp: {
         name: "Dedykowana aplikacja",

@@ -72,4 +72,12 @@ describe("Helpful Machines content", () => {
     expect(en.pricing.teaser.body).toContain("{price}");
     expect(pl.pricing.teaser.body).toContain("{price}");
   });
+
+  it("Polish copy uses neutral forms and the reviewed wording", () => {
+    const text = collectStrings(pl).map((s) => s.value).join(" ");
+    expect(text).not.toMatch(/\p{L}+łeś\b/u);
+    for (const phrase of ["w ciągu około tygodnia", "aktualizują się nawzajem", "Plan wycofania zmian", "zarejestrowany na Ciebie", "Nawigacja główna"]) {
+      expect(text).toContain(phrase);
+    }
+  });
 });

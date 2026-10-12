@@ -8,7 +8,13 @@ export default function RootNotFound() {
   const en = getContent("en");
   const pl = getContent("pl");
   return (
-    <Document locale="en" design="tangent-precision" assignment={{}} analyticsMarket={null}>
+    <Document locale="en" design="tangent-precision" assignment={{}} analyticsMarket={null}
+      languageLink={
+        <a href="/pl" hrefLang="pl-PL" lang="pl-PL" className="inline-flex min-h-11 items-center font-bold underline underline-offset-4">
+          Polski
+        </a>
+      }
+    >
       <title>{`${en.notFound.title} · ${pl.notFound.title}`}</title>
       <Section id="not-found" headingLevel="h1" title={en.notFound.title} intro={en.notFound.body}>
         <p lang="pl-PL" className="-mt-4 mb-8 text-lg text-muted">

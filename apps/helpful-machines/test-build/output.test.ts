@@ -95,4 +95,13 @@ describe("Helpful Machines build output", () => {
   it("follows the copy rule in rendered Polish pages", () => {
     expect(html("control", "pl", "/")).toContain("Dedykowane aplikacje");
   });
+
+  it("puts the brand in every page title", () => {
+    for (const locale of locales) for (const path of allPaths) {
+      expect(html("control", locale, path).match(/<title>([^<]*)<\/title>/)?.[1], `${locale}${path}`).toContain("Helpful Machines");
+    }
+  });
+
+  it("gives the root 404 a working language link (not /pl/_not-found)", () =>
+    expect(readFileSync(join(root, "_not-found.html"), "utf8")).not.toContain("/pl/_not-found"));
 });
