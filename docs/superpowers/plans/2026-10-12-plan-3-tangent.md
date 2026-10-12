@@ -398,12 +398,14 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 `packages/ui/test/tangent.test.tsx`:
 ```tsx
 import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ConnectDots } from "../src/components/ConnectDots";
 import { initials, PersonCard } from "../src/components/PersonCard";
 
-const css = readFileSync(new URL("../src/styles/tangent.css", import.meta.url), "utf8");
+// jsdom gives import.meta.url an http: scheme, so resolve from the package root (vitest cwd).
+const css = readFileSync(join(process.cwd(), "src/styles/tangent.css"), "utf8");
 
 describe("tangent tokens", () => {
   it("defines both designs in light, dark and the no-JS fallback", () => {

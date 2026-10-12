@@ -1,0 +1,176 @@
+/* ---------- Tangent A: dark precision (variant "control") ---------- */
+:root[data-design="tangent-precision"] {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --ink: #0b0c0e;
+  --muted: #4a4f57;
+  --line: #dadce0;
+  --control-border: #80858e;
+  --accent: #e05e00;
+  --accent-text: #b34700;
+  --accent-ink: #0b0c0e;
+  --highlight: #ffd9bf;
+  --focus: #0b0c0e;
+  --grid: #ececea;
+  --radius: 10px;
+  --button-radius: 8px;
+  --cta-shadow: none;
+  --card-shadow: none;
+  --font-display-family: var(--font-inter-tight);
+  --font-body-family: var(--font-inter-tight);
+  --font-mono-family: var(--font-jetbrains);
+  color-scheme: light;
+}
+:root[data-design="tangent-precision"][data-theme="dark"] {
+  --bg: #0b0c0e;
+  --surface: #121418;
+  --ink: #ecedef;
+  --muted: #a0a5ae;
+  --line: #23262c;
+  --control-border: #6b717c;
+  --accent: #ff7a1a;
+  --accent-text: #ff9a4d;
+  --accent-ink: #0b0c0e;
+  --highlight: #5a2d0c;
+  --focus: #ff9a4d;
+  --grid: #16181c;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+:root[data-design="tangent-precision"]:not([data-theme]) {
+  --bg: #0b0c0e;
+  --surface: #121418;
+  --ink: #ecedef;
+  --muted: #a0a5ae;
+  --line: #23262c;
+  --control-border: #6b717c;
+  --accent: #ff7a1a;
+  --accent-text: #ff9a4d;
+  --accent-ink: #0b0c0e;
+  --highlight: #5a2d0c;
+  --focus: #ff9a4d;
+  --grid: #16181c;
+  color-scheme: dark;
+}
+}
+
+/* ---------- Tangent B: light editorial (variant "editorial") ---------- */
+:root[data-design="tangent-editorial"] {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --ink: #111111;
+  --muted: #555555;
+  --line: #dddddd;
+  --control-border: #808080;
+  --accent: #e5402a;
+  --accent-text: #c2321e;
+  --accent-ink: #111111;
+  --highlight: #f6d4cd;
+  --focus: #111111;
+  --radius: 4px;
+  --button-radius: 999px;
+  --cta-shadow: none;
+  --card-shadow: none;
+  --font-display-family: var(--font-inter-tight);
+  --font-body-family: var(--font-inter-tight);
+  --font-serif-family: var(--font-instrument);
+  color-scheme: light;
+}
+:root[data-design="tangent-editorial"][data-theme="dark"] {
+  --bg: #141311;
+  --surface: #1c1b18;
+  --ink: #f2efe8;
+  --muted: #b3ada2;
+  --line: #34312c;
+  --control-border: #7d776d;
+  --accent: #ff6b55;
+  --accent-text: #ff8a78;
+  --accent-ink: #141311;
+  --highlight: #5a2620;
+  --focus: #f2efe8;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+:root[data-design="tangent-editorial"]:not([data-theme]) {
+  --bg: #141311;
+  --surface: #1c1b18;
+  --ink: #f2efe8;
+  --muted: #b3ada2;
+  --line: #34312c;
+  --control-border: #7d776d;
+  --accent: #ff6b55;
+  --accent-text: #ff8a78;
+  --accent-ink: #141311;
+  --highlight: #5a2620;
+  --focus: #f2efe8;
+  color-scheme: dark;
+}
+}
+
+/* ---------- Design style hooks (same components, different look) ---------- */
+[data-design="tangent-precision"] body {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+[data-design="tangent-precision"] [data-eyebrow] {
+  font-family: var(--font-mono-family), ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+[data-design="tangent-precision"] [data-eyebrow]::before {
+  content: "// ";
+}
+[data-design="tangent-precision"] [data-chips] li {
+  border: 0;
+  background: none;
+  padding: 0 0.75rem 0 0;
+  font-family: var(--font-mono-family), ui-monospace, monospace;
+  font-weight: 500;
+  color: var(--muted);
+}
+[data-design="tangent-precision"] .tg-accent {
+  font-style: normal;
+  color: var(--muted);
+}
+[data-design="tangent-precision"] h1,
+[data-design="tangent-precision"] h2,
+[data-design="tangent-precision"] h3 {
+  font-weight: 600;
+}
+
+[data-design="tangent-editorial"] main {
+  counter-reset: tg-section;
+}
+[data-design="tangent-editorial"] main [data-eyebrow]::before {
+  counter-increment: tg-section;
+  content: counter(tg-section, decimal-leading-zero) " — ";
+}
+[data-design="tangent-editorial"] .tg-accent {
+  font-family: var(--font-serif-family), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+[data-design="tangent-editorial"] h1,
+[data-design="tangent-editorial"] h2 {
+  font-weight: 500;
+}
+[data-design="tangent-editorial"] [data-chips] li {
+  border-width: 1px;
+}
+
+/* Connect-the-dots hero illustration: the path draws itself once. */
+.tg-dots .tg-path {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: tg-draw 1.4s 0.3s ease-out forwards;
+}
+@keyframes tg-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tg-dots .tg-path {
+    stroke-dashoffset: 0;
+  }
+}
