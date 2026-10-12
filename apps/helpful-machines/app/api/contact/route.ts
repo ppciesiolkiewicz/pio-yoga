@@ -9,6 +9,6 @@ const to = process.env.CONTACT_TO_EMAIL;
 export const POST = createContactHandler({
   send: apiKey && to ? resendSender(apiKey) : null,
   to: to ?? "",
-  from: process.env.CONTACT_FROM_EMAIL || "Helpful Machines <hello@attunr.com>",
+  from: process.env.CONTACT_FROM_EMAIL || "Helpful Machines <hello@helpfulmachines.com.au>",
   siteName: "Helpful Machines",
 });

@@ -5,8 +5,8 @@ import { describe, expect, it } from "vitest";
 import { allBuckets } from "@repo/web/experiments";
 import { localizedPath, locales } from "@repo/web/locale";
 import { absoluteUrl } from "@repo/web/seo";
-import { resolveSiteUrl } from "@repo/web/site";
 import { experiments } from "../experiments";
+import { site } from "../site.config";
 import { allPaths } from "../lib/routes";
 
 const root = fileURLToPath(new URL("../.next/server/app/", import.meta.url));
@@ -17,7 +17,7 @@ const html = (bucket: string, locale: string, path: string) => readFileSync(file
 const canonical = (page: string) => page.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
 /** Next prints the root as "https://x.com" and we build "https://x.com/"; they're the same URL. */
 const same = (url: string | undefined) => (url ? new URL(url).href : url);
-const siteUrl = resolveSiteUrl();
+const siteUrl = site.url;
 
 function htmlFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -28,6 +28,11 @@ function htmlFiles(dir: string): string[] {
 
 describe("Helpful Machines build output", () => {
   it("exists (run `pnpm --filter helpful-machines build` first)", () => expect(existsSync(root)).toBe(true));
+
+  it("defaults to https://helpfulmachines.com.au when NEXT_PUBLIC_SITE_URL is unset", () => {
+    if (process.env.NEXT_PUBLIC_SITE_URL) return;
+    expect(canonical(html("control", "en", "/pricing"))).toBe("https://helpfulmachines.com.au/pricing");
+  });
 
   it("pre-renders every bucket × locale × page", () => {
     for (const bucket of buckets) for (const locale of locales) for (const path of allPaths) {

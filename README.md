@@ -20,6 +20,16 @@ pnpm test                     # all unit tests
 pnpm typecheck && pnpm build  # everything
 ```
 
+## Domains
+
+| App | Default domain (code fallback) |
+| --- | --- |
+| Yoga | `pioyoga.com.au` |
+| Helpful Machines | `helpfulmachines.com.au` |
+| Tangent | `tangentlabs.com.au` |
+
+Each app reads `NEXT_PUBLIC_SITE_URL` first. Until a domain is bought, set that variable on the Vercel project to its current URL, so canonical links and sitemaps don't point at a domain you don't own yet.
+
 ## Deploying on Vercel
 
 One Vercel project per app, all pointing at this repo:

@@ -5,8 +5,8 @@ import { describe, expect, it } from "vitest";
 import { allBuckets } from "@repo/web/experiments";
 import { localizedPath, locales } from "@repo/web/locale";
 import { absoluteUrl } from "@repo/web/seo";
-import { resolveSiteUrl } from "@repo/web/site";
 import { experiments } from "../experiments";
+import { site } from "../site.config";
 import { allPaths } from "../lib/routes";
 
 const root = fileURLToPath(new URL("../.next/server/app/", import.meta.url));
@@ -16,7 +16,7 @@ const fileFor = (bucket: string, locale: string, path: string) =>
 const html = (bucket: string, locale: string, path: string) => readFileSync(fileFor(bucket, locale, path), "utf8");
 const canonical = (page: string) => page.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
 const same = (url: string | undefined) => (url ? new URL(url).href : url);
-const siteUrl = resolveSiteUrl();
+const siteUrl = site.url;
 
 function htmlFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -27,6 +27,11 @@ function htmlFiles(dir: string): string[] {
 
 describe("Tangent build output", () => {
   it("exists (run `pnpm --filter tangent build` first)", () => expect(existsSync(root)).toBe(true));
+
+  it("defaults to https://tangentlabs.com.au when NEXT_PUBLIC_SITE_URL is unset", () => {
+    if (process.env.NEXT_PUBLIC_SITE_URL) return;
+    expect(canonical(html("control", "en", "/about"))).toBe("https://tangentlabs.com.au/about");
+  });
 
   it("pre-renders every bucket × locale × page", () => {
     for (const bucket of buckets) for (const locale of locales) for (const path of allPaths) {

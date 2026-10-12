@@ -25,4 +25,4 @@ pnpm --filter tangent build && pnpm --filter tangent test:build
 
 ## Vercel
 
-New project from this repo with **Root Directory** `apps/tangent`, and environment variables from `.env.example`. `NEXT_PUBLIC_SITE_URL` must be this project's real URL. HSTS and `upgrade-insecure-requests` turn on automatically on Vercel (`VERCEL=1`).
+New project from this repo with **Root Directory** `apps/tangent`, and environment variables from `.env.example`. `NEXT_PUBLIC_SITE_URL` defaults to `https://tangentlabs.com.au`. Set it to the real URL until that domain is bought. HSTS and `upgrade-insecure-requests` turn on automatically on Vercel (`VERCEL=1`).

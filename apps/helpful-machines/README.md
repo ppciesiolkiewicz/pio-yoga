@@ -19,7 +19,7 @@ pnpm --filter helpful-machines build && pnpm --filter helpful-machines test:buil
 ## Vercel
 
 1. New project from this repo. **Root Directory:** `apps/helpful-machines`. Vercel detects pnpm and Next.
-2. Environment variables from `.env.example`. `NEXT_PUBLIC_SITE_URL` must be this project's real URL (subdomain, path or `helpfulmachines.ai`).
+2. Environment variables from `.env.example`. `NEXT_PUBLIC_SITE_URL` defaults to `https://helpfulmachines.com.au`. Set it to the real URL until that domain is bought.
 3. Builds are skipped when nothing relevant changed (`vercel.json` → `turbo-ignore`).
 4. The country header (`x-vercel-ip-country`) is set by Vercel automatically; visitors in Poland are redirected to `/pl`.
 
