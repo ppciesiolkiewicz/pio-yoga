@@ -21,7 +21,7 @@ export default async function WorkPage({ params }: Props) {
         <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {workSlugs.map((slug) => (
             <li key={slug}>
-              <CaseStudyCard slug={slug} locale={locale} item={t.work.items[slug]} readMore={t.work.readMore} headingLevel="h2" />
+              <CaseStudyCard slug={slug} locale={locale} item={t.work.items[slug]} readMore={t.work.readMore} credit={t.work.cardCredit} headingLevel="h2" />
             </li>
           ))}
         </ul>

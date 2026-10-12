@@ -32,7 +32,20 @@ const serif = Instrument_Serif({
 });
 
 /** The full HTML document for both designs; also used by the root 404. */
-export function Document({ locale, design, assignment, children }: { locale: Locale; design: DesignKey; assignment: Assignment; children: ReactNode }) {
+export function Document({
+  locale,
+  design,
+  assignment,
+  analyticsMarket = locale,
+  children,
+}: {
+  locale: Locale;
+  design: DesignKey;
+  assignment: Assignment;
+  /** null on the root 404, where the visitor's market is unknown (analytics stays cookieless). */
+  analyticsMarket?: Locale | null;
+  children: ReactNode;
+}) {
   const t = getContent(locale);
   const brand = <Logo design={design} />;
   const nav = navItems(locale, t);
@@ -73,7 +86,7 @@ export function Document({ locale, design, assignment, children }: { locale: Loc
           extra={askConsent ? <ConsentSettingsButton label={t.consent.settings} /> : undefined}
         />
         {askConsent && <ConsentBanner labels={t.consent} policyHref={localizedPath(locale, "/privacy")} />}
-        <Analytics apiKey={site.posthogKey} locale={locale} assignment={activeAssignment(experiments, assignment, locale)} />
+        <Analytics apiKey={site.posthogKey} locale={analyticsMarket} assignment={activeAssignment(experiments, assignment, locale)} />
         <JsonLd
           data={[
             organization({ name: site.name, url: site.url, email: site.contactEmail }),

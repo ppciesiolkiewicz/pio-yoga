@@ -14,7 +14,7 @@ export const en = {
         "A fresh look at how your startup works, process and workflow improvement, custom apps and platforms, product sprints, fractional tech leadership, and payments, AI and Web3.",
     },
     work: {
-      title: "Work · problems we've solved",
+      title: "Work · the experience behind Tangent",
       description: "Case studies from fintech, health, e-commerce, retail, property tech and telecoms: the problem, what changed, and the result.",
     },
     about: {
@@ -187,7 +187,7 @@ export const en = {
         title: "Payments, AI & Web3",
         summary: "Specialist depth in payments, subscriptions, AI features and blockchain.",
         intro:
-          "Some problems need people who've done it before. We've built card-to-crypto payments, subscription engines, Medicare gap payments and checkouts for limited-edition drops, and we use AI where it genuinely helps.",
+          "Some problems need people who've done it before. Piotr has built card-to-crypto payments and a subscription engine (ONCHAIN), Medicare gap payments (Lysn) and checkouts for limited-edition drops (Highsnobiety), and we use AI where it genuinely helps.",
         signs: [
           "You're adding payments, subscriptions or pricing logic",
           "You want AI features that do something useful",
@@ -222,11 +222,12 @@ export const en = {
   },
   work: {
     eyebrow: "Work",
-    title: "Problems we've solved",
+    title: "The experience behind Tangent",
     intro:
       "The experience behind Tangent, from fintech to telecoms. Each story starts with a problem, not a technology.",
     link: "See all work",
     credit: "Work by Piotr Ciesiolkiewicz while working with {client}.",
+    cardCredit: "Piotr's work at {client}",
     problemTitle: "The problem",
     changedTitle: "What changed",
     resultTitle: "The result",

@@ -38,3 +38,13 @@ describe("exposureEvents", () => {
     ]));
   it("emits nothing without experiments", () => expect(exposureEvents({})).toEqual([]));
 });
+
+describe("unknown market (root 404 pages)", () => {
+  it("stays cookieless until consent is granted", () => {
+    expect(posthogConfig(null, null).persistence).toBe("memory");
+    expect(posthogConfig(null, "denied").persistence).toBe("memory");
+    expect(posthogConfig(null, "granted").persistence).toBe("localStorage+cookie");
+  });
+  it("labels the market as unknown", () =>
+    expect(superProperties({ market: null, colorMode: "light", assignment: {} }).market).toBe("unknown"));
+});

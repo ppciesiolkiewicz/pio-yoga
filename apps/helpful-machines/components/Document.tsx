@@ -23,7 +23,18 @@ import "../app/globals.css";
 const display = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], variable: "--font-bricolage", display: "swap" });
 
 /** The full HTML document: used by the [bucket]/[locale] layout and by the root 404 page. */
-export function Document({ locale, assignment, children }: { locale: Locale; assignment: Assignment; children: ReactNode }) {
+export function Document({
+  locale,
+  assignment,
+  analyticsMarket = locale,
+  children,
+}: {
+  locale: Locale;
+  assignment: Assignment;
+  /** null on the root 404, where the visitor's market is unknown (analytics stays cookieless). */
+  analyticsMarket?: Locale | null;
+  children: ReactNode;
+}) {
   const t = getContent(locale);
   const brand = (
     <>
@@ -64,7 +75,7 @@ export function Document({ locale, assignment, children }: { locale: Locale; ass
           extra={askConsent ? <ConsentSettingsButton label={t.consent.settings} /> : undefined}
         />
         {askConsent && <ConsentBanner labels={t.consent} policyHref={localizedPath(locale, "/privacy")} />}
-        <Analytics apiKey={site.posthogKey} locale={locale} assignment={activeAssignment(experiments, assignment, locale)} />
+        <Analytics apiKey={site.posthogKey} locale={analyticsMarket} assignment={activeAssignment(experiments, assignment, locale)} />
         <JsonLd
           data={[
             organization({ name: site.name, url: site.url, email: site.contactEmail }),

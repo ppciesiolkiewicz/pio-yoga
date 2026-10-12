@@ -19,3 +19,7 @@ describe("consent", () => {
     expect(parseConsent(undefined)).toBeNull();
   });
 });
+
+describe("consent for an unknown market", () => {
+  it("is required when the market is unknown", () => expect(consentRequired(null)).toBe(true));
+});

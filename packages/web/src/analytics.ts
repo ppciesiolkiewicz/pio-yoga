@@ -2,7 +2,8 @@ import { analyticsPersistence, type Consent } from "./consent";
 import type { Assignment } from "./experiments";
 import type { Locale } from "./locale";
 
-export function posthogConfig(locale: Locale, consent: Consent | null) {
+/** locale null = unknown market (root 404): cookieless until consent, like Poland. */
+export function posthogConfig(locale: Locale | null, consent: Consent | null) {
   return {
     api_host: "/ingest",
     ui_host: "https://eu.posthog.com",
@@ -17,8 +18,8 @@ export function posthogConfig(locale: Locale, consent: Consent | null) {
   };
 }
 
-export function superProperties(o: { market: Locale; colorMode: string; assignment: Assignment }): Record<string, string> {
-  const props: Record<string, string> = { market: o.market, color_mode: o.colorMode };
+export function superProperties(o: { market: Locale | null; colorMode: string; assignment: Assignment }): Record<string, string> {
+  const props: Record<string, string> = { market: o.market ?? "unknown", color_mode: o.colorMode };
   for (const [name, variant] of Object.entries(o.assignment)) props[`$feature/${name}`] = variant;
   return props;
 }

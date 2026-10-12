@@ -11,7 +11,9 @@ import { CONSENT_EVENT, readConsent } from "./ConsentBanner";
 const DEPTHS = [25, 50, 75, 100];
 
 /** Loads PostHog on idle (never blocks rendering). Experiment variants come from the server-rendered bucket. */
-export function Analytics({ apiKey, locale, assignment }: { apiKey: string; locale: Locale; assignment: Assignment }) {
+/** locale null = unknown market (root 404): cookieless until the visitor has consented. */
+export function Analytics({ apiKey, locale, assignment }: { apiKey: string; locale: Locale | null; assignment: Assignment }) {
+  const market = locale ?? "unknown";
   const assignmentKey = JSON.stringify(assignment);
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export function Analytics({ apiKey, locale, assignment }: { apiKey: string; loca
       };
       const onTrack = (event: Event) => {
         const { event: name, properties } = (event as CustomEvent<{ event: string; properties: Record<string, unknown> }>).detail;
-        posthog.capture(name, { ...properties, market: locale });
+        posthog.capture(name, { ...properties, market });
       };
       const onClick = (event: MouseEvent) => {
         const el = (event.target as Element | null)?.closest?.("[data-track]");
@@ -42,7 +44,7 @@ export function Analytics({ apiKey, locale, assignment }: { apiKey: string; loca
         posthog.capture(el.getAttribute("data-track")!, {
           location: el.getAttribute("data-track-location") ?? undefined,
           label: el.textContent?.trim() ?? "",
-          market: locale,
+          market,
         });
       };
       const reached = new Set<number>();
@@ -52,7 +54,7 @@ export function Analytics({ apiKey, locale, assignment }: { apiKey: string; loca
         for (const depth of DEPTHS) {
           if (percent >= depth && !reached.has(depth)) {
             reached.add(depth);
-            posthog.capture("scroll_depth", { depth, market: locale });
+            posthog.capture("scroll_depth", { depth, market });
           }
         }
       };

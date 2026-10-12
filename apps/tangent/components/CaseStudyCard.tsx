@@ -9,12 +9,15 @@ export function CaseStudyCard({
   locale,
   item,
   readMore,
+  credit,
   headingLevel: Heading = "h3",
 }: {
   slug: WorkSlug;
   locale: Locale;
   item: Content["work"]["items"][WorkSlug];
   readMore: string;
+  /** e.g. "Piotr's work at {client}": past work is credited, never presented as Tangent's own. */
+  credit: string;
   headingLevel?: "h2" | "h3";
 }) {
   return (
@@ -29,7 +32,7 @@ export function CaseStudyCard({
       </Heading>
       <p className="mt-3 text-muted">{item.summary}</p>
       <p className="mt-auto flex justify-between gap-4 pt-6 text-sm font-bold">
-        <span>{item.client}</span>
+        <span>{credit.replace("{client}", item.client)}</span>
         <span aria-hidden="true">{readMore} →</span>
       </p>
     </Card>

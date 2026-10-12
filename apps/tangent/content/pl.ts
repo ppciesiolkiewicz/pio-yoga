@@ -11,12 +11,12 @@ export const pl: Content = {
         "Tangent pomaga startupom łączyć kropki: sprawdzamy, jak działa Twój produkt, dane i zespół, usuwamy to, co blokuje pracę, i budujemy potrzebne aplikacje oraz platformy.",
     },
     services: {
-      title: "Usługi · usprawnianie procesów, aplikacje na zamówienie i wsparcie techniczne",
+      title: "Usługi · usprawnianie procesów, aplikacje na zamówienie i przywództwo techniczne",
       description:
         "Świeże spojrzenie na to, jak działa Twój startup, usprawnianie procesów, aplikacje i platformy na zamówienie, sprinty produktowe, techniczne przywództwo na część etatu oraz płatności, AI i Web3.",
     },
     work: {
-      title: "Realizacje · problemy, które rozwiązaliśmy",
+      title: "Realizacje · doświadczenie stojące za Tangent",
       description: "Studia przypadków z fintechu, ochrony zdrowia, e-commerce, handlu, proptechu i telekomunikacji: problem, co się zmieniło i jaki był efekt.",
     },
     about: {
@@ -189,7 +189,7 @@ export const pl: Content = {
         title: "Płatności, AI i Web3",
         summary: "Specjalistyczna wiedza o płatnościach, subskrypcjach, funkcjach AI i blockchainie.",
         intro:
-          "Niektóre problemy wymagają ludzi, którzy już to robili. Budowaliśmy płatności kartą za kryptowaluty, silniki subskrypcji, dopłaty Medicare i koszyki na premiery limitowanych kolekcji, a AI używamy tam, gdzie naprawdę pomaga.",
+          "Niektóre problemy wymagają ludzi, którzy już to robili. Piotr budował płatności kartą za kryptowaluty i silnik subskrypcji (ONCHAIN), dopłaty Medicare (Lysn) oraz koszyki na premiery limitowanych kolekcji (Highsnobiety), a AI używamy tam, gdzie naprawdę pomaga.",
         signs: [
           "Dodajesz płatności, subskrypcje albo logikę cenową",
           "Chcesz funkcji AI, które robią coś naprawdę użytecznego",
@@ -224,10 +224,11 @@ export const pl: Content = {
   },
   work: {
     eyebrow: "Realizacje",
-    title: "Problemy, które rozwiązaliśmy",
+    title: "Doświadczenie stojące za Tangent",
     intro: "Doświadczenie stojące za Tangent, od fintechu po telekomunikację. Każda historia zaczyna się od problemu, nie od technologii.",
     link: "Zobacz wszystkie realizacje",
     credit: "Praca Piotra Ciesiolkiewicza we współpracy z {client}.",
+    cardCredit: "Praca Piotra dla {client}",
     problemTitle: "Problem",
     changedTitle: "Co się zmieniło",
     resultTitle: "Efekt",
@@ -264,7 +265,7 @@ export const pl: Content = {
         whatChanged: [
           "Mikrofrontendy, dzięki którym technologię można było wymieniać krok po kroku, a aplikacja dla klientów ładowała się szybciej",
           "Przebudowana logika cenowa, pozwalająca na zaawansowane, konfigurowalne ceny",
-          "Dopłaty Medicare, które zwiększyły przychody i zmniejszyły ryzyko nieodbytych konsultacji",
+          "Dopłaty Medicare, żeby zwiększyć przychody i zmniejszyć ryzyko nieodbytych konsultacji",
           "Przeszkolony lokalny zespół, który płynnie przejął projekt od zespołu zagranicznego",
           "Szybkie rozwiązywanie krytycznych awarii, z danymi pobieranymi wprost z bazy, żeby firma mogła dalej działać",
         ],

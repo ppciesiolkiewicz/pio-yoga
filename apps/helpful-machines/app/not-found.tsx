@@ -11,7 +11,7 @@ export default function RootNotFound() {
   const en = getContent("en");
   const pl = getContent("pl");
   return (
-    <Document locale="en" assignment={{}}>
+    <Document locale="en" assignment={{}} analyticsMarket={null}>
       <title>{`${en.notFound.title} · ${pl.notFound.title}`}</title>
       <Section id="not-found" headingLevel="h1" title={en.notFound.title} intro={en.notFound.body}>
         <p lang="pl-PL" className="-mt-4 mb-8 text-lg text-muted">

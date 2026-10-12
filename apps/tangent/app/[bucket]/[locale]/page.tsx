@@ -80,7 +80,7 @@ export default async function HomePage({ params }: Props) {
         <ul className="grid gap-5 md:grid-cols-3">
           {featuredWork.map((slug) => (
             <li key={slug}>
-              <CaseStudyCard slug={slug} locale={locale} item={t.work.items[slug]} readMore={t.work.readMore} />
+              <CaseStudyCard slug={slug} locale={locale} item={t.work.items[slug]} readMore={t.work.readMore} credit={t.work.cardCredit} />
             </li>
           ))}
         </ul>

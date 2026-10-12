@@ -81,6 +81,11 @@ describe("Tangent build output", () => {
     expect(html("editorial", "pl", "/services/fresh-look")).toContain('"@type":"FAQPage"');
   });
 
+  it("credits Piotr on every case-study card in the work index", () => {
+    const page = html("control", "en", "/work");
+    for (const client of ["ONCHAIN", "Officeworks", "Nokia Networks"]) expect(page).toContain(`Piotr's work at ${client}`);
+  });
+
   it("renders a branded, bilingual 404 page", () => {
     const page = readFileSync(join(root, "_not-found.html"), "utf8");
     expect(page).not.toContain("__next_error__");

@@ -15,7 +15,7 @@ describe("Button", () => {
   });
   it("has variant classes", () => {
     expect(buttonClasses("primary")).toContain("shadow-cta");
-    expect(buttonClasses("secondary")).toContain("border-line");
+    expect(buttonClasses("secondary")).toContain("border-control");
   });
 });
 
@@ -81,6 +81,10 @@ describe("track", () => {
 });
 
 describe("design hooks", () => {
+  it("secondary buttons are outlined with the ≥3:1 control border (consent buttons rely on it)", () => {
+    expect(buttonClasses("secondary")).toContain("border-control");
+    expect(buttonClasses("secondary")).not.toContain("border-line");
+  });
   it("buttons use the per-design button radius", () => {
     expect(buttonClasses("primary")).toContain("rounded-button");
     expect(buttonClasses("secondary")).toContain("rounded-button");

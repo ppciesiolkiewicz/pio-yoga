@@ -68,3 +68,21 @@ describe("Tangent content", () => {
   it("design variants map to the two design keys", () =>
     expect(experiments.design.variants).toEqual({ control: "tangent-precision", editorial: "tangent-editorial" }));
 });
+
+describe("honest framing of past work", () => {
+  it("never presents Piotr's client work as Tangent's own", () => {
+    for (const dict of [en, pl]) {
+      const text = collectStrings(dict).map((x) => x.value).join(" ");
+      expect(text).not.toMatch(/Problems we've solved|Problemy, które rozwiązaliśmy|We've built|Budowaliśmy/);
+    }
+  });
+  it("credits Piotr on every case-study card", () => {
+    for (const dict of [en, pl]) expect(dict.work.cardCredit).toContain("{client}");
+  });
+  it("Polish Lysn bullet states a purpose, not a claimed result (matches English)", () =>
+    expect(pl.work.items.lysn.whatChanged.join(" ")).toContain("żeby zwiększyć przychody"));
+  it("Polish services title says leadership, not IT helpdesk", () => {
+    expect(pl.meta.services.title).not.toContain("wsparcie techniczne");
+    expect(pl.meta.services.title).toContain("przywództwo techniczne");
+  });
+});
