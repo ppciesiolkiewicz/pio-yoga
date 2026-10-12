@@ -93,3 +93,10 @@ describe("Hero visual slot", () => {
     expect(screen.getByText("E").hasAttribute("data-eyebrow")).toBe(true);
   });
 });
+
+describe("Hero eyebrow level", () => {
+  it("marks the hero eyebrow so section numbering can skip it", () => {
+    render(<Hero eyebrow="E" title="T" lead="L" primary={{ href: "/c", label: "Go" }} />);
+    expect(screen.getByText("E").getAttribute("data-eyebrow")).toBe("hero");
+  });
+});

@@ -32,7 +32,7 @@ export function Hero({
       <Container className={visual ? "grid items-center gap-10 lg:grid-cols-[1.4fr_1fr]" : undefined}>
         <div>
           {eyebrow && (
-            <p data-eyebrow className="mb-4 text-sm font-bold uppercase tracking-widest text-accent-text">
+            <p data-eyebrow="hero" className="mb-4 text-sm font-bold uppercase tracking-widest text-accent-text">
               {eyebrow}
             </p>
           )}

@@ -71,7 +71,7 @@ describe("ContactForm with JavaScript", () => {
     render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
     await fill();
     await userEvent.click(screen.getByRole("button", { name: "Send message" }));
-    expect(await screen.findByRole("status")).toHaveProperty("textContent", labels.sent);
+    expect((await screen.findByText(labels.sent)).getAttribute("role")).toBe("status");
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("/api/contact");
     expect(JSON.parse(init.body as string)).toMatchObject({ name: "Ania", email: "ania@example.pl", locale: "en", website: "" });
@@ -114,7 +114,7 @@ describe("ContactForm with JavaScript", () => {
   it("shows the result of a no-JS submission from the URL", async () => {
     window.history.replaceState({}, "", "/contact?sent=1");
     render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
-    expect((await screen.findByRole("status")).textContent).toBe(labels.sent);
+    expect((await screen.findByText(labels.sent)).getAttribute("role")).toBe("status");
   });
 
   it("shows a no-JS error from the URL", async () => {
@@ -142,5 +142,25 @@ describe("ContactForm borders", () => {
   it("draws inputs with the control border token (≥3:1 in every design)", () => {
     render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
     expect(screen.getByLabelText("Your name").className).toContain("border-control");
+  });
+});
+
+describe("ContactForm accessibility and URL hygiene", () => {
+  it("keeps one polite live region mounted, empty until success", () => {
+    render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
+    const live = screen.getByRole("status");
+    expect(live.getAttribute("aria-live")).toBe("polite");
+    expect(live.textContent).toBe("");
+  });
+  it("styles invalid fields visibly, not only with text", () => {
+    render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
+    expect(screen.getByLabelText("Email").className).toContain("aria-invalid:border-accent-text");
+  });
+  it("cleans ?sent=1 and the #anchor from the URL after showing the result", async () => {
+    window.history.replaceState({}, "", "/contact?sent=1#contact-sent");
+    render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
+    await screen.findByText(labels.sent);
+    expect(window.location.search).toBe("");
+    expect(window.location.hash).toBe("");
   });
 });

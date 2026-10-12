@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CONSENT_COOKIE, parseConsent, type Consent } from "@repo/web/consent";
 import { buttonClasses } from "./Button";
 
@@ -26,10 +26,14 @@ export function ConsentBanner({
   policyHref: string;
 }) {
   const [open, setOpen] = useState(false);
+  const openerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setOpen(readConsent() === null);
-    const reopen = () => setOpen(true);
+    const reopen = () => {
+      openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      setOpen(true);
+    };
     window.addEventListener(CONSENT_OPEN_EVENT, reopen);
     return () => window.removeEventListener(CONSENT_OPEN_EVENT, reopen);
   }, []);
@@ -38,6 +42,10 @@ export function ConsentBanner({
   const choose = (value: Consent) => {
     writeConsent(value);
     setOpen(false);
+    // Don't drop focus to <body> when the banner disappears.
+    const target = openerRef.current ?? document.getElementById("main");
+    openerRef.current = null;
+    target?.focus();
   };
   // Same class on both buttons: accepting must not be more prominent than declining.
   const choiceClass = buttonClasses("secondary");

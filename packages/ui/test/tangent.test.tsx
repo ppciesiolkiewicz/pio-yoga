@@ -52,3 +52,23 @@ describe("PersonCard", () => {
     expect(screen.getByRole("link", { name: "LinkedIn" }).getAttribute("href")).toBe("https://linkedin.com/in/x");
   });
 });
+
+describe("tangent decorations", () => {
+  it("hides decorative text from screen readers with CSS alt text", () => {
+    expect(css).toContain('content: "// " / "";');
+    expect(css).toMatch(/content: counter\(tg-section, decimal-leading-zero\) " — " \/ "";/);
+  });
+  it("numbers only h2 section eyebrows in editorial (not the hero, not page titles)", () =>
+    expect(css).toContain('[data-design="tangent-editorial"] main [data-eyebrow="h2"]::before'));
+  it("separates precision chips", () => expect(css).toContain('[data-design="tangent-precision"] [data-chips] li + li::before'));
+  it("defines a mono font in editorial too", () => {
+    const editorial = css.slice(css.indexOf(':root[data-design="tangent-editorial"] {'));
+    expect(editorial.slice(0, editorial.indexOf("}"))).toContain("--font-mono-family:");
+  });
+  it("draws the dots path with a normalised length", () => {
+    const { container } = render(
+      <ConnectDots labels={{ idea: "i", market: "m", users: "u", data: "d", tech: "t", product: "p" }} />,
+    );
+    expect(container.querySelector(".tg-path")?.getAttribute("pathLength")).toBe("1");
+  });
+});

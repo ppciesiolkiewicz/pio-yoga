@@ -7,7 +7,7 @@ export function ConnectDots({ labels }: { labels: Labels }) {
       <g stroke="var(--line)" strokeWidth="1" strokeDasharray="3 4" fill="none">
         <path d="M30 40 L95 70 M40 150 L95 70 M95 70 L150 120 M120 25 L150 120 M60 105 L150 120" />
       </g>
-      <path className="tg-path" d="M30 40 L95 70 L150 120 L215 150" stroke="var(--accent)" strokeWidth="2" fill="none" />
+      <path className="tg-path" pathLength={1} d="M30 40 L95 70 L150 120 L215 150" stroke="var(--accent)" strokeWidth="2" fill="none" />
       <g fill="var(--bg)" stroke="var(--ink)" strokeWidth="1.4">
         <circle cx="30" cy="40" r="6" />
         <circle cx="40" cy="150" r="5" />

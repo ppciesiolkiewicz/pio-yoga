@@ -98,3 +98,16 @@ describe("design hooks", () => {
     expect(screen.getByRole("list", { name: "L" }).hasAttribute("data-chips")).toBe(true);
   });
 });
+
+describe("eyebrow levels", () => {
+  it("marks section eyebrows with their heading level", () => {
+    render(
+      <>
+        <Section id="a" eyebrow="Top" title="T1" headingLevel="h1">x</Section>
+        <Section id="b" eyebrow="Sub" title="T2">x</Section>
+      </>,
+    );
+    expect(screen.getByText("Top").getAttribute("data-eyebrow")).toBe("h1");
+    expect(screen.getByText("Sub").getAttribute("data-eyebrow")).toBe("h2");
+  });
+});

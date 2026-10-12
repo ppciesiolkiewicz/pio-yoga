@@ -31,7 +31,8 @@ type Status =
   | { kind: "sent" }
   | { kind: "error"; error: ContactErrorKey; fields: Partial<Record<FieldKey, string>> };
 
-const inputClass = "min-h-11 w-full rounded-card border-2 border-control bg-surface px-3 py-2 text-ink";
+const inputClass =
+  "min-h-11 w-full rounded-card border-2 border-control bg-surface px-3 py-2 text-ink aria-invalid:border-4 aria-invalid:border-accent-text";
 
 function Field({
   id,
@@ -75,6 +76,8 @@ export function ContactForm({ locale, labels, email, action = "/api/contact" }: 
     const error = query.get("error");
     if (query.get("sent") === "1") setStatus({ kind: "sent" });
     else if (isErrorKey(error)) setStatus({ kind: "error", error, fields: {} });
+    // Show the result once; a reload or bookmark shouldn't repeat "Thanks!".
+    if (query.has("sent") || query.has("error")) window.history.replaceState(null, "", window.location.pathname);
   }, []);
 
   useEffect(() => {
@@ -136,11 +139,14 @@ export function ContactForm({ locale, labels, email, action = "/api/contact" }: 
           ))}
         </>
       )}
-      {status.kind === "sent" && (
-        <p role="status" className="rounded-card border-2 border-line bg-highlight/40 p-4 font-bold">
-          {labels.sent}
-        </p>
-      )}
+      {/* Always mounted so screen readers announce the change when it's filled. */}
+      <p
+        role="status"
+        aria-live="polite"
+        className={status.kind === "sent" ? "rounded-card border-2 border-line bg-highlight/40 p-4 font-bold" : "sr-only"}
+      >
+        {status.kind === "sent" ? labels.sent : ""}
+      </p>
       {status.kind === "error" && (
         <div ref={alertRef} role="alert" tabIndex={-1} className="rounded-card border-2 border-line bg-surface p-4">
           <p className="font-bold">{fieldEntries.length > 0 ? labels.errorSummary : labels.errors[status.error]}</p>

@@ -101,3 +101,35 @@ describe("Analytics", () => {
     expect(posthog.capture).toHaveBeenCalledWith("form_submitted", { success: true, market: "en" });
   });
 });
+
+describe("ConsentBanner focus", () => {
+  it("moves focus to the main content after a first-visit choice", async () => {
+    render(
+      <>
+        <main id="main" tabIndex={-1}>
+          content
+        </main>
+        <ConsentBanner labels={labels} policyHref="/pl/privacy" />
+      </>,
+    );
+    await userEvent.click(await screen.findByRole("button", { name: "Odrzucam" }));
+    expect(document.activeElement?.id).toBe("main");
+  });
+
+  it("returns focus to the settings button after reopening", async () => {
+    document.cookie = "consent=denied; Path=/";
+    render(
+      <>
+        <main id="main" tabIndex={-1}>
+          content
+        </main>
+        <ConsentBanner labels={labels} policyHref="/pl/privacy" />
+        <ConsentSettingsButton label="Ustawienia prywatności" />
+      </>,
+    );
+    const settings = screen.getByRole("button", { name: "Ustawienia prywatności" });
+    await userEvent.click(settings);
+    await userEvent.click(screen.getByRole("button", { name: "Akceptuję" }));
+    expect(document.activeElement).toBe(settings);
+  });
+});
