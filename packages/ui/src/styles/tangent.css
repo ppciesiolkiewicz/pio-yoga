@@ -18,7 +18,7 @@
   --card-shadow: none;
   --font-display-family: var(--font-inter-tight);
   --font-body-family: var(--font-inter-tight);
-  --font-mono-family: var(--font-jetbrains);
+  --font-mono-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   color-scheme: light;
 }
 :root[data-design="tangent-precision"][data-theme="dark"] {
@@ -74,7 +74,7 @@
   --font-display-family: var(--font-inter-tight);
   --font-body-family: var(--font-inter-tight);
   --font-serif-family: var(--font-instrument);
-  --font-mono-family: var(--font-jetbrains);
+  --font-mono-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   color-scheme: light;
 }
 :root[data-design="tangent-editorial"][data-theme="dark"] {

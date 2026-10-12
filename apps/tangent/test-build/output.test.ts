@@ -107,4 +107,17 @@ describe("Tangent build output", () => {
 
   it("gives the root 404 a working language link (not /pl/_not-found)", () =>
     expect(readFileSync(join(root, "_not-found.html"), "utf8")).not.toContain("/pl/_not-found"));
+
+  it("preloads at most one font file per page (performance budget)", () => {
+    for (const path of ["/", "/about"]) {
+      const preloads = html("control", "en", path).match(/<link rel="preload" href="[^"]+\.woff2"/g) ?? [];
+      expect(preloads.length, path).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("still declares the Latin Extended face so Polish letters use the brand font", () => {
+    const cssDir = fileURLToPath(new URL("../.next/static/css/", import.meta.url));
+    const css = readdirSync(cssDir).map((f) => readFileSync(join(cssDir, f), "utf8")).join("");
+    expect(css).toMatch(/u\+0100-02ba/i);
+  });
 });

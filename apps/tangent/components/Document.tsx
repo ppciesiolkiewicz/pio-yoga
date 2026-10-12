@@ -1,4 +1,4 @@
-import { Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Inter_Tight, Instrument_Serif } from "next/font/google";
 import type { ReactNode } from "react";
 import { Analytics } from "@repo/ui/Analytics";
 import { ConsentBanner, ConsentSettingsButton } from "@repo/ui/ConsentBanner";
@@ -20,8 +20,9 @@ import { site } from "@/site.config";
 import { Logo } from "./Logo";
 import "../app/globals.css";
 
-const interTight = Inter_Tight({ subsets: ["latin", "latin-ext"], variable: "--font-inter-tight", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-jetbrains", display: "swap", preload: false });
+// `subsets` only controls preloading: every subset is still declared (unicode-range), so Polish
+// pages fetch Latin Extended on demand while English pages preload just one file.
+const interTight = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
 const serif = Instrument_Serif({
   subsets: ["latin", "latin-ext"],
   weight: "400",
@@ -57,7 +58,7 @@ export function Document({
     <html
       lang={htmlLang[locale]}
       data-design={design}
-      className={`${interTight.variable} ${mono.variable} ${serif.variable}`}
+      className={`${interTight.variable} ${serif.variable}`}
       suppressHydrationWarning
     >
       <head>
