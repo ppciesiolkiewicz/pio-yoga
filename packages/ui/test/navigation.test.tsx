@@ -94,6 +94,15 @@ describe("SiteHeader / SiteFooter", () => {
     expect(screen.getByRole("navigation", { name: "Główna" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Helpful Machines" }).getAttribute("href")).toBe("/pl");
   });
+  it("hides the header CTA on phones via a wrapper (the button's own display class would win)", () => {
+    render(
+      <SiteHeader brand="Helpful Machines" homeHref="/pl" nav={items} buckets={buckets} cta={cta}
+        labels={{ primary: "Główna", menu: "Menu", close: "Zamknij menu", colorMode }} />,
+    );
+    const link = screen.getByRole("link", { name: "Umów bezpłatną rozmowę" });
+    expect(link.className).not.toMatch(/(^|\s)hidden(\s|$)/);
+    expect(link.parentElement?.className).toBe("hidden sm:block");
+  });
   it("footer shows the email, legal links and language link", () => {
     render(
       <SiteFooter brand="Helpful Machines" tagline="Tagline" nav={items} navLabel="Stopka"

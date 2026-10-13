@@ -36,7 +36,10 @@ export function SiteHeader({
           <div className="hidden lg:block">
             <ColorModeSwitch labels={labels.colorMode} />
           </div>
-          <ButtonLink link={{ ...cta, trackLocation: "header" }} newTabLabel={newTabLabel} className="hidden sm:inline-flex" />
+          {/* Wrapper, not a class on the link: the button's own inline-flex would override "hidden". */}
+          <div className="hidden sm:block">
+            <ButtonLink link={{ ...cta, trackLocation: "header" }} newTabLabel={newTabLabel} />
+          </div>
           <MobileMenu items={nav} buckets={buckets} cta={cta} labels={labels} newTabLabel={newTabLabel} />
         </div>
       </Container>
