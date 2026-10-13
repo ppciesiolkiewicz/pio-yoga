@@ -42,11 +42,19 @@ describe("createRoutingMiddleware", () => {
     expect(res.cookies.get("exp")?.secure).toBe(false);
   });
 
-  it("does not set the language cookie on Next prefetch or RSC requests", () => {
-    const variants: Record<string, string>[] = [{ rsc: "1" }, { "next-router-prefetch": "1" }, { purpose: "prefetch" }];
+  it("does not set the language cookie on fetch/prefetch requests (Sec-Fetch-Dest is not document)", () => {
+    // Next strips its own RSC / Next-Router-Prefetch headers before middleware, so rely on the browser's.
+    const variants: Record<string, string>[] = [{ "sec-fetch-dest": "empty" }, { "sec-fetch-dest": "empty", "sec-fetch-mode": "cors" }, { purpose: "prefetch" }];
     for (const headers of variants) {
       const res = middleware(request("https://attunr.com/pl/services", { ...headers, cookie: "exp=hero:control; NEXT_LOCALE=en" }));
       expect(res.cookies.get("NEXT_LOCALE"), JSON.stringify(headers)).toBeUndefined();
+    }
+  });
+
+  it("still sets it on real page loads, and when the browser sends no fetch metadata", () => {
+    for (const headers of [{ "sec-fetch-dest": "document" }, {}] as Record<string, string>[]) {
+      const res = middleware(request("https://attunr.com/pl/services", { ...headers, cookie: "exp=hero:control; NEXT_LOCALE=en" }));
+      expect(res.cookies.get("NEXT_LOCALE")?.value, JSON.stringify(headers)).toBe("pl");
     }
   });
 });

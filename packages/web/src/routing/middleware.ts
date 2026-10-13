@@ -18,11 +18,10 @@ export function createRoutingMiddleware(opts: { experiments: Experiments; random
       experiments: opts.experiments,
       random: opts.random,
       isKnownPath: opts.isKnownPath,
-      navigation: !(
-        req.headers.get("rsc") === "1" ||
-        req.headers.has("next-router-prefetch") ||
-        req.headers.get("purpose") === "prefetch"
-      ),
+      // Only real page loads may store the language. Next strips its own RSC/prefetch headers
+      // before middleware, so use the browser's Sec-Fetch-Dest (missing = curl, bots: treat as a page).
+      navigation:
+        (req.headers.get("sec-fetch-dest") ?? "document") === "document" && req.headers.get("purpose") !== "prefetch",
     });
     if (decision.kind === "pass") return NextResponse.next();
 
