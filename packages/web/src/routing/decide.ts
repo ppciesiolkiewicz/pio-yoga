@@ -18,6 +18,11 @@ export type RouteInput = {
   cookies: { locale?: string; exp?: string };
   experiments: Experiments;
   random?: () => number;
+  /**
+   * False for Next prefetch / RSC requests. Only real page navigations may store the language:
+   * an in-flight prefetch of a /pl link must not undo a click on "English". Default true.
+   */
+  navigation?: boolean;
   /** Locale-less public paths the app serves. Unknown paths get the root 404. Omit to allow all. */
   isKnownPath?: (rest: string) => boolean;
 };
@@ -99,7 +104,7 @@ export function decideRoute(input: RouteInput): RouteDecision {
   }
 
   const setCookies: CookieSet[] = [];
-  if (locale !== defaultLocale && cookieLocale !== locale) {
+  if (locale !== defaultLocale && cookieLocale !== locale && input.navigation !== false) {
     setCookies.push({ name: LOCALE_COOKIE, value: locale, maxAge: YEAR });
   }
 

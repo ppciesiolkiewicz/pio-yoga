@@ -18,6 +18,11 @@ export function createRoutingMiddleware(opts: { experiments: Experiments; random
       experiments: opts.experiments,
       random: opts.random,
       isKnownPath: opts.isKnownPath,
+      navigation: !(
+        req.headers.get("rsc") === "1" ||
+        req.headers.has("next-router-prefetch") ||
+        req.headers.get("purpose") === "prefetch"
+      ),
     });
     if (decision.kind === "pass") return NextResponse.next();
 

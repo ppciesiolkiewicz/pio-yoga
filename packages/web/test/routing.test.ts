@@ -212,3 +212,17 @@ describe("unknown paths", () => {
   it("treats every path as known when no checker is given", () =>
     expect(run({ pathname: "/whatever", cookies: { exp: "hero:control" } })).toMatchObject({ pathname: "/control/en/whatever" }));
 });
+
+describe("background requests (prefetch / RSC)", () => {
+  it("never change the stored language: only real page navigations do", () =>
+    expect(run({ pathname: "/pl/services", cookies: { exp: "hero:control", locale: "en" }, navigation: false })).toEqual({
+      kind: "rewrite",
+      pathname: "/control/pl/services",
+      setCookies: [],
+    }));
+  it("page navigations still remember the choice", () =>
+    expect(run({ pathname: "/pl/services", cookies: { exp: "hero:control", locale: "en" } })).toMatchObject({
+      setCookies: [{ name: "NEXT_LOCALE", value: "pl", maxAge: 31_536_000 }],
+    }));
+});
+

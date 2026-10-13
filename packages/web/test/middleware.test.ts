@@ -41,4 +41,12 @@ describe("createRoutingMiddleware", () => {
     const res = middleware(request("http://localhost:3000/"));
     expect(res.cookies.get("exp")?.secure).toBe(false);
   });
+
+  it("does not set the language cookie on Next prefetch or RSC requests", () => {
+    const variants: Record<string, string>[] = [{ rsc: "1" }, { "next-router-prefetch": "1" }, { purpose: "prefetch" }];
+    for (const headers of variants) {
+      const res = middleware(request("https://attunr.com/pl/services", { ...headers, cookie: "exp=hero:control; NEXT_LOCALE=en" }));
+      expect(res.cookies.get("NEXT_LOCALE"), JSON.stringify(headers)).toBeUndefined();
+    }
+  });
 });
