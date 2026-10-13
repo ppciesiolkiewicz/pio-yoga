@@ -290,7 +290,7 @@ const inputClass =
 - In the first `useEffect`, after the `if (...) setStatus(...) else if (...)` lines, add:
 ```ts
     // Show the result once; a reload or bookmark shouldn't repeat "Thanks!".
-    if (query.has("sent") || query.has("error")) window.history.replaceState(null, "", window.location.pathname);
+    if (query.has("sent") || query.has("error")) window.history.replaceState(window.history.state, "", window.location.pathname);
 ```
 - Replace the block
 ```tsx

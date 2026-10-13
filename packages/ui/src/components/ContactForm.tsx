@@ -77,7 +77,8 @@ export function ContactForm({ locale, labels, email, action = "/api/contact" }: 
     if (query.get("sent") === "1") setStatus({ kind: "sent" });
     else if (isErrorKey(error)) setStatus({ kind: "error", error, fields: {} });
     // Show the result once; a reload or bookmark shouldn't repeat "Thanks!".
-    if (query.has("sent") || query.has("error")) window.history.replaceState(null, "", window.location.pathname);
+    // Keep the existing state object: Next.js stores its router state there, and Back breaks without it.
+    if (query.has("sent") || query.has("error")) window.history.replaceState(window.history.state, "", window.location.pathname);
   }, []);
 
   useEffect(() => {

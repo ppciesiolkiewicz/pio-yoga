@@ -1,6 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
-/** Runs against the BUILT apps (turbo builds them first). Never sends real email: see tests/helpers.ts. */
+/**
+ * Runs against the BUILT apps (turbo builds them first).
+ * Never sends real email: the servers start with the Resend variables blanked, and Next's env
+ * loading never overrides variables that are already set, so no .env file can enable sending.
+ */
+const noEmail = { RESEND_API_KEY: "", CONTACT_TO_EMAIL: "" };
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
@@ -13,12 +18,14 @@ export default defineConfig({
       command: "pnpm --filter helpful-machines start",
       url: "http://localhost:3001/robots.txt",
       reuseExistingServer: !process.env.CI,
+      env: noEmail,
       timeout: 120_000,
     },
     {
       command: "pnpm --filter tangent start",
       url: "http://localhost:3002/robots.txt",
       reuseExistingServer: !process.env.CI,
+      env: noEmail,
       timeout: 120_000,
     },
   ],

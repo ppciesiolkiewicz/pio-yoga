@@ -164,3 +164,14 @@ describe("ContactForm accessibility and URL hygiene", () => {
     expect(window.location.hash).toBe("");
   });
 });
+
+describe("ContactForm keeps the router's history state", () => {
+  it("cleans the URL without wiping Next's history state (Back must keep working)", async () => {
+    window.history.replaceState({ __NA: true, tree: "x" }, "", "/contact?sent=1#contact-sent");
+    render(<ContactForm locale="en" labels={labels} email="hello@attunr.com" />);
+    await screen.findByText(labels.sent);
+    expect(window.location.search).toBe("");
+    expect(window.history.state).toEqual({ __NA: true, tree: "x" });
+  });
+});
+
