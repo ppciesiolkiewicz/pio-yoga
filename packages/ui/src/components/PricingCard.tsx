@@ -27,7 +27,7 @@ export function PricingCard({
   return (
     <Card as="article" className={cn("flex h-full flex-col", featured && "border-4")}>
       {badge && (
-        <p className="mb-3 self-start rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-sm font-bold text-accent-text">{badge}</p>
+        <p className="mb-3 self-start rounded-full bg-highlight px-3 py-1 text-sm font-bold text-ink">{badge}</p>
       )}
       <Heading className="font-display text-2xl font-extrabold">{name}</Heading>
       <p className="mt-2 font-display text-3xl font-extrabold">{price}</p>
