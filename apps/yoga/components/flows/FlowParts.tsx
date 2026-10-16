@@ -218,6 +218,58 @@ export function partType(part: Part): string {
   return step.kind;
 }
 
+// --- phases: every class runs Arrive → Warm up → Build → Peak → Close ------------
+export type Phase = "arrive" | "warm" | "build" | "peak" | "close";
+export const PHASES: Phase[] = ["arrive", "warm", "build", "peak", "close"];
+export const PHASE_LABEL: Record<Phase, string> = {
+  arrive: "Arrive",
+  warm: "Warm up",
+  build: "Build",
+  peak: "Peak",
+  close: "Close",
+};
+
+/** Phase of a step type; null means "stays in the phase before it" (vinyasa, drills, mid-class release). */
+function phaseOf(type: string): Phase | null {
+  switch (type) {
+    case "arrive":
+      return "arrive";
+    case "warmup":
+    case "sun":
+      return "warm";
+    case "flow":
+    case "ladder":
+    case "core":
+      return "build";
+    case "peak":
+      return "peak";
+    case "cooldown":
+    case "rest":
+    case "closing":
+      return "close";
+    default:
+      return null;
+  }
+}
+
+export type NumberedPart = { part: Part; n: number | null; type: string; phase: Phase };
+export type PhaseGroup = { phase: Phase; items: NumberedPart[] };
+
+/** Splits a class into consecutive phase groups and numbers every part except vinyasas. */
+export function groupByPhase(parts: Part[]): PhaseGroup[] {
+  const groups: PhaseGroup[] = [];
+  let n = 0;
+  for (const part of parts) {
+    const type = partType(part);
+    const last = groups[groups.length - 1];
+    const phase = phaseOf(type) ?? last?.phase ?? "warm";
+    const item: NumberedPart = { part, n: type === "vinyasa" ? null : ++n, type, phase };
+    if (last && last.phase === phase) last.items.push(item);
+    else groups.push({ phase, items: [item] });
+  }
+  return groups;
+}
+
 /** A class part: either an inline step, or a building block shown in place with a link to the library. */
 export function PartView({ part }: { part: Part }) {
   if (!isUse(part)) return <StepView step={part} />;

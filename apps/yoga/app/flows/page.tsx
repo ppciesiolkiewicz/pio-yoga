@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { PieceCategory } from "@/content/flows";
 import { byFocus, byPeak, classes, isUse, pieces, practiceList, related, usedIn } from "@/content/flows";
-import { PartView, StepView, partType } from "@/components/flows/FlowParts";
+import { PHASES, PHASE_LABEL, PartView, StepView, groupByPhase } from "@/components/flows/FlowParts";
+import ClassCircle from "@/components/flows/ClassCircle";
 
 const ladderCount =
   pieces.filter((p) => p.category === "ladder").length +
@@ -75,6 +76,11 @@ export default function FlowNotebook() {
             </div>
           </dl>
           <ul className="legend" aria-label="Legend">
+            {PHASES.map((p) => (
+              <li key={p} data-phase={p}>
+                <span className="lg-phase" /> {PHASE_LABEL[p]}
+              </li>
+            ))}
             <li>
               <span className="lg-dot new" /> new this round
             </li>
@@ -104,6 +110,7 @@ export default function FlowNotebook() {
           <div className="cls-grid">
             {classes.map((c) => (
               <a className="cls-card" href={`#${c.slug}`} key={c.slug}>
+                <ClassCircle slug={c.slug} groups={groupByPhase(c.parts)} variant="mini" />
                 <span className="cls-card-title">{c.title}</span>
                 {c.subtitle && <span className="cls-card-sub">{c.subtitle}</span>}
                 <span className="chips">
@@ -158,9 +165,12 @@ export default function FlowNotebook() {
 
         {classes.map((c, i) => {
           const rel = related(c);
+          const groups = groupByPhase(c.parts);
+          const parts = groups.reduce((sum, g) => sum + g.items.filter((it) => it.n !== null).length, 0);
           return (
             <article className="cls" id={c.slug} key={c.slug}>
               <header className="cls-head">
+                <div className="cls-head-text">
                 <div className="eyebrow">Class {i + 1}</div>
                 <h2>{c.title}</h2>
                 {c.subtitle && <p className="cls-sub">{c.subtitle}</p>}
@@ -178,15 +188,47 @@ export default function FlowNotebook() {
                   ))}
                 </div>
                 {c.note && <p className="cls-note">{c.note}</p>}
+                </div>
+                <ClassCircle
+                  slug={c.slug}
+                  groups={groups}
+                  centre={[`${parts} parts`, c.duration ?? `${groups.length} phases`]}
+                />
               </header>
 
-              <ol className="seq">
-                {c.parts.map((p, j) => (
-                  <li key={j} data-type={partType(p)}>
-                    <PartView part={p} />
-                  </li>
-                ))}
-              </ol>
+              <div className="phases">
+                {groups.map((g, gi) => {
+                  const nums = g.items.flatMap((it) => (it.n === null ? [] : [it.n]));
+                  return (
+                    <section className="phase" data-phase={g.phase} key={gi}>
+                      <h3 className="phase-head">
+                        <span className="phase-bar" aria-hidden="true" />
+                        {PHASE_LABEL[g.phase]}
+                        {nums.length > 0 && (
+                          <span className="phase-range">
+                            {nums.length > 1 ? `${nums[0]}–${nums[nums.length - 1]}` : nums[0]}
+                          </span>
+                        )}
+                      </h3>
+                      <ol className="seq">
+                        {g.items.map((it, j) => (
+                          <li
+                            key={j}
+                            id={it.n === null ? undefined : `${c.slug}-${it.n}`}
+                            data-type={it.type}
+                            className={it.n === null ? "is-vin" : undefined}
+                          >
+                            <span className="node" aria-hidden="true">
+                              {it.n}
+                            </span>
+                            <PartView part={it.part} />
+                          </li>
+                        ))}
+                      </ol>
+                    </section>
+                  );
+                })}
+              </div>
 
               <footer className="cls-foot">
                 {rel.length > 0 && (
