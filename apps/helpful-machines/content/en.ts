@@ -193,19 +193,19 @@ export const en = {
     eyebrow: "New-client offer",
     title: "Dedicated hours every month, at a price locked for a year",
     intro:
-      "Instead of one-off projects, you get dedicated time every month spent improving your business: finding what slows you down, then fixing it with a better process, AI, tidy data or custom apps. Start in the next few weeks and your price stays the same for 12 months. No contract: cancel any time.",
+      "Instead of one-off projects, you get dedicated time every month spent improving your business: finding what slows you down, then fixing it with a better process, AI, tidy data or custom apps. Every plan also includes a free idea session each month, where we look at your business together and pick what to improve next. Start in the next few weeks and your price stays the same for 12 months. No contract: cancel any time.",
     badge: "New-client price · locked 12 months",
     perMonth: "/month",
     plans: {
       light: {
         name: "{hours} hours a month",
         summary: "{hours} dedicated hours every month improving your business.",
-        features: ["One improvement at a time, start to finish", "A short update on what changed", "Price locked for 12 months", "Cancel any time"],
+        features: ["One improvement at a time, start to finish", "Free monthly idea session, on top of your hours", "A short update on what changed", "Price locked for 12 months", "Cancel any time"],
       },
       focus: {
         name: "{hours} hours a month",
         summary: "{hours} dedicated hours every month improving your business.",
-        features: ["Bigger fixes, including custom apps", "A monthly check-in call", "Price locked for 12 months", "Cancel any time"],
+        features: ["Bigger fixes, including custom apps", "Free monthly idea session, on top of your hours", "A short update on what changed", "Price locked for 12 months", "Cancel any time"],
       },
     },
     custom: {
@@ -216,11 +216,11 @@ export const en = {
     note: "Prices exclude GST. The new-client price stays the same for 12 months from your first month.",
     teaser: {
       title: "{price} a month. Locked for a year.",
-      body: "New clients get {hours} dedicated hours every month improving their business for {price} a month, at a price that won't change for 12 months. Cancel any time.",
+      body: "New clients get {hours} dedicated hours every month improving their business, plus a free monthly idea session, for {price} a month. The price won't change for 12 months, and you can cancel any time.",
       link: "See the offer",
     },
     banner: {
-      text: "New clients: {hours} hours a month improving your business for {price}/month, price locked for 12 months. Cancel any time.",
+      text: "New clients: {hours} hours a month improving your business + a free idea session, {price}/month, price locked for 12 months.",
       link: "See the offer",
     },
   },
