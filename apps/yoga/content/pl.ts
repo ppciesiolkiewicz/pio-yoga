@@ -130,8 +130,6 @@ export const pl: Dictionary = {
   },
   timer: {
     eyebrow: "Timer do praktyki",
-    title: "Niech gong pilnuje czasu, a ty skup się na praktyce.",
-    lead: "Ustaw, ile trwa jedna runda. Gong otwiera każdą rundę, a opcjonalny gong wewnętrzny wyznacza moment w jej trakcie: czas zmienić stronę, pozycję albo wrócić do oddechu.",
     teaser: "Gong na początek każdej rundy i łagodniejszy, gdy pora zmienić stronę. Za darmo.",
     teaserCta: "Otwórz timer",
     length: "Długość rundy",

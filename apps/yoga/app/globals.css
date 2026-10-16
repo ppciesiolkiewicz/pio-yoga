@@ -113,6 +113,7 @@ main > section:last-child { border-bottom: 0; }
 
 .page-head { padding-block: clamp(3rem, 7vw, 5.5rem); }
 .page-head.narrow { max-width: 44rem; }
+.page-head h1.eyebrow { font-size: 0.78rem; font-weight: 600; margin: 0; }
 
 /* story */
 .story { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(2rem, 5vw, 4rem); }

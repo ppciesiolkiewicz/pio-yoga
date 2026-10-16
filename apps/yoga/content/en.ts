@@ -128,8 +128,6 @@ export const en = {
   },
   timer: {
     eyebrow: "Practice timer",
-    title: "Let the gong keep time, so you don't have to.",
-    lead: "Set how long each round lasts. A gong opens every round, and an optional inner gong marks a point inside it: time to switch sides, change pose or come back to the breath.",
     teaser: "A gong for every round, and a softer one when it's time to switch sides. Free to use.",
     teaserCta: "Open the timer",
     length: "Round length",

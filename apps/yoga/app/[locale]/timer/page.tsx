@@ -21,9 +21,7 @@ export default async function TimerPage({ params }: Props) {
   return (
     <>
       <section className="page-head narrow">
-        <div className="eyebrow">{t.eyebrow}</div>
-        <h1>{t.title}</h1>
-        <p className="lead">{t.lead}</p>
+        <h1 className="eyebrow">{t.eyebrow}</h1>
       </section>
       <section className="timer-sec">
         <GongTimer t={t} />
