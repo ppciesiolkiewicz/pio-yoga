@@ -147,6 +147,11 @@ export default async function Home({ params }: Props) {
           <p>{t.video.teaser}</p>
           <span className="arrow">{t.video.teaserCta} →</span>
         </Link>
+        <Link className="offer wide" href={`/${locale}/timer`}>
+          <div className="eyebrow">{t.timer.eyebrow}</div>
+          <p>{t.timer.teaser}</p>
+          <span className="arrow">{t.timer.teaserCta} →</span>
+        </Link>
       </section>
 
       <section id="beyond">

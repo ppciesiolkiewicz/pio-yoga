@@ -9,6 +9,7 @@ Bilingual (English / Polish) personal site, built with Next.js (App Router) and 
 | `/en`, `/pl` | Home: story, training, classes, Thai yoga massage, other disciplines, contact |
 | `/[locale]/program` | Guided transformation program (yoga, yin yoga, dynamic fascia release) |
 | `/[locale]/video` | Video program with a free consultation; shows "coming soon" until enabled |
+| `/[locale]/timer` | Gong interval timer for practice (sounds in `public/sounds/`, generated with ElevenLabs) |
 | `/[locale]/checkout/success`, `/cancel` | Stripe Checkout return pages (not indexed) |
 
 Visiting `/` redirects to `/pl` or `/en` based on the browser language (and remembers the choice from the language switch in a cookie).

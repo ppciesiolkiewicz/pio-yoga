@@ -20,6 +20,7 @@ export default function Header({ locale, t }: { locale: Locale; t: Dictionary["n
           <Link href={`${base}#classes`}>{t.classes}</Link>
           <Link href={`${base}/program`}>{t.program}</Link>
           <Link href={`${base}/video`}>{t.video}</Link>
+          <Link href={`${base}/timer`}>{t.timer}</Link>
           <Link href={`${base}#contact`}>{t.contact}</Link>
         </nav>
         <LangSwitch locale={locale} label={t.langLabel} />

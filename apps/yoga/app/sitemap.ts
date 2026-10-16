@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { locales } from "@/lib/i18n";
 import { site } from "@/lib/site";
 
-const paths = ["", "/program", "/video"];
+const paths = ["", "/program", "/video", "/timer"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
