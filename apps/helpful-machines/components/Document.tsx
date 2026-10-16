@@ -59,19 +59,22 @@ export function Document({
       </head>
       <body className="min-h-dvh bg-bg font-body text-ink antialiased">
         <SkipLink label={t.nav.skip} />
-        <OfferBanner
-          text={fillPlan(t.pricing.banner.text, formatPrice(locale, market.currency, light.monthlyPrice), light.hoursPerMonth)}
-          link={{ href: localizedPath(locale, "/pricing"), label: t.pricing.banner.link }}
-        />
-        <SiteHeader
-          brand={brand}
-          homeHref={localizedPath(locale, "/")}
-          nav={nav}
-          buckets={buckets}
-          cta={bookingLink(locale, t, "header")}
-          labels={{ primary: t.nav.primary, menu: t.nav.menu, close: t.nav.close, colorMode: t.nav.colorMode }}
-          newTabLabel={t.nav.newTab}
-        />
+        {/* Banner and header stick together; the header's own sticky is inert inside this wrapper. */}
+        <div className="sticky top-0 z-40">
+          <OfferBanner
+            text={fillPlan(t.pricing.banner.text, formatPrice(locale, market.currency, light.monthlyPrice), light.hoursPerMonth)}
+            link={{ href: localizedPath(locale, "/pricing"), label: t.pricing.banner.link }}
+          />
+          <SiteHeader
+            brand={brand}
+            homeHref={localizedPath(locale, "/")}
+            nav={nav}
+            buckets={buckets}
+            cta={bookingLink(locale, t, "header")}
+            labels={{ primary: t.nav.primary, menu: t.nav.menu, close: t.nav.close, colorMode: t.nav.colorMode }}
+            newTabLabel={t.nav.newTab}
+          />
+        </div>
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>
