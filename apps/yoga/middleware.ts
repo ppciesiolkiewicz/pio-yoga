@@ -27,5 +27,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  // "flows" is the private, English-only teaching notebook: no locale redirect.
+  matcher: ["/((?!api|_next|_vercel|flows|.*\\..*).*)"],
 };

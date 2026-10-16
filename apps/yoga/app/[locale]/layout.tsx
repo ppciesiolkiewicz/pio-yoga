@@ -1,25 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
-import { Bricolage_Grotesque, Literata } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getDictionary, isLocale, locales } from "@/lib/i18n";
 import { site } from "@/lib/site";
+import { body, display } from "@/lib/fonts";
 import Header from "@/components/Header";
 import "../globals.css";
-
-const display = Bricolage_Grotesque({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  variable: "--font-display",
-});
-const body = Literata({
-  subsets: ["latin", "latin-ext"],
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--font-body",
-});
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));

@@ -19,7 +19,11 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      // Private teaching notebook: keep it out of search engines.
+      { source: "/flows", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+    ];
   },
 };
 
