@@ -8,10 +8,11 @@ import { Section } from "@repo/ui/Section";
 import { ServiceCard } from "@repo/ui/ServiceCard";
 import { StepList } from "@repo/ui/StepList";
 import { localizedPath } from "@repo/web/locale";
+import { Career } from "@/components/Career";
 import { WorkCard } from "@/components/WorkCard";
 import { serviceSlugs } from "@/content/services";
 import { featuredWork } from "@/content/work";
-import { priceFormatter } from "@/lib/format";
+import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
 import { meta } from "@/lib/metadata";
 import { resolveParams, type RouteParams } from "@/lib/params";
@@ -28,6 +29,7 @@ export default async function HomePage({ params }: Props) {
   const variant = assignment.hero === "easy-mode" ? "easy-mode" : "control";
   const [before, highlighted, after] = t.hero.title[variant];
   const price = await priceFormatter(market.currency);
+  const { light } = market.plans;
   const href = (path: string) => localizedPath(locale, path);
 
   return (
@@ -88,11 +90,13 @@ export default async function HomePage({ params }: Props) {
       <Section
         id="pricing"
         eyebrow={t.pricing.eyebrow}
-        title={t.pricing.teaser.title}
-        intro={t.pricing.teaser.body.replace("{price}", price(market.prices.quickWin))}
+        title={fillPlan(t.pricing.teaser.title, price(light.monthlyPrice), light.hoursPerMonth)}
+        intro={fillPlan(t.pricing.teaser.body, price(light.monthlyPrice), light.hoursPerMonth)}
       >
-        <ButtonLink link={{ href: href("/pricing"), label: t.pricing.teaser.link }} variant="secondary" />
+        <ButtonLink link={{ href: href("/pricing"), label: t.pricing.teaser.link }} variant="primary" />
       </Section>
+
+      <Career t={t} />
 
       <Section id="work" eyebrow={t.work.eyebrow} title={t.work.title} intro={t.work.intro}>
         <ul className="grid gap-5 md:grid-cols-3">

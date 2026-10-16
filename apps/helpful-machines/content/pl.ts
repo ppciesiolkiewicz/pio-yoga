@@ -20,9 +20,9 @@ export const pl: Content = {
       description: "Cztery proste kroki: bezpłatna rozmowa, plan ze stałą wyceną, realizacja i wsparcie po wdrożeniu.",
     },
     pricing: {
-      title: "Cennik · jasne ceny startowe",
+      title: "Cennik · stałe godziny co tydzień z gwarancją ceny na rok",
       description:
-        "Ceny startowe automatyzacji AI, dedykowanych aplikacji i stałej pomocy. Każdy projekt zaczyna się od bezpłatnej rozmowy i stałej wyceny.",
+        "Nowi klienci dostają 4 lub 10 godzin co tydzień na usprawnianie swojej firmy, w tygodniowej cenie gwarantowanej przez 12 miesięcy. Zacznij od bezpłatnej rozmowy.",
     },
     work: {
       title: "Realizacje · co zbudowaliśmy wcześniej",
@@ -196,39 +196,57 @@ export const pl: Content = {
     ],
   },
   pricing: {
-    eyebrow: "Cennik",
-    title: "Jasne ceny startowe",
-    intro: "Każda firma jest inna, dlatego każdy projekt dostaje stałą wycenę po bezpłatnej rozmowie. To typowe punkty startowe.",
-    from: "Od",
+    eyebrow: "Oferta dla nowych klientów",
+    title: "Godziny co tydzień tylko dla Twojej firmy, z ceną gwarantowaną przez rok",
+    intro:
+      "Zamiast jednorazowych projektów dostajesz co tydzień czas poświęcony na usprawnianie Twojej firmy: szukamy tego, co Cię spowalnia, i naprawiamy to lepszym procesem, AI, uporządkowanymi danymi albo aplikacjami na zamówienie. Zacznij w najbliższych tygodniach, a cena nie zmieni się przez 12 miesięcy.",
+    badge: "Cena dla nowych klientów · gwarancja 12 miesięcy",
     perMonth: "/mies.",
-    packages: {
-      quickWin: {
-        name: "Szybka poprawa",
-        summary: "Jedna automatyzacja, asystent AI lub poprawka arkusza.",
-        features: ["Jedno konkretne usprawnienie", "Wdrożenie w ciągu około tygodnia", "Miesiąc poprawek"],
+    plans: {
+      light: {
+        name: "{hours} godziny tygodniowo",
+        summary: "{hours} godziny co tydzień poświęcone na usprawnianie Twojej firmy.",
+        features: ["Jedno usprawnienie naraz, od początku do końca", "Krótkie cotygodniowe podsumowanie zmian", "Cena gwarantowana przez 12 miesięcy", "Rezygnacja w dowolnym momencie"],
       },
-      customApp: {
-        name: "Dedykowana aplikacja",
-        summary: "Dedykowana aplikacja lub strona zbudowana wokół Twojej firmy.",
-        features: ["Projektowana razem z Tobą", "Należy do Ciebie", "Trzy miesiące poprawek"],
-      },
-      support: {
-        name: "Stała pomoc",
-        summary: "Niewielki miesięczny abonament na zmiany i pytania.",
-        features: ["Zmiany, kiedy ich potrzebujesz", "Szybsze odpowiedzi", "Rezygnacja w dowolnym momencie"],
+      focus: {
+        name: "{hours} godzin tygodniowo",
+        summary: "{hours} godzin co tydzień poświęconych na usprawnianie Twojej firmy.",
+        features: ["Większe zmiany, także dedykowane aplikacje", "Cotygodniowa rozmowa", "Cena gwarantowana przez 12 miesięcy", "Rezygnacja w dowolnym momencie"],
       },
     },
     custom: {
-      name: "Coś większego?",
-      body: "Migracje, integracje i większe aplikacje na zamówienie wyceniamy po bezpłatnej rozmowie.",
+      name: "Potrzebujesz więcej godzin albo jednorazowego projektu?",
+      body: "Większe aplikacje na zamówienie, migracje i integracje wyceniamy po bezpłatnej rozmowie.",
       cta: "Umów bezpłatną rozmowę",
     },
-    note: "Ceny netto (bez VAT).",
+    note: "Ceny netto (bez VAT). Cena dla nowych klientów nie zmienia się przez 12 miesięcy od pierwszego tygodnia współpracy.",
     teaser: {
-      title: "Ceny dla małych firm",
-      body: "Szybkie poprawki od {price}. Każdy projekt dostaje stałą wycenę przed rozpoczęciem pracy.",
-      link: "Zobacz cennik",
+      title: "{price} tygodniowo. Gwarancja ceny na rok.",
+      body: "Nowi klienci dostają {hours} godziny co tydzień na usprawnianie swojej firmy za {price} tygodniowo, w cenie, która nie zmieni się przez 12 miesięcy.",
+      link: "Zobacz ofertę",
     },
+    banner: {
+      text: "Nowi klienci: {hours} godziny tygodniowo na usprawnianie Twojej firmy za {price}/tydz., z gwarancją ceny na 12 miesięcy.",
+      link: "Zobacz ofertę",
+    },
+  },
+  career: {
+    eyebrow: "Doświadczenie, które za tym stoi",
+    title: "Ponad dziesięć lat usprawniania tego, jak działają firmy",
+    intro:
+      "Helpful Machines prowadzi Piotr Ciesiolkiewicz, inżynier oprogramowania i osoba, która lubi rozwiązywać problemy, magister informatyki Politechniki Wrocławskiej z ponad dziesięcioletnim doświadczeniem w startupach i globalnych firmach w Australii i Europie. To doświadczenie trafia do każdego planu: patrzymy na ceny, przychody, sposób pracy zespołu i to, czego naprawdę potrzebują klienci, a nie tylko na technologię.",
+    highlights: [
+      { title: "Nokia", body: "Zaczynał od przekopywania się przez gigabajty logów, żeby zrozumieć nieoczekiwane zachowanie systemów, a potem budował narzędzia, dzięki którym inni znajdowali odpowiedzi w kilka minut." },
+      { title: "Highsnobiety", body: "Zbudował strony produktów i koszyk, które działały szybko i bezbłędnie podczas ogromnych premier limitowanych kolekcji." },
+      { title: "Officeworks", body: "Zmienił sposób pracy zespołu tak, że programiści przestali czekać na testerów, i zbudował zamówienia cykliczne dla klientów biznesowych." },
+      { title: "Lysn", body: "Wprowadził konfigurowalne ceny i dopłaty Medicare, które zwiększyły przychody, oraz przygotował lokalny zespół do płynnego przejęcia produktu." },
+      { title: "ONCHAIN", body: "Zbudował płatności kartą i silnik subskrypcji, który wycenia w dolarach, a pobiera opłaty w kryptowalutach." },
+      {
+        title: "Pomysły spoza schematów",
+        body: "1. miejsce na RegHack Downunder 2017 i nagroda GovHack 2017. Poza ekranem: cyrk, taniec i muzyka, dzięki którym pomysły są świeże, a rozwiązania kreatywne.",
+      },
+    ],
+    link: "LinkedIn",
   },
   work: {
     eyebrow: "Realizacje",
@@ -282,7 +300,7 @@ export const pl: Content = {
     items: [
       {
         question: "Ile to kosztuje?",
-        answer: "Większość projektów zaczyna się od cen z naszego cennika. Po bezpłatnej rozmowie dostajesz stałą wycenę, więc cena się nie zmieni, chyba że zmieni się zakres.",
+        answer: "Nowi klienci wybierają plan tygodniowy: 4 lub 10 godzin co tydzień, w cenie gwarantowanej przez 12 miesięcy (szczegóły w cenniku). Większe jednorazowe projekty dostają stałą wycenę po bezpłatnej rozmowie.",
       },
       { question: "Ile trwa projekt?", answer: "Szybkie poprawki zwykle tydzień lub dwa. Dedykowane aplikacje zwykle od czterech do ośmiu tygodni." },
       { question: "Nie znam się na technologii. Czy to problem?", answer: "Ani trochę. Wszystko tłumaczymy prostym językiem i zajmujemy się stroną techniczną." },

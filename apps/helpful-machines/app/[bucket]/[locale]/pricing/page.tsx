@@ -3,7 +3,9 @@ import { CtaBand } from "@repo/ui/CtaBand";
 import { PricingCard } from "@repo/ui/PricingCard";
 import { Section } from "@repo/ui/Section";
 import { ButtonLink } from "@repo/ui/SmartLink";
-import { priceFormatter } from "@/lib/format";
+import { Career } from "@/components/Career";
+import { planKeys } from "@/content/market";
+import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
 import { meta } from "@/lib/metadata";
 import { resolveParams, type RouteParams } from "@/lib/params";
@@ -19,30 +21,40 @@ export default async function PricingPage({ params }: Props) {
   const { locale, t, market } = await resolveParams(params);
   const price = await priceFormatter(market.currency);
   const booking = bookingLink(locale, t, "pricing");
-  const { quickWin, customApp, support } = t.pricing.packages;
   return (
     <>
       <Section id="pricing" headingLevel="h1" eyebrow={t.pricing.eyebrow} title={t.pricing.title} intro={t.pricing.intro}>
-        <div className="grid gap-6 lg:grid-cols-3">
-          <PricingCard headingLevel="h2" {...quickWin} price={`${t.pricing.from} ${price(market.prices.quickWin)}`} cta={booking} newTabLabel={t.nav.newTab} />
-          <PricingCard headingLevel="h2" featured {...customApp} price={`${t.pricing.from} ${price(market.prices.customApp)}`} cta={booking} newTabLabel={t.nav.newTab} />
-          <PricingCard
-            headingLevel="h2"
-            {...support}
-            price={`${t.pricing.from} ${price(market.prices.support)}${t.pricing.perMonth}`}
-            cta={booking}
-            newTabLabel={t.nav.newTab}
-          />
+        <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+          {planKeys.map((key) => {
+            const plan = market.plans[key];
+            const copy = t.pricing.plans[key];
+            const fill = (text: string) => fillPlan(text, price(plan.monthlyPrice), plan.hoursPerMonth);
+            return (
+              <PricingCard
+                key={key}
+                headingLevel="h2"
+                featured={key === "focus"}
+                badge={t.pricing.badge}
+                name={fill(copy.name)}
+                price={`${price(plan.monthlyPrice)}${t.pricing.perMonth}`}
+                summary={fill(copy.summary)}
+                features={copy.features}
+                cta={booking}
+                newTabLabel={t.nav.newTab}
+              />
+            );
+          })}
         </div>
-        <Card className="mt-6 flex flex-wrap items-center justify-between gap-6">
+        <Card className="mx-auto mt-6 flex max-w-4xl flex-wrap items-center justify-between gap-6">
           <div>
             <h2 className="font-display text-2xl font-extrabold">{t.pricing.custom.name}</h2>
             <p className="mt-2 text-muted">{t.pricing.custom.body}</p>
           </div>
           <ButtonLink link={{ ...booking, label: t.pricing.custom.cta }} variant="secondary" newTabLabel={t.nav.newTab} />
         </Card>
-        <p className="mt-6 text-sm text-muted">{t.pricing.note}</p>
+        <p className="mx-auto mt-6 max-w-4xl text-sm text-muted">{t.pricing.note}</p>
       </Section>
+      <Career t={t} />
       <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />
     </>
   );

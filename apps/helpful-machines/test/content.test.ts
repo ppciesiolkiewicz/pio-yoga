@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { collectStrings, findCopyViolations } from "@repo/web/content-rules";
 import { en } from "../content/en";
 import { pl } from "../content/pl";
-import { markets } from "../content/market";
+import { markets, planKeys } from "../content/market";
 import { serviceSlugs } from "../content/services";
 import { workSlugs } from "../content/work";
 import { experiments } from "../experiments";
@@ -50,15 +50,18 @@ describe("Helpful Machines content", () => {
     }
   });
 
-  it("has whole positive prices in the market currency", () => {
+  it("has whole positive weekly plans in the market currency", () => {
     expect(markets.en.currency).toBe("AUD");
     expect(markets.pl.currency).toBe("PLN");
     for (const market of Object.values(markets)) {
-      for (const price of Object.values(market.prices)) {
-        expect(Number.isInteger(price)).toBe(true);
-        expect(price).toBeGreaterThan(0);
+      for (const key of planKeys) {
+        const plan = market.plans[key];
+        expect(Number.isInteger(plan.monthlyPrice)).toBe(true);
+        expect(plan.monthlyPrice).toBeGreaterThan(0);
+        expect(plan.hoursPerMonth).toBeGreaterThan(0);
       }
     }
+    expect(markets.en.plans).toEqual({ light: { monthlyPrice: 89, hoursPerMonth: 4 }, focus: { monthlyPrice: 219, hoursPerMonth: 10 } });
   });
 
   it("Polish privacy text matches what analytics really does before consent", () => {
@@ -68,15 +71,18 @@ describe("Helpful Machines content", () => {
     expect(privacy).not.toContain("Za Twoją zgodą korzystamy z analityki");
   });
 
-  it("keeps the pricing teaser placeholder", () => {
-    expect(en.pricing.teaser.body).toContain("{price}");
-    expect(pl.pricing.teaser.body).toContain("{price}");
+  it("keeps the plan placeholders in the offer copy", () => {
+    for (const dict of [en, pl]) {
+      for (const text of [dict.pricing.teaser.title, dict.pricing.teaser.body, dict.pricing.banner.text]) expect(text).toContain("{price}");
+      for (const text of [dict.pricing.teaser.body, dict.pricing.banner.text]) expect(text).toContain("{hours}");
+      for (const key of planKeys) expect(dict.pricing.plans[key].name).toContain("{hours}");
+    }
   });
 
   it("Polish copy uses neutral forms and the reviewed wording", () => {
     const text = collectStrings(pl).map((s) => s.value).join(" ");
     expect(text).not.toMatch(/\p{L}+łeś\b/u);
-    for (const phrase of ["w ciągu około tygodnia", "aktualizują się nawzajem", "Plan wycofania zmian", "zarejestrowany na Ciebie", "Nawigacja główna"]) {
+    for (const phrase of ["aktualizują się nawzajem", "Plan wycofania zmian", "zarejestrowany na Ciebie", "Nawigacja główna"]) {
       expect(text).toContain(phrase);
     }
   });

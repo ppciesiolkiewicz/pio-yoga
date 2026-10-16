@@ -1,12 +1,22 @@
 import type { Locale } from "@repo/web/locale";
 
+export type PlanKey = "light" | "focus";
+export const planKeys: readonly PlanKey[] = ["light", "focus"];
+
 export type Market = {
   currency: "AUD" | "PLN";
-  /** PLACEHOLDER starting prices: confirm before launch. */
-  prices: { quickWin: number; customApp: number; support: number };
+  /** New-client monthly plans: dedicated hours per month at a price locked for the client's first 12 months. */
+  plans: Record<PlanKey, { monthlyPrice: number; hoursPerMonth: number }>;
 };
 
 export const markets: Record<Locale, Market> = {
-  en: { currency: "AUD", prices: { quickWin: 900, customApp: 4900, support: 390 } },
-  pl: { currency: "PLN", prices: { quickWin: 2400, customApp: 12900, support: 990 } },
+  en: {
+    currency: "AUD",
+    plans: { light: { monthlyPrice: 89, hoursPerMonth: 4 }, focus: { monthlyPrice: 219, hoursPerMonth: 10 } },
+  },
+  pl: {
+    currency: "PLN",
+    /** PLACEHOLDER: roughly the AUD prices converted; confirm. */
+    plans: { light: { monthlyPrice: 129, hoursPerMonth: 4 }, focus: { monthlyPrice: 259, hoursPerMonth: 10 } },
+  },
 };

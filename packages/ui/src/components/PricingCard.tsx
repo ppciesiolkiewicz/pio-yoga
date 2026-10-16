@@ -11,9 +11,12 @@ export function PricingCard({
   featured = false,
   headingLevel: Heading = "h3",
   newTabLabel,
+  badge,
 }: {
   name: string;
   price: string;
+  /** Short promo label shown above the name, e.g. "New-client price". */
+  badge?: string;
   summary: string;
   features: string[];
   cta?: CtaLink;
@@ -23,6 +26,9 @@ export function PricingCard({
 }) {
   return (
     <Card as="article" className={cn("flex h-full flex-col", featured && "border-4")}>
+      {badge && (
+        <p className="mb-3 self-start rounded-full bg-highlight px-3 py-1 text-sm font-bold text-ink">{badge}</p>
+      )}
       <Heading className="font-display text-2xl font-extrabold">{name}</Heading>
       <p className="mt-2 font-display text-3xl font-extrabold">{price}</p>
       <p className="mt-3 text-muted">{summary}</p>

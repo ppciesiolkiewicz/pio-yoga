@@ -18,8 +18,8 @@ export const en = {
       description: "Four simple steps: a free chat, a fixed plan and quote, the build, and support afterwards.",
     },
     pricing: {
-      title: "Pricing · clear starting prices",
-      description: "Starting prices for AI automations, custom apps and ongoing support. Every project starts with a free chat and a fixed quote.",
+      title: "Pricing · dedicated monthly hours, price locked for a year",
+      description: "New clients get 4 or 10 dedicated hours every month improving their business, at a monthly price locked for 12 months. Cancel any time. Start with a free chat.",
     },
     work: {
       title: "Work · what we've built before",
@@ -190,39 +190,57 @@ export const en = {
     ],
   },
   pricing: {
-    eyebrow: "Pricing",
-    title: "Clear starting prices",
-    intro: "Every business is different, so every project gets a fixed quote after a free chat. These are typical starting points.",
-    from: "From",
+    eyebrow: "New-client offer",
+    title: "Dedicated hours every month, at a price locked for a year",
+    intro:
+      "Instead of one-off projects, you get dedicated time every month spent improving your business: finding what slows you down, then fixing it with a better process, AI, tidy data or custom apps. Start in the next few weeks and your price stays the same for 12 months. No contract: cancel any time.",
+    badge: "New-client price · locked 12 months",
     perMonth: "/month",
-    packages: {
-      quickWin: {
-        name: "Quick win",
-        summary: "One automation, AI assistant or spreadsheet fix.",
-        features: ["One focused improvement", "Set up in about a week", "A month of tweaks"],
+    plans: {
+      light: {
+        name: "{hours} hours a month",
+        summary: "{hours} dedicated hours every month improving your business.",
+        features: ["One improvement at a time, start to finish", "A short update on what changed", "Price locked for 12 months", "Cancel any time"],
       },
-      customApp: {
-        name: "Custom app",
-        summary: "A custom app or website built around your business.",
-        features: ["Designed with you", "Yours to own", "Three months of fixes"],
-      },
-      support: {
-        name: "Ongoing help",
-        summary: "A small monthly plan for changes and questions.",
-        features: ["Changes when you need them", "Priority replies", "Cancel any time"],
+      focus: {
+        name: "{hours} hours a month",
+        summary: "{hours} dedicated hours every month improving your business.",
+        features: ["Bigger fixes, including custom apps", "A monthly check-in call", "Price locked for 12 months", "Cancel any time"],
       },
     },
     custom: {
-      name: "Something bigger?",
-      body: "Migrations, integrations and larger custom apps are quoted after a free chat.",
+      name: "Need more hours, or a one-off project?",
+      body: "Larger custom apps, migrations and integrations are quoted after a free chat.",
       cta: "Book a free chat",
     },
-    note: "Prices exclude GST.",
+    note: "Prices exclude GST. The new-client price stays the same for 12 months from your first month.",
     teaser: {
-      title: "Small-business prices",
-      body: "Quick wins from {price}. Every project gets a fixed quote before work starts.",
-      link: "See pricing",
+      title: "{price} a month. Locked for a year.",
+      body: "New clients get {hours} dedicated hours every month improving their business for {price} a month, at a price that won't change for 12 months. Cancel any time.",
+      link: "See the offer",
     },
+    banner: {
+      text: "New clients: {hours} hours a month improving your business for {price}/month, price locked for 12 months. Cancel any time.",
+      link: "See the offer",
+    },
+  },
+  career: {
+    eyebrow: "The experience behind it",
+    title: "More than ten years of fixing how businesses run",
+    intro:
+      "Helpful Machines is led by Piotr Ciesiolkiewicz, a software engineer and problem-solver with a Master's in Computer Science and more than ten years in startups and global companies across Australia and Europe. That experience goes into every plan: we look at pricing, revenue, how teams work and what customers actually need, not just the technology.",
+    highlights: [
+      { title: "Nokia", body: "Started out digging through gigabytes of logs to find why systems misbehaved, then built tools so others could find answers in minutes." },
+      { title: "Highsnobiety", body: "Built product pages and a checkout that stayed fast and correct through huge limited-edition drops." },
+      { title: "Officeworks", body: "Changed a team workflow that cut developers' wait for QA to zero, and built recurring orders for business customers." },
+      { title: "Lysn", body: "Added configurable pricing and Medicare gap payments to grow revenue, and upskilled the local team for a smooth handover." },
+      { title: "ONCHAIN", body: "Built card payments and a subscription engine that prices in dollars and charges in crypto." },
+      {
+        title: "Ideas from outside the box",
+        body: "1st prize at RegHack Downunder 2017 and a GovHack 2017 award. Away from screens: circus, dance and music, which keep the ideas fresh and the solutions creative.",
+      },
+    ],
+    link: "LinkedIn",
   },
   work: {
     eyebrow: "Work",
@@ -276,7 +294,7 @@ export const en = {
     items: [
       {
         question: "How much does it cost?",
-        answer: "Most projects start from the prices on our pricing page. After a free chat you get a fixed quote, so the price won't change unless what you need changes.",
+        answer: "New clients pick a monthly plan of 4 or 10 dedicated hours, at a price locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote after a free chat.",
       },
       { question: "How long does a project take?", answer: "Quick wins usually take a week or two. Custom apps usually take four to eight weeks." },
       { question: "I'm not technical. Is that a problem?", answer: "Not at all. We explain everything in plain English and handle the technical side." },

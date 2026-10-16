@@ -13,11 +13,14 @@ import { activeAssignment, type Assignment } from "@repo/web/experiments";
 import { organization, professionalService, website } from "@repo/web/json-ld";
 import { htmlLang, localizedPath, type Locale } from "@repo/web/locale";
 import { getContent } from "@/content";
+import { markets } from "@/content/market";
+import { fillPlan, formatPrice } from "@/lib/format";
 import { experiments } from "@/experiments";
 import { bookingLink, footerLinks, navItems } from "@/lib/links";
 import { buckets } from "@/lib/params";
 import { site } from "@/site.config";
 import { Logo } from "./Logo";
+import { OfferBanner } from "./OfferBanner";
 import "../app/globals.css";
 
 const display = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], variable: "--font-bricolage", display: "swap" });
@@ -39,6 +42,8 @@ export function Document({
   children: ReactNode;
 }) {
   const t = getContent(locale);
+  const market = markets[locale];
+  const { light } = market.plans;
   const brand = (
     <>
       <Logo />
@@ -54,6 +59,10 @@ export function Document({
       </head>
       <body className="min-h-dvh bg-bg font-body text-ink antialiased">
         <SkipLink label={t.nav.skip} />
+        <OfferBanner
+          text={fillPlan(t.pricing.banner.text, formatPrice(locale, market.currency, light.monthlyPrice), light.hoursPerMonth)}
+          link={{ href: localizedPath(locale, "/pricing"), label: t.pricing.banner.link }}
+        />
         <SiteHeader
           brand={brand}
           homeHref={localizedPath(locale, "/")}

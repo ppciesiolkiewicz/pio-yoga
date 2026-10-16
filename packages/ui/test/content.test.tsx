@@ -65,6 +65,11 @@ describe("PricingCard", () => {
     expect(within(card).getByText("One focused improvement")).toBeTruthy();
     expect(within(card).getByRole("link", { name: "Book a free chat" })).toBeTruthy();
   });
+
+  it("shows a promo badge", () => {
+    render(<PricingCard name="4 hours a week" price="A$49/week" badge="New-client price" summary="S" features={["Cancel any time"]} />);
+    expect(within(screen.getByRole("article")).getByText("New-client price")).toBeTruthy();
+  });
 });
 
 describe("FaqList", () => {
