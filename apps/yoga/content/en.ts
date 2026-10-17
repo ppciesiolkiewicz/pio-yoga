@@ -9,7 +9,7 @@ export const en = {
     videoTitle: "Video program with a free consultation",
     videoDescription:
       "Practise yoga, yin yoga and dynamic fascia release at home with Pio's video program. Every purchase includes a free one-to-one consultation.",
-    timerTitle: "Yoga and meditation gong timer",
+    timerTitle: "Yoga Timer · gong timer for yoga and meditation",
     timerDescription:
       "A free interval timer for yoga, yin and meditation: set the round length, and a gong opens every round, with an optional inner gong at any point you choose.",
   },
@@ -18,7 +18,7 @@ export const en = {
     classes: "Classes",
     program: "Program",
     video: "Video",
-    timer: "Timer",
+    timer: "Yoga Timer",
     beyond: "Beyond the mat",
     contact: "Contact",
     langLabel: "Language",
@@ -73,7 +73,7 @@ export const en = {
       { title: "Sound meditation", body: "Resting your attention on a gong, a singing bowl or your own humming, and following it into silence." },
       { title: "Moving meditation", body: "Slow flows, mindful walking and free movement, for the days when sitting still feels like too much." },
     ],
-    cta: "Practise with the gong timer",
+    cta: "Open the Yoga Timer",
   },
   breath: {
     in: "inhale",
@@ -169,9 +169,9 @@ export const en = {
     error: "Something went wrong starting the payment. Please try again, or write to me.",
   },
   timer: {
-    eyebrow: "Practice timer",
-    teaser: "A gong for every round, and a softer one when it's time to switch sides. Free to use.",
-    teaserCta: "Open the timer",
+    eyebrow: "Yoga Timer",
+    teaser: "A gong for every round and a deeper one halfway, when it's time to switch sides. For yoga, yin and meditation. Free to use.",
+    teaserCta: "Open the Yoga Timer",
     length: "Round length",
     min: "min",
     presets: "Quick picks",
@@ -188,7 +188,7 @@ export const en = {
     halfway: "halfway",
     outerSound: "Round gong",
     innerSound: "Inner gong",
-    sounds: { gong: "Deep gong", bowl: "Singing bowl", tingsha: "Tingsha", rin: "Rin bell" },
+    sounds: { gong: "Deep gong", bowl: "Singing bowl", deepBowl: "Deep bowl", temple: "Temple bell", crystal: "Crystal bowl", rin: "Rin bell" },
     hint: "Tap a sound to hear it. The screen stays awake while the timer runs, where your browser allows it.",
     start: "Start",
     loading: "Loading sounds…",

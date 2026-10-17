@@ -8,13 +8,13 @@ type SoundId = keyof T["sounds"];
 type Status = "idle" | "loading" | "running" | "paused" | "done";
 type Settings = { minutes: number; rounds: number; inner: boolean; innerAt: number; outerSound: SoundId; innerSound: SoundId };
 
-const SOUND_IDS: SoundId[] = ["gong", "bowl", "tingsha", "rin"];
-const DEFAULTS: Settings = { minutes: 5, rounds: 6, inner: true, innerAt: 50, outerSound: "gong", innerSound: "tingsha" };
-const PRESETS = [1, 3, 5, 10, 15];
+const SOUND_IDS: SoundId[] = ["gong", "bowl", "deepBowl", "temple", "crystal", "rin"];
+const DEFAULTS: Settings = { minutes: 5, rounds: 6, inner: true, innerAt: 50, outerSound: "gong", innerSound: "deepBowl" };
+const PRESETS = [1, 3, 5, 10, 15, 30];
 const MAX_MINUTES = 90;
 const MAX_ROUNDS = 60; // 0 = until stopped
 const HORIZON = 15 * 60; // seconds of gongs scheduled ahead, so throttled background tabs keep ringing
-const STORE = "gong-timer";
+const STORE = "gong-timer-v2";
 
 const R = 150;
 const C = 2 * Math.PI * R;
@@ -377,9 +377,7 @@ export default function GongTimer({ t }: { t: T }) {
               <button type="button" aria-label={t.shorter} onClick={() => update({ minutes: clamp(s.minutes - 1, 1, MAX_MINUTES) })} disabled={s.minutes <= 1}>
                 −
               </button>
-              <output aria-live="polite">
-                {s.minutes} <small>{t.min}</small>
-              </output>
+              <NumberField label={t.length} value={s.minutes} min={1} max={MAX_MINUTES} unit={t.min} onCommit={(minutes) => update({ minutes })} />
               <button type="button" aria-label={t.longer} onClick={() => update({ minutes: clamp(s.minutes + 1, 1, MAX_MINUTES) })} disabled={s.minutes >= MAX_MINUTES}>
                 +
               </button>
@@ -399,7 +397,7 @@ export default function GongTimer({ t }: { t: T }) {
               <button type="button" aria-label={t.fewer} onClick={() => update({ rounds: clamp((s.rounds || 1) - 1, 1, MAX_ROUNDS) })} disabled={s.rounds === 1}>
                 −
               </button>
-              <output aria-live="polite">{s.rounds || "∞"}</output>
+              <NumberField label={t.rounds} value={s.rounds} min={1} max={MAX_ROUNDS} empty="∞" onCommit={(rounds) => update({ rounds })} />
               <button type="button" aria-label={t.more} onClick={() => update({ rounds: clamp(s.rounds + 1, 1, MAX_ROUNDS) })} disabled={s.rounds >= MAX_ROUNDS}>
                 +
               </button>
@@ -496,5 +494,62 @@ function SoundPicker({
         ))}
       </div>
     </fieldset>
+  );
+}
+
+/** A number you can type straight into. Commits on blur or Enter, clamped to min–max; Escape cancels.
+ *  With `empty`, a value of 0 shows that placeholder (∞ for "until I stop"). */
+function NumberField({
+  label,
+  value,
+  min,
+  max,
+  unit,
+  empty,
+  onCommit,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  unit?: string;
+  empty?: string;
+  onCommit: (n: number) => void;
+}) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const shown = draft ?? (empty && value === 0 ? "" : String(value));
+  const commit = () => {
+    if (draft === null) return;
+    const n = parseInt(draft, 10);
+    if (!Number.isNaN(n)) onCommit(clamp(n, min, max));
+    setDraft(null);
+  };
+  return (
+    <label className="num">
+      <input
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        enterKeyHint="done"
+        autoComplete="off"
+        aria-label={label}
+        value={shown}
+        placeholder={empty}
+        size={String(max).length}
+        onFocus={(e) => e.currentTarget.select()}
+        onChange={(e) => setDraft(e.target.value.replace(/\D/g, "").slice(0, String(max).length))}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            e.currentTarget.blur();
+          } else if (e.key === "Escape") {
+            setDraft(null);
+            e.currentTarget.blur();
+          }
+        }}
+      />
+      {unit && <small>{unit}</small>}
+    </label>
   );
 }

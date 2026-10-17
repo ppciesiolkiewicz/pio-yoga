@@ -11,7 +11,7 @@ export const pl: Dictionary = {
     videoTitle: "Program wideo z bezpłatną konsultacją",
     videoDescription:
       "Ćwicz jogę, jogę yin i dynamiczne uwalnianie powięzi w domu z programem wideo Pio. Każdy zakup obejmuje bezpłatną konsultację indywidualną.",
-    timerTitle: "Timer z gongiem do jogi i medytacji",
+    timerTitle: "Timer jogi · gong do jogi i medytacji",
     timerDescription:
       "Darmowy timer interwałowy do jogi, jogi yin i medytacji: ustaw długość rundy, a gong rozpocznie każdą z nich, z opcjonalnym gongiem wewnętrznym w wybranym momencie.",
   },
@@ -20,7 +20,7 @@ export const pl: Dictionary = {
     classes: "Zajęcia",
     program: "Program",
     video: "Wideo",
-    timer: "Timer",
+    timer: "Timer jogi",
     beyond: "Poza matą",
     contact: "Kontakt",
     langLabel: "Język",
@@ -75,7 +75,7 @@ export const pl: Dictionary = {
       { title: "Medytacja z dźwiękiem", body: "Uwaga spoczywa na gongu, misie albo własnym mruczeniu i podąża za dźwiękiem aż do ciszy." },
       { title: "Medytacja w ruchu", body: "Powolne sekwencje, uważny spacer i swobodny ruch, na dni, gdy siedzenie w bezruchu to za dużo." },
     ],
-    cta: "Ćwicz z timerem z gongiem",
+    cta: "Otwórz Timer jogi",
   },
   breath: {
     in: "wdech",
@@ -171,9 +171,9 @@ export const pl: Dictionary = {
     error: "Nie udało się rozpocząć płatności. Spróbuj ponownie albo napisz do mnie.",
   },
   timer: {
-    eyebrow: "Timer do praktyki",
-    teaser: "Gong na początek każdej rundy i łagodniejszy, gdy pora zmienić stronę. Za darmo.",
-    teaserCta: "Otwórz timer",
+    eyebrow: "Timer jogi",
+    teaser: "Gong na początek każdej rundy i głębszy w połowie, gdy pora zmienić stronę. Do jogi, yin i medytacji. Za darmo.",
+    teaserCta: "Otwórz Timer jogi",
     length: "Długość rundy",
     min: "min",
     presets: "Szybki wybór",
@@ -190,7 +190,7 @@ export const pl: Dictionary = {
     halfway: "w połowie",
     outerSound: "Gong rundy",
     innerSound: "Gong wewnętrzny",
-    sounds: { gong: "Głęboki gong", bowl: "Misa tybetańska", tingsha: "Tingsha", rin: "Dzwon rin" },
+    sounds: { gong: "Głęboki gong", bowl: "Misa tybetańska", deepBowl: "Głęboka misa", temple: "Dzwon świątynny", crystal: "Misa kryształowa", rin: "Dzwon rin" },
     hint: "Dotknij dźwięku, aby go usłyszeć. Ekran nie wygasa, gdy timer działa, jeśli przeglądarka na to pozwala.",
     start: "Start",
     loading: "Ładuję dźwięki…",

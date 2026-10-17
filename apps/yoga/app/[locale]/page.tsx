@@ -8,6 +8,7 @@ import BreathCircle from "@/components/BreathCircle";
 import CopyEmail from "@/components/CopyEmail";
 import JsonLd from "@/components/JsonLd";
 import PracticeWeb from "@/components/PracticeWeb";
+import TimerIcon from "@/components/TimerIcon";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -209,9 +210,14 @@ export default async function Home({ params }: Props) {
           <p>{t.video.teaser}</p>
           <span className="arrow">{t.video.teaserCta} →</span>
         </Link>
-        <Link className="offer wide" href={`/${locale}/timer`}>
-          <div className="eyebrow">{t.timer.eyebrow}</div>
-          <p>{t.timer.teaser}</p>
+        <Link className="offer wide app-tile" href={`/${locale}/timer`}>
+          <span className="app-disc">
+            <TimerIcon />
+          </span>
+          <div className="app-text">
+            <div className="eyebrow">{t.timer.eyebrow}</div>
+            <p>{t.timer.teaser}</p>
+          </div>
           <span className="arrow">{t.timer.teaserCta} →</span>
         </Link>
       </section>

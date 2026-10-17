@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/content/en";
 import LangSwitch from "./LangSwitch";
+import TimerIcon from "./TimerIcon";
 
 export default function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) {
   const base = `/${locale}`;
@@ -20,9 +21,12 @@ export default function Header({ locale, t }: { locale: Locale; t: Dictionary["n
           <Link href={`${base}#classes`}>{t.classes}</Link>
           <Link href={`${base}/program`}>{t.program}</Link>
           <Link href={`${base}/video`}>{t.video}</Link>
-          <Link href={`${base}/timer`}>{t.timer}</Link>
           <Link href={`${base}#contact`}>{t.contact}</Link>
         </nav>
+        <Link className="app-link" href={`${base}/timer`}>
+          <TimerIcon className="app-ico" />
+          <span>{t.timer}</span>
+        </Link>
         <LangSwitch locale={locale} label={t.langLabel} />
       </div>
     </header>
