@@ -7,6 +7,7 @@ import { bookingHref, site } from "@/lib/site";
 import BreathCircle from "@/components/BreathCircle";
 import CopyEmail from "@/components/CopyEmail";
 import JsonLd from "@/components/JsonLd";
+import PracticeWeb from "@/components/PracticeWeb";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -30,7 +31,7 @@ export default async function Home({ params }: Props) {
     name: "Pio",
     url: `${site.url}/${locale}`,
     email: site.email,
-    jobTitle: ["Yoga teacher", "Thai yoga massage therapist", "Vocal and music trainer", "Contemporary dancer", "Circus artist"],
+    jobTitle: ["Yoga teacher", "Thai yoga massage therapist", "Vocal and music trainer", "Contemporary dancer", "Circus artist", "Meditation teacher"],
     knowsLanguage: ["en", "pl"],
     hasCredential: t.story.creds.map((c) => ({
       "@type": "EducationalOccupationalCredential",
@@ -63,11 +64,54 @@ export default async function Home({ params }: Props) {
             <a className="btn primary" href={booking} {...(external ? { target: "_blank", rel: "noopener" } : {})}>
               {t.hero.cta1}
             </a>
-            <a className="btn" href="#story">{t.hero.cta2}</a>
+            <a className="btn" href="#practice">{t.hero.cta2}</a>
           </div>
           <p className="small">{t.hero.langs}</p>
         </div>
         <BreathCircle t={t.breath} />
+      </section>
+
+      <section id="practice">
+        <div className="sec-head">
+          <div className="eyebrow">{t.practice.eyebrow}</div>
+          <h2>{t.practice.title}</h2>
+          <p className="lead">{t.practice.lead}</p>
+        </div>
+        <div className="web-wrap">
+          <PracticeWeb centre={t.practice.centre} labels={t.practice.items.map((i) => i.short)} />
+          <div>
+            <h3 className="h-xs">{t.practice.threadsTitle}</h3>
+            <div className="principles threads">
+              {t.practice.threads.map((th) => (
+                <div key={th.title}>
+                  <h4>{th.title}</h4>
+                  <p>{th.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <h3 className="h-xs sub">{t.practice.itemsTitle}</h3>
+        <div className="practices">
+          {t.practice.items.map((it) => (
+            <article className="class" key={it.title}>
+              <div className="meta">{it.tag}</div>
+              <h4>{it.title}</h4>
+              <p>{it.body}</p>
+            </article>
+          ))}
+        </div>
+        <div className="well">
+          <h3 className="h-xs">{t.practice.wellTitle}</h3>
+          <div className="well-grid">
+            {t.practice.well.map((w) => (
+              <div key={w.title}>
+                <strong>{w.title}</strong>
+                <p>{w.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section id="story" className="story">
@@ -76,13 +120,12 @@ export default async function Home({ params }: Props) {
           <h2>{t.story.title}</h2>
           <figure className="bone">
             <svg viewBox="0 0 300 90" aria-hidden="true">
-              <path d="M18 58 C 60 70, 95 30, 140 38 S 230 66, 282 30" fill="none" stroke="var(--ink)" strokeWidth="11" strokeLinecap="round" />
-              <path d="M18 58 C 60 70, 95 30, 140 38 S 230 66, 282 30" fill="none" stroke="var(--bg)" strokeWidth="5" strokeLinecap="round" />
-              <g stroke="var(--sun)" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M150 24 L146 54" />
-                <path d="M140 28 L156 30" />
-                <path d="M138 40 L158 42" />
-                <path d="M136 52 L156 54" />
+              <path d="M6 45 C 30 10, 54 10, 78 45 S 126 80, 150 45 S 198 10, 222 45 S 270 80, 294 45" fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
+              <path d="M6 45 C 30 25, 54 25, 78 45 S 126 65, 150 45 S 198 25, 222 45 S 270 65, 294 45" fill="none" stroke="var(--sun)" strokeWidth="2" strokeLinecap="round" strokeDasharray="2 6" />
+              <g fill="var(--sun)">
+                <circle cx="78" cy="45" r="4" />
+                <circle cx="150" cy="45" r="4" />
+                <circle cx="222" cy="45" r="4" />
               </g>
             </svg>
             <figcaption>{t.story.fig}</figcaption>
@@ -129,6 +172,25 @@ export default async function Home({ params }: Props) {
               <p className="cred-inline">{t.classes.thai.cred}</p>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section id="meditation" className="two">
+        <div>
+          <div className="eyebrow">{t.mindful.eyebrow}</div>
+          <h2 className="h-mid">{t.mindful.title}</h2>
+          <p className="lead">{t.mindful.lead}</p>
+          <div className="ctas">
+            <Link className="btn" href={`/${locale}/timer`}>{t.mindful.cta} →</Link>
+          </div>
+        </div>
+        <div className="principles quiet">
+          {t.mindful.items.map((m) => (
+            <div key={m.title}>
+              <h3>{m.title}</h3>
+              <p>{m.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
