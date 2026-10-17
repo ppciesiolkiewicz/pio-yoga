@@ -80,21 +80,57 @@ export default function GongTimer({ t }: { t: T }) {
     return ctxRef.current;
   }, []);
 
+  // One in-flight request per sound, shared by the background preload, previews and Start.
+  const pending = useRef(new Map<SoundId, Promise<void>>());
+
   const load = useCallback(
     async (ids: SoundId[]) => {
       const ac = ctx();
       await Promise.all(
         ids
           .filter((id) => !buffers.current.has(id))
-          .map(async (id) => {
-            const res = await fetch(`/sounds/${id}.mp3`);
-            if (!res.ok) throw new Error(`sound ${id}: ${res.status}`);
-            buffers.current.set(id, await ac.decodeAudioData(await res.arrayBuffer()));
+          .map((id) => {
+            let p = pending.current.get(id);
+            if (!p) {
+              p = (async () => {
+                const res = await fetch(`/sounds/${id}.mp3`);
+                if (!res.ok) throw new Error(`sound ${id}: ${res.status}`);
+                buffers.current.set(id, await ac.decodeAudioData(await res.arrayBuffer()));
+              })();
+              // A failed load can be retried by the next caller.
+              p.catch(() => pending.current.delete(id));
+              pending.current.set(id, p);
+            }
+            return p;
           }),
       );
     },
     [ctx],
   );
+
+  // Load every sound in the background once the page has finished loading, so Start and the
+  // sound previews respond instantly. The audio context starts suspended until the first tap,
+  // which is allowed; decoding works without it running. Errors stay quiet here and surface
+  // only if Start or a preview still can't load a sound.
+  useEffect(() => {
+    let cancelled = false;
+    let idle = 0;
+    const run = () => {
+      if (cancelled) return;
+      load(SOUND_IDS).catch(() => {});
+    };
+    const schedule = () => {
+      idle = typeof window.requestIdleCallback === "function" ? window.requestIdleCallback(run, { timeout: 2000 }) : window.setTimeout(run, 200);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", schedule);
+      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle);
+      clearTimeout(idle);
+    };
+  }, [load]);
 
   const play = useCallback((id: SoundId, when: number) => {
     const ac = ctxRef.current;
@@ -181,7 +217,8 @@ export default function GongTimer({ t }: { t: T }) {
 
   async function start() {
     setError(false);
-    setStatus("loading");
+    // Usually the background preload has finished; only show "Loading sounds…" if it hasn't.
+    if (![s.outerSound, s.innerSound].every((id) => buffers.current.has(id))) setStatus("loading");
     previewSrc.current?.stop();
     stopSources();
     try {
