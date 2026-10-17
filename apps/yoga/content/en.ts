@@ -86,7 +86,7 @@ export const en = {
     title: "From the stage to the mat, and back again.",
     fig: "Breath, pulse, movement: the same wave.",
     p1: "I came to yoga through performing. As a singer, vocal trainer, contemporary dancer and circus artist I spent years learning how breath, rhythm and attention shape what a body can do, and how it feels while doing it.",
-    p2: "Yoga became the place where all of it met. When I broke my collarbone a few years ago, slow, breath-led practice helped me find my way back, and it showed me how much these disciplines feed one another.",
+    p2: "My body has also been my teacher. As a child I was diagnosed with one leg shorter than the other, and over the years I've broken my collarbone, wrist and thumb and sprained my ankle more times than I can count. Each time, I healed with these same practices: yoga and yin, fascia work, breath, movement and sound. They showed me how much these disciplines feed one another, and how much a body can recover when you listen to it.",
     p3: "Today I teach them together: yoga and yin, fascia work, dance, voice and rhythm, held by mindfulness. Not to perfect a pose or a note, but to feel more alive, more at ease and more like yourself.",
     note: "Movement and meditation support wellbeing but don't replace medical or psychological care. If something about your health matters for practice, tell me and we'll adapt.",
     credEyebrow: "Training",

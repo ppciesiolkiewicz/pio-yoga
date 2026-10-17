@@ -88,7 +88,7 @@ export const pl: Dictionary = {
     title: "Ze sceny na matę i z powrotem.",
     fig: "Oddech, puls, ruch: ta sama fala.",
     p1: "Do jogi przyprowadziła mnie scena. Jako wokalista, trener głosu, tancerz współczesny i artysta cyrkowy przez lata uczyłem się, jak oddech, rytm i uwaga kształtują to, co ciało potrafi, i jak się w nim wtedy czujesz.",
-    p2: "Joga stała się miejscem, w którym to wszystko się spotkało. Gdy kilka lat temu złamałem obojczyk, powolna praktyka prowadzona oddechem pomogła mi wrócić do formy i pokazała, jak bardzo te dziedziny się wzajemnie karmią.",
+    p2: "Moje ciało też było moim nauczycielem. W dzieciństwie zdiagnozowano u mnie krótszą nogę, a przez lata złamałem obojczyk, nadgarstek i kciuk i niezliczoną ilość razy skręciłem kostkę. Za każdym razem wracałem do formy dzięki tym samym praktykom: jodze i yin, pracy z powięzią, oddechowi, ruchowi i dźwiękowi. Pokazały mi, jak bardzo te dziedziny się wzajemnie karmią i jak wiele ciało potrafi odbudować, gdy się go słucha.",
     p3: "Dziś uczę ich razem: jogi i yin, pracy z powięzią, tańca, głosu i rytmu, w ramie uważności. Nie po to, by dopracować pozycję czy dźwięk, ale by czuć się bardziej żywo, swobodniej i bardziej po swojemu.",
     note: "Ruch i medytacja wspierają dobrostan, ale nie zastępują opieki medycznej ani psychologicznej. Jeśli coś w Twoim zdrowiu ma znaczenie dla praktyki, powiedz mi, a dopasujemy ćwiczenia.",
     credEyebrow: "Wykształcenie",
