@@ -20,10 +20,8 @@ export default async function TimerPage({ params }: Props) {
 
   return (
     <>
-      <section className="page-head narrow">
-        <h1 className="eyebrow">{t.eyebrow}</h1>
-      </section>
       <section className="timer-sec">
+        <h1 className="eyebrow">{t.eyebrow}</h1>
         <GongTimer t={t} />
       </section>
     </>

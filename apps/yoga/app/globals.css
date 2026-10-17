@@ -211,35 +211,38 @@ main > section:last-child { border-bottom: 0; }
 .offer.wide:hover { border-color: var(--sun); }
 @media (max-width: 760px) { .offer.wide { grid-template-columns: 1fr; } }
 
-/* gong timer: dial + controls on the left, settings on the right; one column on phones */
-.timer-sec { padding-top: 0; }
-.gt { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "dial panel" "controls panel"; grid-template-rows: auto 1fr; gap: 1.5rem clamp(2rem, 5vw, 4rem); align-items: start; }
-.gt-dial { grid-area: dial; position: relative; width: min(100%, 380px); justify-self: center; }
+/* gong timer: dial + controls on the left, settings as ruled rows on the right (like the rest of the site, no boxed panel); one column on phones */
+.timer-sec { display: grid; gap: clamp(2rem, 5vw, 3rem); padding-block: clamp(3rem, 7vw, 5.5rem); }
+.timer-sec > .eyebrow { margin: 0; }
+.gt { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "dial panel" "controls panel"; grid-template-rows: auto 1fr; gap: 2rem clamp(2rem, 6vw, 5rem); align-items: start; }
+.gt-dial { grid-area: dial; position: relative; width: min(100%, 360px); justify-self: center; }
 .gt-dial svg { width: 100%; height: auto; display: block; overflow: visible; }
-.gt-dial .track { fill: var(--surface); stroke: var(--line); stroke-width: 10; }
-.gt-dial .arc { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; }
-.gt-dial .mark { stroke: var(--bg); stroke-width: 3; }
+.gt-dial .track { fill: none; stroke: var(--line); stroke-width: 6; }
+.gt-dial .arc { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; }
+.gt-dial circle.mark { stroke: var(--bg); stroke-width: 3; }
 .gt-dial .mark.outer, .dot.outer { fill: var(--sun); background: var(--sun); }
 .gt-dial .mark.inner, .dot.inner { fill: var(--ink); background: var(--ink); }
-.gt-face { position: absolute; inset: 18%; display: grid; place-content: center; justify-items: center; text-align: center; gap: 0.35rem; font-family: var(--display); }
+.gt-face { position: absolute; inset: 18%; display: grid; place-content: center; justify-items: center; text-align: center; gap: 0.5rem; font-family: var(--display); }
 .gt-time { font-size: clamp(3rem, 11vw, 4.6rem); font-weight: 400; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.gt-round { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.gt-round { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .gt-next { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .gt-done { font-size: 1.2rem; line-height: 1.35; max-width: 12em; }
 .gt-controls { grid-area: controls; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
 .gt-go { min-width: 9rem; }
 .gt-controls .form-msg { flex-basis: 100%; text-align: center; }
 
-.gt-panel { grid-area: panel; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(1.25rem, 3vw, 1.75rem); }
+.gt-panel { grid-area: panel; border-top: 1px solid var(--line); }
 .gt-panel fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
-.gt-panel > fieldset { display: grid; gap: 1.5rem; }
+.gt-panel > fieldset { display: grid; }
 .gt-panel > fieldset:disabled { opacity: 0.55; }
-.gt-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
-.gt-row + .gt-row { padding-top: 1.5rem; border-top: 1px solid var(--line); }
-.gt-label { flex-basis: 100%; display: flex; align-items: center; gap: 0.55rem; font-family: var(--display); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0; }
-.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.gt-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; padding-block: 1.4rem; border-bottom: 1px solid var(--line); }
+.gt-label { flex-basis: 100%; display: flex; align-items: center; gap: 0.55rem; margin: 0; padding: 0; font-family: var(--display); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+/* a legend ignores flex layout; floating it makes it a normal full-width line like the other row labels */
+.gt-sounds > legend.gt-label { float: left; width: 100%; margin-bottom: 0.75rem; }
+.gt-sounds > .chips { clear: both; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 
-.stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; }
 .stepper button { width: 2.75rem; height: 2.75rem; border: 0; border-radius: 50%; background: transparent; color: var(--ink); font: 500 1.35rem var(--display); cursor: pointer; }
 .stepper button:hover:not(:disabled) { background: var(--sun-soft); }
 .stepper button:disabled { opacity: 0.35; cursor: default; }
@@ -255,16 +258,17 @@ main > section:last-child { border-bottom: 0; }
 fieldset:disabled .chip, fieldset:disabled .chip input, fieldset:disabled .check { cursor: default; }
 
 .check { display: inline-flex; align-items: center; gap: 0.55rem; font-family: var(--display); font-size: 0.95rem; cursor: pointer; }
-.check.gt-label { font-size: 0.8rem; color: var(--muted); }
+.check.gt-label { font-size: 0.78rem; }
 .check input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--accent); }
 .gt-range { flex: 1 1 100%; display: grid; gap: 0.35rem; }
-.gt-range input { width: 100%; accent-color: var(--ink); min-height: 2.25rem; }
-.gt-range span { font-family: var(--display); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
-.gt-panel .small { margin-top: 0; }
+.gt-range input { width: 100%; accent-color: var(--accent); min-height: 2.25rem; }
+.gt-range span { font-family: var(--display); font-size: 0.95rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.gt-panel .small { margin-top: 1.25rem; }
 
 @media (max-width: 820px) {
   .gt { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "dial" "controls" "panel"; }
-  .gt-dial { width: min(100%, 320px); }
+  .gt-dial { width: min(100%, 300px); }
+  .gt-panel { margin-top: 1rem; }
 }
 
 /* practice web: drawing beside the three threads, then practice cards and a wellbeing band */
