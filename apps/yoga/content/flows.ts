@@ -94,6 +94,8 @@ export const pieces: Piece[] = [
       block("warmup", undefined, [
         "Feel the foot on the ball of the foot: rotations",
         "Heel raises, both legs",
+        "Stand on one foot",
+        "Raise the toes",
         { n: "Single heel raises", note: "10 each side" },
         { n: "Stretch the midfoot", note: "1 min, easy" },
         "Foot dorsi plank",
