@@ -26,7 +26,8 @@ export type BlockType =
   | "rest"
   | "closing";
 
-export type Round = { items: Item[]; after?: string; note?: string };
+/** `use` puts a building block (e.g. an interlude) between this round and the next. */
+export type Round = { items: Item[]; after?: string; note?: string; use?: string };
 
 export type Step =
   | { kind: "block"; type: BlockType; title?: string; items: Item[]; note?: string }
@@ -34,7 +35,7 @@ export type Step =
   | { kind: "vinyasa"; note?: string }
   | { kind: "words"; lines: string[] };
 
-export type PieceCategory = "warmup" | "sun" | "drill" | "standing" | "ladder" | "core" | "closing";
+export type PieceCategory = "warmup" | "sun" | "drill" | "standing" | "interlude" | "ladder" | "core" | "closing";
 
 export type Piece = {
   id: string;
@@ -192,6 +193,13 @@ export const pieces: Piece[] = [
     ],
   },
   {
+    id: "camel-interlude",
+    category: "interlude",
+    title: "Camel interlude",
+    subtitle: "A kneeling break from the warrior poses, mid-flow",
+    steps: [block("release", undefined, ["Half camel", "Camel → puppy"])],
+  },
+  {
     id: "shoulder-ladder",
     category: "ladder",
     title: "Shoulder ladder",
@@ -256,8 +264,15 @@ export const pieces: Piece[] = [
           after: "Vinyasa with striking cobra",
         },
         {
-          items: ["High lunge", "Twisted high lunge", "Warrior II → reverse warrior → side angle", "Triangle", "Tree pose"],
-          after: "Vinyasa → half camel, camel → puppy",
+          items: [
+            "High lunge",
+            "Twisted high lunge",
+            g(["Warrior II", "Reverse warrior", "Extended side angle"], "loop"),
+            "Triangle",
+            "Tree pose",
+          ],
+          after: "Vinyasa",
+          use: "camel-interlude",
         },
         {
           items: [
@@ -284,7 +299,7 @@ export const pieces: Piece[] = [
         { items: ["Striking cobra", "Half locust", "Bridge"], after: "Core flow + child's pose" },
         { items: ["Striking cobra", "Half locust", "Locust", "Half camel", "Bridge"] },
         {
-          items: ["Striking cobra", "Half locust", "Locust → bow", "Half camel", "Camel", "Bridge", peak("Wheel")],
+          items: ["Striking cobra", "Half locust", "Locust", "Bow", "Half camel", "Camel", "Bridge", peak("Wheel")],
         },
       ]),
     ],
@@ -309,8 +324,7 @@ export const pieces: Piece[] = [
           },
           { items: ["Lizard", "Pigeon"] },
           { items: ["Malasana", "Skandasana", peak("Crane")] },
-        ],
-        "Each round is its own stage rather than a build-up.",
+        ]
       ),
     ],
   },
@@ -629,9 +643,25 @@ export function getPiece(id: string): Piece {
   return piece;
 }
 
-/** Classes that use a building block. */
+/** Building blocks a piece pulls in itself (e.g. an interlude inside a ladder round). */
+function nestedIds(piece: Piece): string[] {
+  return piece.steps.flatMap((s) => (s.kind === "ladder" ? s.rounds.flatMap((r) => (r.use ? [r.use] : [])) : []));
+}
+
+/** Classes that use a building block, directly or through another block. */
 export function usedIn(pieceId: string): ClassPlan[] {
-  return classes.filter((c) => c.parts.some((p) => isUse(p) && p.use === pieceId));
+  return classes.filter((c) =>
+    c.parts.some(
+      (p) =>
+        (isUse(p) && (p.use === pieceId || nestedIds(getPiece(p.use)).includes(pieceId))) ||
+        (!isUse(p) && p.kind === "ladder" && p.rounds.some((r) => r.use === pieceId)),
+    ),
+  );
+}
+
+/** Building blocks that include this one (shown as "Part of …" in the library). */
+export function partOf(pieceId: string): Piece[] {
+  return pieces.filter((p) => nestedIds(p).includes(pieceId));
 }
 
 function pieceIds(c: ClassPlan) {

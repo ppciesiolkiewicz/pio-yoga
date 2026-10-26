@@ -224,3 +224,10 @@
 
 .practice { list-style: none; margin: 0; padding: 0; columns: 3 12rem; column-gap: 2rem; font-family: var(--display); }
 .practice li { break-inside: avoid; padding-block: 0.4rem; border-top: 1px solid var(--line); }
+
+/* a building block slotted between ladder rounds */
+.interlude { display: grid; gap: 0.2rem; text-decoration: none; padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px dashed color-mix(in srgb, var(--tone) 55%, var(--line)); background: color-mix(in srgb, var(--tone) 8%, transparent); }
+.interlude:hover { border-style: solid; }
+.interlude-title { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tone); }
+.interlude-poses { font-family: var(--display); font-size: 0.92rem; color: var(--ink); }
+.ladder-rule { font-family: var(--display); font-size: 0.82rem; color: var(--muted); }

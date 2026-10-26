@@ -29,6 +29,45 @@ function names(items: Item[]): string[] {
   return items.flatMap((i) => (typeof i === "string" ? [key(i)] : "group" in i ? names(i.group) : [key(i.n)]));
 }
 
+/** Identity of an item for matching across ladder rounds (a group matches by its poses). */
+function itemKey(i: Item): string {
+  if (typeof i === "string") return key(i);
+  if ("group" in i) return `g:${names(i.group).join("|")}`;
+  return key(i.n);
+}
+
+/**
+ * Ladder rounds are cumulative: each round repeats everything before it.
+ * Merges a round into the sequence so far. Poses already in the sequence are anchors;
+ * new poses go in right after the last anchor written before them (or before the first
+ * anchor, or at the end when the round repeats nothing explicitly).
+ */
+export function mergeRound(sofar: Item[], round: Item[]): Item[] {
+  const out = [...sofar];
+  let cursor: number | null = null;
+  const pending: Item[] = [];
+  for (const item of round) {
+    const k = itemKey(item);
+    const idx = out.findIndex((o) => itemKey(o) === k);
+    if (idx >= 0) {
+      out[idx] = item; // keep this round's tags (e.g. peak, optional)
+      if (cursor === null) {
+        out.splice(idx, 0, ...pending);
+        cursor = idx + pending.length + 1;
+        pending.length = 0;
+      } else {
+        cursor = Math.max(cursor, idx + 1);
+      }
+    } else if (cursor === null) {
+      pending.push(item);
+    } else {
+      out.splice(cursor, 0, item);
+      cursor++;
+    }
+  }
+  return [...out, ...pending];
+}
+
 /** Renders "a → b → c" with styled arrows. */
 export function Text({ s }: { s: string }) {
   const parts = s.split("→");
@@ -129,15 +168,36 @@ function Stairs({ step, total }: { step: number; total: number }) {
   );
 }
 
+/** A building block slotted between ladder rounds: compact card linking to the library. */
+function InterludeLink({ id }: { id: string }) {
+  const piece = getPiece(id);
+  const poses = piece.steps.flatMap((s) => (s.kind === "block" ? s.items : []));
+  return (
+    <a className="interlude" href={`#block-${piece.id}`} data-type="release">
+      <span className="interlude-title">
+        <span aria-hidden="true">◇</span> {piece.title}
+      </span>
+      <span className="interlude-poses">
+        {poses.map((p, i) => (
+          <Fragment key={i}>
+            {i > 0 && " · "}
+            <Text s={typeof p === "string" ? p : "n" in p ? p.n : ""} />
+          </Fragment>
+        ))}
+      </span>
+    </a>
+  );
+}
+
 function Ladder({ rounds }: { rounds: Round[] }) {
-  let prev: Set<string> | null = null;
+  let sofar: Item[] = [];
   return (
     <div className="ladder">
       {rounds.map((r, i) => {
-        const cur = new Set(names(r.items));
-        const before: Set<string> | null = prev;
-        const shares = before !== null && [...cur].some((n) => before.has(n));
-        prev = cur;
+        // earlier rounds' poses are carried over (greyed); this round's additions are new
+        const before = i === 0 ? null : new Set(names(sofar));
+        const shown = i === 0 ? r.items : mergeRound(sofar, r.items);
+        sofar = shown;
         return (
           <section className="round" key={i} aria-label={`Round ${i + 1}`}>
             <header className="round-head">
@@ -145,12 +205,13 @@ function Ladder({ rounds }: { rounds: Round[] }) {
               <span>Round {i + 1}</span>
             </header>
             {r.note && <p className="bnote">{r.note}</p>}
-            <ItemList items={r.items} prev={shares ? before : null} />
+            <ItemList items={shown} prev={before} />
             {r.after && (
               <p className="after">
                 <Text s={r.after} />
               </p>
             )}
+            {r.use && <InterludeLink id={r.use} />}
           </section>
         );
       })}
@@ -192,6 +253,7 @@ export function StepView({ step }: { step: Step }) {
           <span className="type">Ladder · {step.rounds.length} rounds</span>
           <h4>{step.title}</h4>
         </div>
+        <p className="ladder-rule">Each round repeats everything before it. Earlier poses are greyed, new ones bold.</p>
         {step.note && <p className="bnote">{step.note}</p>}
         <Ladder rounds={step.rounds} />
       </div>

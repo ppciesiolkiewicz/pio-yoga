@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { PieceCategory } from "@/content/flows";
-import { byFocus, byPeak, classes, isUse, pieces, practiceList, related, usedIn } from "@/content/flows";
+import { byFocus, byPeak, classes, isUse, partOf, pieces, practiceList, related, usedIn } from "@/content/flows";
 import { PHASES, PHASE_LABEL, PartView, StepView, groupByPhase } from "@/components/flows/FlowParts";
 import ClassCircle from "@/components/flows/ClassCircle";
 
@@ -13,11 +13,12 @@ const CATEGORY_LABEL: Record<PieceCategory, string> = {
   sun: "Sun salutations",
   drill: "Drills",
   standing: "Standing sequences",
+  interlude: "Interludes",
   ladder: "Ladders",
   core: "Core",
   closing: "Closing",
 };
-const CATEGORY_ORDER: PieceCategory[] = ["warmup", "sun", "drill", "standing", "ladder", "core", "closing"];
+const CATEGORY_ORDER: PieceCategory[] = ["warmup", "sun", "drill", "standing", "interlude", "ladder", "core", "closing"];
 
 function ClassLinks({ list }: { list: { slug: string; title: string }[] }) {
   return (
@@ -85,7 +86,7 @@ export default function FlowNotebook() {
               <span className="lg-dot new" /> new this round
             </li>
             <li>
-              <span className="lg-dot repeat" /> repeated from the round before
+              <span className="lg-dot repeat" /> carried over from earlier rounds
             </li>
             <li>
               <span className="tag tag-optional">optional</span>
@@ -278,6 +279,17 @@ export default function FlowNotebook() {
                               "Not in a class yet. Mix it in."
                             )}
                           </p>
+                          {partOf(p.id).length > 0 && (
+                            <p className="piece-used">
+                              Part of{" "}
+                              {partOf(p.id).map((o, i) => (
+                                <span key={o.id}>
+                                  {i > 0 && ", "}
+                                  <a href={`#block-${o.id}`}>{o.title}</a>
+                                </span>
+                              ))}
+                            </p>
+                          )}
                           {p.note && <p className="bnote">{p.note}</p>}
                         </header>
                         {p.steps.map((s, i) => (
