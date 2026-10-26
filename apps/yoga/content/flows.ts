@@ -187,7 +187,7 @@ export const pieces: Piece[] = [
     title: "Flow 2",
     subtitle: "Pyramid to warrior III",
     steps: [
-      block("flow", undefined, ["Pyramid", "Revolved pyramid", "Warrior III", "Skandasana", unsure("High lunge")]),
+      block("flow", undefined, ["Pyramid", "Revolved pyramid", "Warrior III", "Skandasana", "Lizard"]),
       block("core", undefined, ["Core"]),
     ],
   },
