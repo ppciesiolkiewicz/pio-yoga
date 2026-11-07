@@ -40,11 +40,11 @@ export default async function HomePage({ params }: Props) {
           <Hero
             eyebrow={t.hero.eyebrow}
             title={
-              <>
+              <span className="select-none">
                 {before}
                 <Highlight>{highlighted}</Highlight>
                 {after}
-              </>
+              </span>
             }
             lead={t.hero.lead}
             primary={bookingLink(locale, t, "hero")}
@@ -67,7 +67,9 @@ export default async function HomePage({ params }: Props) {
       </Section>
 
       <Section id="how-it-works" eyebrow={t.howItWorks.eyebrow} title={t.howItWorks.title} intro={t.howItWorks.intro}>
-        <StepList steps={t.howItWorks.steps} />
+        <div className="select-none">
+          <StepList steps={t.howItWorks.steps} />
+        </div>
       </Section>
 
       <Section

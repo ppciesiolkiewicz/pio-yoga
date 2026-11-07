@@ -4,7 +4,7 @@ import { cn } from "../cn";
 export type Variant = "primary" | "secondary" | "ghost";
 
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 font-display font-bold no-underline transition-transform duration-150 disabled:opacity-60";
+  "inline-flex min-h-11 select-none items-center justify-center gap-2 font-display font-bold no-underline transition-transform duration-150 disabled:opacity-60";
 const variants: Record<Variant, string> = {
   primary: "hm-metallic rounded-button bg-ink px-5 py-3 text-bg shadow-cta hover:-translate-y-0.5 active:translate-y-0",
   secondary: "rounded-button border-2 border-control bg-surface px-5 py-3 text-ink shadow-card hover:-translate-y-0.5 active:translate-y-0",

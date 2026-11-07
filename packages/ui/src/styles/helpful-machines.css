@@ -98,3 +98,8 @@
   from { background-size: 0% 100%; }
   to { background-size: 100% 100%; }
 }
+
+/* Labels and controls aren't copy: keep them out of text selection. */
+:root[data-design="helpful-machines"] :is([data-eyebrow], [data-chips], button, [role="button"]) {
+  user-select: none;
+}
