@@ -18,8 +18,8 @@ export const en = {
       description: "Four simple steps: a free review, a free written plan, the work, and a monthly check-in on what to improve next.",
     },
     pricing: {
-      title: "Pricing · Up to 75% off for our first 5 clients",
-      description: "Your own consultant for 4 or 8 hours every week. Our first 5 clients get up to 75% off the usual price, locked for 12 months. Cancel any time. Start with a free review.",
+      title: "Pricing · Up to 70% off for our first 3 clients",
+      description: "Your own consultant for 4 or 8 hours every week. Our first 3 clients get up to 70% off the usual price, locked for 12 months. Cancel any time. Start with a free review.",
     },
     work: {
       title: "Work · what we've built before",
@@ -205,10 +205,10 @@ export const en = {
   },
   pricing: {
     eyebrow: "Founding-client offer",
-    title: "Your own consultant, up to 75% off for our first 5 clients",
+    title: "Your own consultant, up to 70% off for our first 3 clients",
     intro:
-      "Every week, a consultant works on your business: finding what slows you down, then fixing it with AI tools, custom apps or integrations. Every plan includes a free monthly idea session to pick what to improve next. To build our first Australian case studies, our first 5 clients pay up to 75% less than the usual price, locked for 12 months, in exchange for feedback and a testimonial once we deliver. No contract: cancel any time.",
-    badge: "Founding client · up to 75% off",
+      "Every week, a consultant works on your business: finding what slows you down, then fixing it with AI tools, custom apps or integrations. Every plan includes a free monthly idea session to pick what to improve next. To build our first Australian case studies, our first 3 clients pay up to 70% less than the usual price, locked for 12 months, in exchange for feedback and a testimonial once we deliver. No contract: cancel any time.",
+    badge: "Founding client · up to 70% off",
     perMonth: "/month",
     regularPriceLabel: "Usual price",
     plans: {
@@ -232,7 +232,7 @@ export const en = {
     offerTerms: {
       title: "Offer terms",
       items: [
-        "The founding price is for our first 5 clients who start a monthly plan. The offer ends when all 5 places are taken, or earlier if we close it.",
+        "The founding price is for our first 3 clients who start a monthly plan. The offer ends when all 3 places are taken, or earlier if we close it.",
         "Your founding price is locked for 12 months from your first paid month. It won't go up during that time.",
         "If you switch between the 4-hour and 8-hour plans, you keep your founding discount off the usual price for the rest of your 12 months.",
         "After 12 months, your plan moves to our usual price at that time. We'll tell you at least 30 days before, so you can change plan or cancel.",
@@ -245,11 +245,11 @@ export const en = {
     },
     teaser: {
       title: "Your own consultant from {price} a month",
-      body: "{hours} hours a week, plus a free monthly idea session. Our first 5 clients pay {price} instead of {fullPrice}, locked for 12 months. Cancel any time.",
+      body: "{hours} hours a week, plus a free monthly idea session. Our first 3 clients pay {price} instead of {fullPrice}, locked for 12 months. Cancel any time.",
       link: "See the offer",
     },
     banner: {
-      headline: "Up to 75% off for our first 5 clients",
+      headline: "Up to 70% off for our first 3 clients",
       detail: "{hours} hours a week for {price} (usually {fullPrice}), locked for 12 months. Cancel any time.",
       link: "See the offer",
     },
@@ -333,7 +333,7 @@ export const en = {
     items: [
       {
         question: "How much does it cost?",
-        answer: "The review and written plan are free. If you want us to do the work, pick a monthly plan of 4 or 8 hours a week. Our first 5 clients get up to 75% off the usual price, locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote.",
+        answer: "The review and written plan are free. If you want us to do the work, pick a monthly plan of 4 or 8 hours a week. Our first 3 clients get up to 70% off the usual price, locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote.",
       },
       {
         question: "What's in the free review?",
