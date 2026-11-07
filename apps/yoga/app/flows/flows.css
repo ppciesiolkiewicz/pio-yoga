@@ -59,7 +59,31 @@
   border-bottom: 1px solid var(--line);
 }
 .fl-bar .wrap { display: flex; align-items: center; gap: 0.75rem 1.5rem; flex-wrap: wrap; }
-.fl-mark { font-family: var(--display); font-weight: 600; }
+.fl-mark { font-family: var(--display); font-weight: 600; text-decoration: none; color: var(--ink); }
+.fl-mark:hover { color: var(--accent); }
+
+/* floating back-to-top */
+.fl-totop {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  z-index: 4;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 0.85rem;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.12);
+  opacity: 0;
+  translate: 0 0.5rem;
+  pointer-events: none;
+  transition: opacity 0.2s, translate 0.2s;
+}
+.fl-totop[data-show="true"] { opacity: 1; translate: 0 0; pointer-events: auto; }
+.fl-totop:hover { border-color: var(--accent); }
 .fl-bar nav { display: flex; gap: 1.1rem; font-family: var(--display); font-size: 0.9rem; overflow-x: auto; min-width: 0; }
 .fl-bar nav a, .fl-site { text-decoration: none; color: var(--muted); white-space: nowrap; }
 .fl-bar nav a:hover, .fl-site:hover { color: var(--ink); }
@@ -221,6 +245,9 @@
 .cls-modal-bar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: flex-end; padding-top: 0.75rem; margin-bottom: -1.5rem; pointer-events: none; }
 .cls-modal-close { pointer-events: auto; width: 2.25rem; height: 2.25rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-size: 0.95rem; }
 .cls-modal-close:hover { border-color: var(--accent); }
+.cls-modal-bar { justify-content: space-between; }
+.cls-modal-back { pointer-events: auto; height: 2.25rem; padding: 0 0.95rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-family: var(--display); font-size: 0.85rem; }
+.cls-modal-back:hover { border-color: var(--accent); }
 html:has(.cls-modal[open]) { overflow: hidden; }
 
 /* library */
