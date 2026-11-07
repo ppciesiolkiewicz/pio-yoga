@@ -10,6 +10,5 @@ export const site = {
   googleVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
   calUrl: {
     en: process.env.NEXT_PUBLIC_CAL_URL_EN || "",
-    pl: process.env.NEXT_PUBLIC_CAL_URL_PL || "",
   },
 } as const;

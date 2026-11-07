@@ -1,15 +1,15 @@
 import { getFormatter } from "next-intl/server";
 import type { Locale } from "@repo/web/locale";
 
-const options = (currency: "AUD" | "PLN") => ({ style: "currency", currency, maximumFractionDigits: 0 }) as const;
+const options = (currency: "AUD") => ({ style: "currency", currency, maximumFractionDigits: 0 }) as const;
 
-export async function priceFormatter(currency: "AUD" | "PLN") {
+export async function priceFormatter(currency: "AUD") {
   const format = await getFormatter();
   return (amount: number) => format.number(amount, options(currency));
 }
 
 /** Same output as priceFormatter, for components outside a next-intl request (the site-wide Document). */
-export function formatPrice(locale: Locale, currency: "AUD" | "PLN", amount: number) {
+export function formatPrice(locale: Locale, currency: "AUD", amount: number) {
   return new Intl.NumberFormat(locale, options(currency)).format(amount);
 }
 

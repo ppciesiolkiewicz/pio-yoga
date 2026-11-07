@@ -6,7 +6,7 @@ import { site } from "@/site.config";
 
 /** Cal.com when configured for the market (new tab, tracked as booking_opened), otherwise the contact page. */
 export function bookingLink(locale: Locale, t: Content, location: string): CtaLink {
-  const url = site.calUrl[locale];
+  const url = site.calUrl.en;
   return url
     ? { href: url, label: t.nav.cta, external: true, track: "booking_opened", trackLocation: location }
     : { href: localizedPath(locale, "/contact"), label: t.nav.cta, track: "cta_click", trackLocation: location };

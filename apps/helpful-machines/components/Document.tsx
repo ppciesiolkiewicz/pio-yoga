@@ -13,7 +13,7 @@ import { activeAssignment, type Assignment } from "@repo/web/experiments";
 import { organization, professionalService, website } from "@repo/web/json-ld";
 import { htmlLang, liveLocales, localizedPath, type Locale } from "@repo/web/locale";
 import { getContent } from "@/content";
-import { markets } from "@/content/market";
+import { getMarket } from "@/content/market";
 import { fillPlan, formatPrice } from "@/lib/format";
 import { experiments } from "@/experiments";
 import { bookingLink, footerLinks, navItems } from "@/lib/links";
@@ -42,7 +42,7 @@ export function Document({
   children: ReactNode;
 }) {
   const t = getContent(locale);
-  const market = markets[locale];
+  const market = getMarket(locale);
   const { light } = market.plans;
   const brand = (
     <>
@@ -62,8 +62,9 @@ export function Document({
         {/* Banner and header stick together; the header's own sticky is inert inside this wrapper. */}
         <div className="sticky top-0 z-40">
           <OfferBanner
-            text={fillPlan(
-              t.pricing.banner.text,
+            headline={t.pricing.banner.headline}
+            detail={fillPlan(
+              t.pricing.banner.detail,
               formatPrice(locale, market.currency, light.monthlyPrice),
               light.hoursPerMonth,
               formatPrice(locale, market.currency, light.regularPrice),

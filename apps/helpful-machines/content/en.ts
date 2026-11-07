@@ -194,15 +194,13 @@ export const en = {
   },
   howItWorks: {
     eyebrow: "How it works",
-    title: "Three simple steps",
+    title: "Four simple steps",
     intro: "You see the plan before you pay anything.",
     steps: [
       { title: "Free review", body: "A 30-minute call about your business and what's slowing it down." },
       { title: "A clear plan", body: "A free written plan: what to build, rough costs, and what to do first." },
-      {
-        title: "We do it",
-        body: "Choose a monthly plan and we build it, integrate it and maintain it for you, one step at a time, with updates as we go. No list of software to set up yourself.",
-      },
+      { title: "We build it", body: "Choose a monthly plan and we build it, integrate it and maintain it for you, with updates as we go." },
+      { title: "Keep improving", body: "A free monthly idea session to pick what to improve next. No list of software to set up yourself." },
     ],
   },
   pricing: {
@@ -251,7 +249,8 @@ export const en = {
       link: "See the offer",
     },
     banner: {
-      text: "Up to 75% off for our first 5 clients: {hours} hours a month for {price} (usually {fullPrice}), locked for 12 months. Cancel any time.",
+      headline: "Up to 75% off for our first 5 clients",
+      detail: "{hours} hours a month for {price} (usually {fullPrice}), locked for 12 months. Cancel any time.",
       link: "See the offer",
     },
   },
@@ -264,7 +263,7 @@ export const en = {
       { title: "Nokia", body: "Started out digging through gigabytes of logs to find why systems misbehaved, then built tools so others could find answers in minutes." },
       { title: "Highsnobiety", body: "Built product pages and a checkout that stayed fast and correct through huge limited-edition drops." },
       { title: "Officeworks", body: "Changed a team workflow that cut developers' wait for QA to zero, and built recurring orders for business customers." },
-      { title: "Lysn", body: "Added configurable pricing and Medicare gap payments to grow revenue, and upskilled the local team for a smooth handover." },
+      { title: "Lysn", body: "Added configurable pricing and Medicare gap payments to grow revenue." },
       { title: "ONCHAIN", body: "Built card payments and a subscription engine that prices in dollars and charges in crypto." },
       {
         title: "Ideas from outside the box",
@@ -416,7 +415,7 @@ export const en = {
       {
         heading: "Cookies",
         paragraphs: [
-          "We set cookies that remember your language and which version of a page you see, and analytics cookies. On our Polish site, analytics cookies are only set after you accept them.",
+          "We set cookies that remember which version of a page you see, and analytics cookies.",
         ],
       },
       {

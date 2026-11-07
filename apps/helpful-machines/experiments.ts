@@ -5,6 +5,6 @@ export const experiments = defineExperiments({
   hero: {
     variants: { control: "AI that actually does the boring bits.", "easy-mode": "Put your business on easy mode." },
     weights: [50, 50],
-    markets: ["en", "pl"],
+    markets: ["en"],
   },
 });
