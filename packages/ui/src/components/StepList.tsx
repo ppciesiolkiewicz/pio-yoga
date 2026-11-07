@@ -6,7 +6,10 @@ export function StepList({ steps, headingLevel: Heading = "h3" }: { steps: { tit
       {steps.map((step, index) => (
         <li key={step.title}>
           <Card className="h-full">
-            <span aria-hidden="true" className="grid size-10 place-items-center rounded-full bg-accent font-display font-extrabold text-accent-ink">
+            <span
+              aria-hidden="true"
+              className="hm-metallic-accent grid size-10 place-items-center rounded-full bg-accent font-display font-extrabold text-accent-ink shadow-[inset_0_1px_1px_rgba(255,255,255,0.5)]"
+            >
               {index + 1}
             </span>
             <Heading className="mt-4 font-display text-xl font-extrabold">{step.title}</Heading>

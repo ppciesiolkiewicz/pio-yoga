@@ -31,7 +31,7 @@ export function PricingCard({
   newTabLabel?: string;
 }) {
   return (
-    <Card as="article" className={cn("flex h-full flex-col", featured && "border-4")}>
+    <Card as="article" className={cn("flex h-full flex-col", featured && "border-2")}>
       {badge && (
         <p className="mb-3 self-start rounded-full bg-highlight px-3 py-1 text-sm font-bold text-ink">{badge}</p>
       )}

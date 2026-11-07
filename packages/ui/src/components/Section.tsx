@@ -10,6 +10,7 @@ export function Section({
   children,
   className,
   headingLevel: Heading = "h2",
+  tint = false,
 }: {
   id: string;
   eyebrow?: string;
@@ -18,12 +19,18 @@ export function Section({
   children?: ReactNode;
   className?: string;
   headingLevel?: "h1" | "h2";
+  /** Full-bleed surface-colour band behind the section, to separate it from its neighbours. */
+  tint?: boolean;
 }) {
   const headingId = `${id}-title`;
   return (
-    <section id={id} aria-labelledby={headingId} className={cn("py-14 sm:py-20", className)}>
+    <section
+      id={id}
+      aria-labelledby={headingId}
+      className={cn("border-t border-line/10 py-14 sm:py-20", tint && "bg-surface", className)}
+    >
       <Container>
-        {eyebrow && <p data-eyebrow={Heading} className="mb-3 text-sm font-bold uppercase tracking-widest text-accent-text">{eyebrow}</p>}
+        {eyebrow && <p data-eyebrow={Heading} className="mb-3 text-sm font-extrabold uppercase tracking-widest text-accent-text">{eyebrow}</p>}
         <Heading
           id={headingId}
           className={cn(

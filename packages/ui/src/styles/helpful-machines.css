@@ -9,8 +9,8 @@
   --accent-ink: #1e1a15;
   --highlight: #ffc94a;
   --focus: #1e1a15;
-  --radius: 12px;
-  --button-radius: 12px;
+  --radius: 20px;
+  --button-radius: 20px;
   --control-border: #1e1a15;
   --cta-shadow: 4px 4px 0 #ff5a36;
   --card-shadow: 4px 4px 0 #1e1a15;
@@ -54,6 +54,38 @@
     --card-shadow: 4px 4px 0 #ff6b4a;
     color-scheme: dark;
   }
+}
+
+/* Brushed-metal sheen for a few high-value accents: primary CTA, step badges, logo. */
+[data-design="helpful-machines"] .hm-metallic {
+  position: relative;
+  background-image: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--ink) 80%, white) 0%,
+    var(--ink) 30%,
+    color-mix(in srgb, var(--ink) 65%, white) 48%,
+    var(--ink) 66%,
+    color-mix(in srgb, var(--ink) 85%, white) 100%
+  );
+}
+[data-design="helpful-machines"] .hm-metallic-accent {
+  position: relative;
+  background-image: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--accent) 75%, white) 0%,
+    var(--accent) 32%,
+    color-mix(in srgb, var(--accent) 60%, white) 50%,
+    var(--accent) 68%,
+    color-mix(in srgb, var(--accent) 80%, white) 100%
+  );
+}
+
+/* Frosted-glass panel for decorative elements. */
+[data-design="helpful-machines"] .hm-glass {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--line) 18%, transparent);
 }
 
 /* Highlighter sweep on headline words. */

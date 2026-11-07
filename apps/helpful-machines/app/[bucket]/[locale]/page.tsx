@@ -7,6 +7,8 @@ import { Section } from "@repo/ui/Section";
 import { ServiceCard } from "@repo/ui/ServiceCard";
 import { StepList } from "@repo/ui/StepList";
 import { localizedPath } from "@repo/web/locale";
+import { HeroDecor } from "@/components/HeroDecor";
+import { NetworkVisual } from "@/components/NetworkVisual";
 import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
@@ -32,23 +34,29 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <Hero
-        eyebrow={t.hero.eyebrow}
-        title={
-          <>
-            {before}
-            <Highlight>{highlighted}</Highlight>
-            {after}
-          </>
-        }
-        lead={t.hero.lead}
-        primary={bookingLink(locale, t, "hero")}
-        secondary={{ href: "#services", label: t.hero.secondary }}
-        note={t.hero.note}
-        newTabLabel={t.nav.newTab}
-      />
+      <div className="relative overflow-hidden">
+        <HeroDecor />
+        <div className="relative z-10">
+          <Hero
+            eyebrow={t.hero.eyebrow}
+            title={
+              <>
+                {before}
+                <Highlight>{highlighted}</Highlight>
+                {after}
+              </>
+            }
+            lead={t.hero.lead}
+            primary={bookingLink(locale, t, "hero")}
+            secondary={{ href: "#services", label: t.hero.secondary }}
+            note={t.hero.note}
+            newTabLabel={t.nav.newTab}
+            visual={<NetworkVisual />}
+          />
+        </div>
+      </div>
 
-      <Section id="services" eyebrow={t.landing.services.eyebrow} title={t.landing.services.title}>
+      <Section id="services" tint eyebrow={t.landing.services.eyebrow} title={t.landing.services.title}>
         <ul className="grid gap-5 sm:grid-cols-2">
           {t.landing.services.items.map((item) => (
             <li key={item.slug}>
@@ -64,6 +72,7 @@ export default async function HomePage({ params }: Props) {
 
       <Section
         id="pricing"
+        tint
         eyebrow={t.pricing.eyebrow}
         title={fillPlan(t.pricing.teaser.title, price(light.monthlyPrice), light.hoursPerMonth, price(light.regularPrice))}
         intro={fillPlan(t.pricing.teaser.body, price(light.monthlyPrice), light.hoursPerMonth, price(light.regularPrice))}
