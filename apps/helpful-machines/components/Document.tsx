@@ -1,4 +1,4 @@
-import { Bricolage_Grotesque } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Analytics } from "@repo/ui/Analytics";
 import { ConsentBanner, ConsentSettingsButton } from "@repo/ui/ConsentBanner";
@@ -23,7 +23,21 @@ import { Logo } from "./Logo";
 import { OfferBanner } from "./OfferBanner";
 import "../app/globals.css";
 
-const display = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], variable: "--font-bricolage", display: "swap" });
+// Self-hosted so dev and builds never depend on a Google Fonts fetch (a failed fetch silently falls back to Arial).
+const display = localFont({
+  src: "./fonts/BricolageGrotesque-Variable.woff2",
+  weight: "200 800",
+  variable: "--font-bricolage",
+  display: "swap",
+});
+const body = localFont({
+  src: [
+    { path: "./fonts/HankenGrotesk-Variable.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/HankenGrotesk-Italic-Variable.woff2", weight: "100 900", style: "italic" },
+  ],
+  variable: "--font-hanken",
+  display: "swap",
+});
 
 /** The full HTML document: used by the [bucket]/[locale] layout and by the root 404 page. */
 export function Document({
@@ -53,7 +67,7 @@ export function Document({
   const nav = navItems(locale, t);
   const askConsent = consentRequired(locale);
   return (
-    <html lang={htmlLang[locale]} data-design={site.design} className={display.variable} suppressHydrationWarning>
+    <html lang={htmlLang[locale]} data-design={site.design} className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: colorModeScript }} />
       </head>
@@ -66,7 +80,7 @@ export function Document({
             detail={fillPlan(
               t.pricing.banner.detail,
               formatPrice(locale, market.currency, light.monthlyPrice),
-              light.hoursPerMonth,
+              light.hoursPerWeek,
               formatPrice(locale, market.currency, light.regularPrice),
             )}
             link={{ href: localizedPath(locale, "/pricing"), label: t.pricing.banner.link }}

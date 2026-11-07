@@ -39,11 +39,11 @@ describe("Helpful Machines content", () => {
       const plan = markets.en.plans[key];
       expect(Number.isInteger(plan.monthlyPrice)).toBe(true);
       expect(plan.monthlyPrice).toBeGreaterThan(0);
-      expect(plan.hoursPerMonth).toBeGreaterThan(0);
+      expect(plan.hoursPerWeek).toBeGreaterThan(0);
     }
     expect(markets.en.plans).toEqual({
-      light: { monthlyPrice: 199, regularPrice: 600, hoursPerMonth: 4 },
-      focus: { monthlyPrice: 299, regularPrice: 1200, hoursPerMonth: 8 },
+      light: { monthlyPrice: 199, regularPrice: 600, hoursPerWeek: 4 },
+      focus: { monthlyPrice: 299, regularPrice: 1200, hoursPerWeek: 8 },
     });
   });
 

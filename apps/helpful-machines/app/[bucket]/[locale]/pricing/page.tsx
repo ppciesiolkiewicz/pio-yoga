@@ -3,6 +3,7 @@ import { CtaBand } from "@repo/ui/CtaBand";
 import { PricingCard } from "@repo/ui/PricingCard";
 import { Section } from "@repo/ui/Section";
 import { ButtonLink } from "@repo/ui/SmartLink";
+import { PageBreadcrumbs } from "@/components/Breadcrumbs";
 import { Career } from "@/components/Career";
 import { localizedPath } from "@repo/web/locale";
 import { planKeys } from "@/content/market";
@@ -24,12 +25,13 @@ export default async function PricingPage({ params }: Props) {
   const booking = bookingLink(locale, t, "pricing");
   return (
     <>
-      <Section id="pricing" headingLevel="h1" eyebrow={t.pricing.eyebrow} title={t.pricing.title} intro={t.pricing.intro}>
+      <PageBreadcrumbs locale={locale} t={t} trail={[{ name: t.nav.pricing }]} />
+      <Section id="pricing" className="pt-6 sm:pt-8" headingLevel="h1" eyebrow={t.pricing.eyebrow} title={t.pricing.title} intro={t.pricing.intro}>
         <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
           {planKeys.map((key) => {
             const plan = market.plans[key];
             const copy = t.pricing.plans[key];
-            const fill = (text: string) => fillPlan(text, price(plan.monthlyPrice), plan.hoursPerMonth, price(plan.regularPrice));
+            const fill = (text: string) => fillPlan(text, price(plan.monthlyPrice), plan.hoursPerWeek, price(plan.regularPrice));
             return (
               <PricingCard
                 key={key}
@@ -73,7 +75,7 @@ export default async function PricingPage({ params }: Props) {
         </section>
       </Section>
       <Career t={t} />
-      <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />
+      <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} className="hm-cta" />
     </>
   );
 }

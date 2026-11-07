@@ -1,4 +1,5 @@
 import { Section } from "@repo/ui/Section";
+import { PageBreadcrumbs } from "@/components/Breadcrumbs";
 import { Prose } from "@/components/Prose";
 import { meta } from "@/lib/metadata";
 import { resolveParams, type RouteParams } from "@/lib/params";
@@ -11,10 +12,13 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function PrivacyPage({ params }: Props) {
-  const { t } = await resolveParams(params);
+  const { locale, t } = await resolveParams(params);
   return (
-    <Section id="privacy" headingLevel="h1" title={t.privacy.title}>
-      <Prose updated={t.privacy.updated} sections={t.privacy.sections} />
-    </Section>
+    <>
+      <PageBreadcrumbs locale={locale} t={t} trail={[{ name: t.privacy.title }]} />
+      <Section id="privacy" className="pt-6 sm:pt-8" headingLevel="h1" title={t.privacy.title}>
+        <Prose updated={t.privacy.updated} sections={t.privacy.sections} />
+      </Section>
+    </>
   );
 }

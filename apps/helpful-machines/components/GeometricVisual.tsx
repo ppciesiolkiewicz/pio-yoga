@@ -150,8 +150,25 @@ export function GeometricVisual() {
     resizeObserver.observe(canvas);
 
     const CAMERA = 6;
+    // Fit the whole scene (orbiters included) inside the canvas: sample the motion
+    // over a long window, find the widest projected vertex, and scale so it lands
+    // at FIT of the half-width — the rest is room for strokes.
+    const FIT = 0.9;
+    let extent = 0;
+    for (let t = 0; t < 120; t += 0.05) {
+      for (const body of bodies) {
+        const [ax, ay, az] = body.rot(t);
+        const [px, py, pz] = body.pos(t);
+        for (const v of body.shape.verts) {
+          const [x, y, z] = rotate(v, ax, ay, az);
+          const persp = CAMERA / (CAMERA - (z * body.radius + pz));
+          extent = Math.max(extent, Math.abs(x * body.radius + px) * persp, Math.abs(y * body.radius + py) * persp);
+        }
+      }
+    }
+    const k = (0.5 * FIT) / extent;
     const project = ([x, y, z]: Vec): [number, number] => {
-      const scale = (size * 0.2 * CAMERA) / (CAMERA - z);
+      const scale = (size * k * CAMERA) / (CAMERA - z);
       return [size / 2 + x * scale, size / 2 + y * scale];
     };
 
@@ -237,7 +254,7 @@ export function GeometricVisual() {
     // and past the column edges; the hero renders the text column above it.
     <div
       aria-hidden="true"
-      className="pointer-events-none relative -my-40 -ml-56 -mr-32 aspect-square w-[calc(100%+22rem)] max-w-none"
+      className="pointer-events-none relative -my-16 -ml-20 -mr-8 aspect-square w-[calc(100%+7rem)] max-w-none"
     >
       <div className="absolute inset-[22%] rounded-full bg-accent/25 blur-3xl" />
       <canvas ref={canvasRef} className="relative h-full w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.25)]" />

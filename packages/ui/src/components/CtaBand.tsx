@@ -1,12 +1,28 @@
+import { cn } from "../cn";
 import { Card } from "./Card";
 import { Container } from "./Container";
 import { ButtonLink, type CtaLink } from "./SmartLink";
 
-export function CtaBand({ id = "cta", title, body, cta, newTabLabel }: { id?: string; title: string; body: string; cta: CtaLink; newTabLabel?: string }) {
+export function CtaBand({
+  id = "cta",
+  title,
+  body,
+  cta,
+  newTabLabel,
+  className,
+}: {
+  id?: string;
+  title: string;
+  body: string;
+  cta: CtaLink;
+  newTabLabel?: string;
+  /** Extra classes for the card, e.g. a design-specific colour. */
+  className?: string;
+}) {
   return (
     <section aria-labelledby={`${id}-title`} className="py-14 sm:py-20">
       <Container>
-        <Card className="grid gap-6 p-8 sm:p-12 md:grid-cols-[1fr_auto] md:items-center">
+        <Card className={cn("grid gap-6 p-8 sm:p-12 md:grid-cols-[1fr_auto] md:items-center", className)}>
           <div>
             <h2 id={`${id}-title`} className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
               {title}

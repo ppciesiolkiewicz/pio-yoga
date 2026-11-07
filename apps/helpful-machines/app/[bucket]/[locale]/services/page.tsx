@@ -2,6 +2,7 @@ import { CtaBand } from "@repo/ui/CtaBand";
 import { Section } from "@repo/ui/Section";
 import { ServiceCard } from "@repo/ui/ServiceCard";
 import { localizedPath } from "@repo/web/locale";
+import { PageBreadcrumbs } from "@/components/Breadcrumbs";
 import { serviceSlugs } from "@/content/services";
 import { bookingLink } from "@/lib/links";
 import { meta } from "@/lib/metadata";
@@ -18,7 +19,8 @@ export default async function ServicesPage({ params }: Props) {
   const { locale, t } = await resolveParams(params);
   return (
     <>
-      <Section id="services" headingLevel="h1" eyebrow={t.services.eyebrow} title={t.services.title} intro={t.services.intro}>
+      <PageBreadcrumbs locale={locale} t={t} trail={[{ name: t.nav.services }]} />
+      <Section id="services" className="pt-6 sm:pt-8" headingLevel="h1" eyebrow={t.services.eyebrow} title={t.services.title} intro={t.services.intro}>
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {serviceSlugs.map((slug) => (
             <li key={slug}>
@@ -33,7 +35,7 @@ export default async function ServicesPage({ params }: Props) {
           ))}
         </ul>
       </Section>
-      <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />
+      <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} className="hm-cta" />
     </>
   );
 }

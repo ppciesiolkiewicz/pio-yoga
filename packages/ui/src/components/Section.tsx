@@ -27,7 +27,7 @@ export function Section({
     <section
       id={id}
       aria-labelledby={headingId}
-      className={cn("border-t border-line/10 py-14 sm:py-20", tint && "bg-surface", className)}
+      className={cn("hm-rule border-t border-line/10 py-14 sm:py-20", tint && "bg-surface", className)}
     >
       <Container>
         {eyebrow && <p data-eyebrow={Heading} className="mb-3 text-sm font-extrabold uppercase tracking-widest text-accent-text">{eyebrow}</p>}

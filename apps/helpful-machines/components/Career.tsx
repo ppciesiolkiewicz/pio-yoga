@@ -3,22 +3,23 @@ import { Card } from "@repo/ui/Card";
 import { Section } from "@repo/ui/Section";
 import type { Content } from "@/content";
 
-const linkedIn = "https://www.linkedin.com/in/piotr-ciesiolkiewicz";
+export const linkedIn ="https://www.linkedin.com/in/piotr-ciesiolkiewicz";
 
-/** Who does the work: Piotr's career highlights, shown on the home and pricing pages. */
+/** Who does the work: Piotr's career highlights, shown on the pricing page. */
 export function Career({ t }: { t: Content }) {
   return (
     <Section id="career" eyebrow={t.career.eyebrow} title={t.career.title} intro={t.career.intro}>
       <div className="flex items-center gap-4">
         <Image
           src="/images/founder.jpg"
-          alt="Piotr Ciesiolkiewicz"
+          alt={t.founder.photoAlt}
           width={96}
           height={96}
-          className="size-20 rounded-full object-cover"
+          className="size-20 rounded-full object-cover sm:size-24"
         />
         <div>
-          <p className="font-display text-lg font-bold">Piotr Ciesiolkiewicz</p>
+          <p className="font-display text-lg font-bold">{t.founder.name}</p>
+          <p className="text-sm font-bold text-muted">{t.founder.role}</p>
           <a href={linkedIn} rel="noopener noreferrer" className="inline-flex min-h-11 items-center font-bold underline decoration-2 underline-offset-4">
             {t.career.link}
           </a>

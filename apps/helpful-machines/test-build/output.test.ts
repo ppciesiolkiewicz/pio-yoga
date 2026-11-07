@@ -26,9 +26,6 @@ function htmlFiles(dir: string): string[] {
   });
 }
 
-/** Polish is on hold (liveLocales): its assertions only run while it is live. */
-const polish = liveLocales.includes("pl");
-
 describe("Helpful Machines build output", () => {
   it("exists (run `pnpm --filter helpful-machines build` first)", () => expect(existsSync(root)).toBe(true));
 
@@ -37,8 +34,8 @@ describe("Helpful Machines build output", () => {
     expect(canonical(html("control", "en", "/pricing"))).toBe("https://helpfulmachines.com.au/pricing");
   });
 
-  it("builds no Polish pages while Polish is off", () => {
-    if (!polish) expect(existsSync(fileFor("control", "pl", "/"))).toBe(false);
+  it("builds no Polish pages", () => {
+    expect(existsSync(fileFor("control", "pl", "/"))).toBe(false);
   });
 
   it("pre-renders every bucket × locale × page", () => {
@@ -49,15 +46,12 @@ describe("Helpful Machines build output", () => {
 
   it("sets <html lang> and the design", () => {
     expect(html("control", "en", "/")).toMatch(/<html[^>]*lang="en-AU"/);
-    if (polish) expect(html("control", "pl", "/")).toMatch(/<html[^>]*lang="pl-PL"/);
     expect(html("easy-mode", "en", "/pricing")).toMatch(/<html[^>]*data-design="helpful-machines"/);
   });
 
-  it("renders each hero variant in each market", () => {
+  it("renders each hero variant", () => {
     expect(html("control", "en", "/")).toContain("and do it better");
     expect(html("easy-mode", "en", "/")).toContain("easy mode");
-    if (polish) expect(html("control", "pl", "/")).toContain("robi nudną robotę");
-    if (polish) expect(html("easy-mode", "pl", "/")).toContain("tryb łatwy");
   });
 
   it("gives every bucket the same public canonical", () => {
@@ -67,9 +61,8 @@ describe("Helpful Machines build output", () => {
     }
   });
 
-  it("has hreflang alternates for both markets and x-default", () => {
+  it("has an x-default hreflang alternate", () => {
     const page = html("control", "en", "/pricing");
-    if (polish) expect(page).toMatch(new RegExp(`hreflang="pl-PL" href="${absoluteUrl(siteUrl, "/pl/pricing")}"`, "i"));
     expect(page).toMatch(new RegExp(`hreflang="x-default" href="${absoluteUrl(siteUrl, "/pricing")}"`, "i"));
   });
 
@@ -85,9 +78,8 @@ describe("Helpful Machines build output", () => {
     }
   });
 
-  it("ships FAQ and service structured data", () => {
+  it("ships FAQ structured data", () => {
     expect(html("control", "en", "/services/custom-apps-websites")).toContain('"@type":"FAQPage"');
-    if (polish) expect(html("control", "pl", "/services/spreadsheets-data")).toContain('"@type":"Service"');
   });
 
   it("renders a branded, 404 page (not an empty error shell)", () => {
@@ -95,12 +87,6 @@ describe("Helpful Machines build output", () => {
     expect(page).not.toContain("__next_error__");
     expect(page).toMatch(/<html[^>]*data-design="helpful-machines"/);
     expect(page).toMatch(/<h1[^>]*>[^<]*Page not found/);
-    if (polish) expect(page).toContain("Nie znaleziono strony");
-    if (polish) expect(page).toContain('href="/pl"');
-  });
-
-  it("follows the copy rule in rendered Polish pages", () => {
-    if (polish) expect(html("control", "pl", "/")).toContain("Dedykowane aplikacje");
   });
 
   it("puts the brand in every page title", () => {
@@ -108,7 +94,4 @@ describe("Helpful Machines build output", () => {
       expect(html("control", locale, path).match(/<title>([^<]*)<\/title>/)?.[1], `${locale}${path}`).toContain("Helpful Machines");
     }
   });
-
-  it("gives the root 404 a working language link (not /pl/_not-found)", () =>
-    expect(readFileSync(join(root, "_not-found.html"), "utf8")).not.toContain("/pl/_not-found"));
 });

@@ -17,7 +17,7 @@ export function OfferBanner({
         <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
           <span>{detail}</span>
           <SmartLink href={link.href} track="cta_click" trackLocation="offer_banner" className="underline decoration-2 underline-offset-4">
-            {link.label} <span aria-hidden="true">→</span>
+            {link.label} <span aria-hidden="true" className="hm-nudge">→</span>
           </SmartLink>
         </p>
       </div>

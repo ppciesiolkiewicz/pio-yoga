@@ -19,7 +19,7 @@ export const en = {
     },
     pricing: {
       title: "Pricing · Up to 75% off for our first 5 clients",
-      description: "Your own consultant for 4 or 8 hours every month. Our first 5 clients get up to 75% off the usual price, locked for 12 months. Cancel any time. Start with a free review.",
+      description: "Your own consultant for 4 or 8 hours every week. Our first 5 clients get up to 75% off the usual price, locked for 12 months. Cancel any time. Start with a free review.",
     },
     work: {
       title: "Work · what we've built before",
@@ -197,28 +197,28 @@ export const en = {
     title: "Four simple steps",
     intro: "You see the plan before you pay anything.",
     steps: [
-      { title: "Free review", body: "A 30-minute call about your business and what's slowing it down." },
-      { title: "A clear plan", body: "A free written plan: what to build, rough costs, and what to do first." },
-      { title: "We build it", body: "Choose a monthly plan and we build it, integrate it and maintain it for you, with updates as we go." },
-      { title: "Keep improving", body: "A free monthly idea session to pick what to improve next. No list of software to set up yourself." },
+      { title: "Free review", tag: "Free", body: "A 30-minute call about your business and what's slowing it down." },
+      { title: "A clear plan", tag: "Free", body: "A free written plan: what to build, rough costs, and what to do first." },
+      { title: "We build it", tag: "Monthly plan", body: "Choose a monthly plan and we build it, integrate it and maintain it for you, with updates as we go." },
+      { title: "Keep improving", tag: "Included", body: "A free monthly idea session to pick what to improve next. No list of software to set up yourself." },
     ],
   },
   pricing: {
     eyebrow: "Founding-client offer",
     title: "Your own consultant, up to 75% off for our first 5 clients",
     intro:
-      "Every month, a consultant works on your business: finding what slows you down, then fixing it with AI tools, custom apps or integrations. Every plan includes a free monthly idea session to pick what to improve next. To build our first Australian case studies, our first 5 clients pay up to 75% less than the usual price, locked for 12 months, in exchange for feedback and a testimonial once we deliver. No contract: cancel any time.",
+      "Every week, a consultant works on your business: finding what slows you down, then fixing it with AI tools, custom apps or integrations. Every plan includes a free monthly idea session to pick what to improve next. To build our first Australian case studies, our first 5 clients pay up to 75% less than the usual price, locked for 12 months, in exchange for feedback and a testimonial once we deliver. No contract: cancel any time.",
     badge: "Founding client · up to 75% off",
     perMonth: "/month",
     regularPriceLabel: "Usual price",
     plans: {
       light: {
-        name: "{hours} hours a month",
+        name: "{hours} hours a week",
         summary: "One improvement at a time, start to finish.",
         features: ["Free monthly idea session, on top of your hours", "A short update on what changed", "Founding price locked for 12 months", "Cancel any time"],
       },
       focus: {
-        name: "{hours} hours a month",
+        name: "{hours} hours a week",
         summary: "Room for bigger fixes, including custom apps.",
         features: ["Free monthly idea session, on top of your hours", "A short update on what changed", "Founding price locked for 12 months", "Cancel any time"],
       },
@@ -237,7 +237,7 @@ export const en = {
         "If you switch between the 4-hour and 8-hour plans, you keep your founding discount off the usual price for the rest of your 12 months.",
         "After 12 months, your plan moves to our usual price at that time. We'll tell you at least 30 days before, so you can change plan or cancel.",
         "There's no minimum term. Cancel before your next month starts and you won't be charged again.",
-        "Unused hours don't carry over to the next month.",
+        "Unused hours don't carry over to the next week.",
         "If you cancel and come back later, the usual price applies.",
         "Prices exclude GST. These terms sit alongside our general terms and don't limit your rights under the Australian Consumer Law.",
       ],
@@ -245,25 +245,34 @@ export const en = {
     },
     teaser: {
       title: "Your own consultant from {price} a month",
-      body: "{hours} hours a month, plus a free monthly idea session. Our first 5 clients pay {price} instead of {fullPrice}, locked for 12 months. Cancel any time.",
+      body: "{hours} hours a week, plus a free monthly idea session. Our first 5 clients pay {price} instead of {fullPrice}, locked for 12 months. Cancel any time.",
       link: "See the offer",
     },
     banner: {
       headline: "Up to 75% off for our first 5 clients",
-      detail: "{hours} hours a month for {price} (usually {fullPrice}), locked for 12 months. Cancel any time.",
+      detail: "{hours} hours a week for {price} (usually {fullPrice}), locked for 12 months. Cancel any time.",
       link: "See the offer",
     },
+  },
+  founder: {
+    eyebrow: "Who you'll work with",
+    title: "No sales team. No account managers. Just Piotr.",
+    name: "Piotr Ciesiolkiewicz",
+    role: "Founder · Software engineer",
+    body: "Piotr has spent more than ten years building checkouts, payments and internal tools for companies like Highsnobiety and Officeworks. Now he brings the same skills to small businesses. He's your one point of contact from start to finish. When a job needs other skills, he brings in specialists he trusts and checks their work himself.",
+    link: "See his experience",
+    photoAlt: "Piotr Ciesiolkiewicz, founder of Helpful Machines",
   },
   career: {
     eyebrow: "The experience behind it",
     title: "More than ten years of fixing how businesses run",
     intro:
-      "Helpful Machines is led by Piotr Ciesiolkiewicz, a software engineer with a Master's in Computer Science and more than ten years in startups and global companies across Australia and Europe. Every plan looks at the whole business, not just the technology.",
+      "Helpful Machines is led by Piotr Ciesiolkiewicz, a software engineer with a Master's in Computer Science and more than ten years in startups and global companies across Australia and Europe. Now he brings that experience to small businesses, and every plan looks at the whole business, not just the technology.",
     highlights: [
-      { title: "Nokia", body: "Started out digging through gigabytes of logs to find why systems misbehaved, then built tools so others could find answers in minutes." },
-      { title: "Highsnobiety", body: "Built product pages and a checkout that stayed fast and correct through huge limited-edition drops." },
-      { title: "Officeworks", body: "Changed a team workflow that cut developers' wait for QA to zero, and built recurring orders for business customers." },
-      { title: "Lysn", body: "Added configurable pricing and Medicare gap payments to grow revenue." },
+      { title: "Nokia", body: "Tracked down why systems misbehaved in gigabytes of logs, then built tools so the team could find answers in minutes." },
+      { title: "Highsnobiety", body: "Built product pages and a checkout that kept taking orders through huge limited-edition drops." },
+      { title: "Officeworks", body: "Changed how the team worked so developers no longer waited for QA, and built recurring orders for business customers." },
+      { title: "Lysn", body: "Built configurable pricing and Medicare gap payments, giving the business new ways to charge and clients new ways to pay." },
       { title: "ONCHAIN", body: "Built card payments and a subscription engine that prices in dollars and charges in crypto." },
       {
         title: "Ideas from outside the box",
@@ -324,7 +333,7 @@ export const en = {
     items: [
       {
         question: "How much does it cost?",
-        answer: "The review and written plan are free. If you want us to do the work, pick a monthly plan of 4 or 8 hours. Our first 5 clients get up to 75% off the usual price, locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote.",
+        answer: "The review and written plan are free. If you want us to do the work, pick a monthly plan of 4 or 8 hours a week. Our first 5 clients get up to 75% off the usual price, locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote.",
       },
       {
         question: "What's in the free review?",

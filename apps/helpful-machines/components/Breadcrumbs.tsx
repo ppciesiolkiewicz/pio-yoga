@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { localizedPath, type Locale } from "@repo/web/locale";
+import type { Content } from "@/content";
 
 export function Breadcrumbs({ items, label }: { items: { name: string; href?: string }[]; label: string }) {
   return (
@@ -20,5 +22,22 @@ export function Breadcrumbs({ items, label }: { items: { name: string; href?: st
         ))}
       </ol>
     </nav>
+  );
+}
+
+/** "Home / …" trail at the top of every page below the home page, so the way back is always one tap away. */
+export function PageBreadcrumbs({
+  locale,
+  t,
+  trail,
+}: {
+  locale: Locale;
+  t: Content;
+  trail: { name: string; href?: string }[];
+}) {
+  return (
+    <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6">
+      <Breadcrumbs label={t.nav.breadcrumbs} items={[{ name: t.nav.home, href: localizedPath(locale, "/") }, ...trail]} />
+    </div>
   );
 }

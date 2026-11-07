@@ -7,7 +7,7 @@ import { Section } from "@repo/ui/Section";
 import { breadcrumbList, faqPage, service } from "@repo/web/json-ld";
 import { localizedPath } from "@repo/web/locale";
 import { absoluteUrl } from "@repo/web/seo";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { PageBreadcrumbs } from "@/components/Breadcrumbs";
 import { isServiceSlug, serviceSlugs } from "@/content/services";
 import { bookingLink } from "@/lib/links";
 import { meta } from "@/lib/metadata";
@@ -44,16 +44,11 @@ export default async function ServicePage({ params }: Props) {
   ];
   return (
     <>
-      <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6">
-        <Breadcrumbs
-          label={t.nav.breadcrumbs}
-          items={[
-            { name: t.nav.home, href: localizedPath(locale, "/") },
-            { name: t.nav.services, href: localizedPath(locale, "/services") },
-            { name: item.title },
-          ]}
-        />
-      </div>
+      <PageBreadcrumbs
+        locale={locale}
+        t={t}
+        trail={[{ name: t.nav.services, href: localizedPath(locale, "/services") }, { name: item.title }]}
+      />
       <Section id="service" headingLevel="h1" title={item.title} intro={item.intro} className="pt-6 sm:pt-8">
         <div className="grid gap-5 md:grid-cols-3">
           {lists.map(([heading, entries]) => (
@@ -71,7 +66,7 @@ export default async function ServicePage({ params }: Props) {
       <Section id="service-faq" title={t.services.faqTitle}>
         <FaqList items={item.faq} />
       </Section>
-      <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />
+      <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} className="hm-cta" />
       <JsonLd
         data={[
           service({ name: item.title, description: item.summary, url: url(`/services/${slug}`), providerName: site.name, providerUrl: site.url, areaServed: ["AU"] }),
