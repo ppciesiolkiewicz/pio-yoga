@@ -8,7 +8,7 @@ import { ServiceCard } from "@repo/ui/ServiceCard";
 import { StepList } from "@repo/ui/StepList";
 import { localizedPath } from "@repo/web/locale";
 import { HeroDecor } from "@/components/HeroDecor";
-import { NetworkVisual } from "@/components/NetworkVisual";
+import { GeometricVisual } from "@/components/GeometricVisual";
 import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
@@ -51,7 +51,7 @@ export default async function HomePage({ params }: Props) {
             secondary={{ href: "#services", label: t.hero.secondary }}
             note={t.hero.note}
             newTabLabel={t.nav.newTab}
-            visual={<NetworkVisual />}
+            visual={<GeometricVisual />}
           />
         </div>
       </div>

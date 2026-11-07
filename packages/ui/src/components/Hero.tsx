@@ -30,7 +30,7 @@ export function Hero({
   return (
     <section aria-labelledby="hero-title" className="pt-12 pb-14 sm:pt-20 sm:pb-20">
       <Container className={visual ? "grid items-center gap-10 lg:grid-cols-[1.4fr_1fr]" : undefined}>
-        <div>
+        <div className="relative z-10">
           {eyebrow && (
             <p data-eyebrow="hero" className="mb-4 text-sm font-bold uppercase tracking-widest text-accent-text">
               {eyebrow}
@@ -51,7 +51,7 @@ export function Hero({
             </div>
           )}
         </div>
-        {visual && <div className="hidden lg:block">{visual}</div>}
+        {visual && <div className="relative z-0 hidden lg:block">{visual}</div>}
       </Container>
     </section>
   );
