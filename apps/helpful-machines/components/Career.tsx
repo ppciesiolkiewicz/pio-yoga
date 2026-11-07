@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Card } from "@repo/ui/Card";
 import { Section } from "@repo/ui/Section";
 import type { Content } from "@/content";
@@ -8,7 +9,22 @@ const linkedIn = "https://www.linkedin.com/in/piotr-ciesiolkiewicz";
 export function Career({ t }: { t: Content }) {
   return (
     <Section id="career" eyebrow={t.career.eyebrow} title={t.career.title} intro={t.career.intro}>
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex items-center gap-4">
+        <Image
+          src="/images/founder.jpg"
+          alt="Piotr Ciesiolkiewicz"
+          width={96}
+          height={96}
+          className="size-20 rounded-full object-cover"
+        />
+        <div>
+          <p className="font-display text-lg font-bold">Piotr Ciesiolkiewicz</p>
+          <a href={linkedIn} rel="noopener noreferrer" className="inline-flex min-h-11 items-center font-bold underline decoration-2 underline-offset-4">
+            {t.career.link}
+          </a>
+        </div>
+      </div>
+      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {t.career.highlights.map((item) => (
           <li key={item.title}>
             <Card className="h-full">
@@ -18,11 +34,6 @@ export function Career({ t }: { t: Content }) {
           </li>
         ))}
       </ul>
-      <p className="mt-8">
-        <a href={linkedIn} rel="noopener noreferrer" className="inline-flex min-h-11 items-center font-bold underline decoration-2 underline-offset-4">
-          {t.career.link}
-        </a>
-      </p>
     </Section>
   );
 }

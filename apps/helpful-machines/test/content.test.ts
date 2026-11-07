@@ -62,16 +62,16 @@ describe("Helpful Machines content", () => {
       }
     }
     expect(markets.en.plans).toEqual({
-      light: { monthlyPrice: 89, regularPrice: 360, hoursPerMonth: 4 },
-      focus: { monthlyPrice: 219, regularPrice: 880, hoursPerMonth: 10 },
+      light: { monthlyPrice: 199, regularPrice: 600, hoursPerMonth: 4 },
+      focus: { monthlyPrice: 299, regularPrice: 1200, hoursPerMonth: 8 },
     });
   });
 
-  it("founding price is 75% off the usual price", () => {
+  it("founding price is up to 75% off the usual price", () => {
     for (const key of planKeys) {
       const { monthlyPrice, regularPrice } = markets.en.plans[key];
       expect(regularPrice).toBeGreaterThan(monthlyPrice);
-      expect(Math.abs(1 - monthlyPrice / regularPrice - 0.75)).toBeLessThan(0.01);
+      expect(1 - monthlyPrice / regularPrice).toBeLessThanOrEqual(0.76);
     }
   });
 

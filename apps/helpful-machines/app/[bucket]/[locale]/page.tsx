@@ -2,10 +2,12 @@ import { ButtonLink } from "@repo/ui/SmartLink";
 import { CtaBand } from "@repo/ui/CtaBand";
 import { Hero } from "@repo/ui/Hero";
 import { Highlight } from "@repo/ui/Highlight";
+import { PricingCard } from "@repo/ui/PricingCard";
 import { Section } from "@repo/ui/Section";
 import { ServiceCard } from "@repo/ui/ServiceCard";
 import { StepList } from "@repo/ui/StepList";
 import { localizedPath } from "@repo/web/locale";
+import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
 import { meta } from "@/lib/metadata";
@@ -26,6 +28,7 @@ export default async function HomePage({ params }: Props) {
   const price = await priceFormatter(market.currency);
   const { light } = market.plans;
   const href = (path: string) => localizedPath(locale, path);
+  const booking = bookingLink(locale, t, "pricing");
 
   return (
     <>
@@ -65,7 +68,31 @@ export default async function HomePage({ params }: Props) {
         title={fillPlan(t.pricing.teaser.title, price(light.monthlyPrice), light.hoursPerMonth, price(light.regularPrice))}
         intro={fillPlan(t.pricing.teaser.body, price(light.monthlyPrice), light.hoursPerMonth, price(light.regularPrice))}
       >
-        <ButtonLink link={{ href: href("/pricing"), label: t.pricing.teaser.link }} variant="primary" />
+        <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+          {planKeys.map((key) => {
+            const plan = market.plans[key];
+            const copy = t.pricing.plans[key];
+            const fill = (text: string) => fillPlan(text, price(plan.monthlyPrice), plan.hoursPerMonth, price(plan.regularPrice));
+            return (
+              <PricingCard
+                key={key}
+                featured={key === "focus"}
+                badge={t.pricing.badge}
+                name={fill(copy.name)}
+                price={`${price(plan.monthlyPrice)}${t.pricing.perMonth}`}
+                regularPrice={`${price(plan.regularPrice)}${t.pricing.perMonth}`}
+                regularPriceLabel={t.pricing.regularPriceLabel}
+                summary={fill(copy.summary)}
+                features={copy.features}
+                cta={booking}
+                newTabLabel={t.nav.newTab}
+              />
+            );
+          })}
+        </div>
+        <p className="mx-auto mt-6 max-w-4xl text-center">
+          <ButtonLink link={{ href: href("/pricing"), label: t.pricing.teaser.link }} variant="secondary" />
+        </p>
       </Section>
 
       <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />
