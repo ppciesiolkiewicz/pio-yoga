@@ -90,7 +90,11 @@
 
 /* class index */
 .cls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.75rem; }
+<<<<<<< Updated upstream
 .cls-card { position: relative; display: grid; gap: 0.45rem; align-content: start; text-decoration: none; padding: 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: border-color 0.15s; }
+=======
+.cls-card { appearance: none; font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; display: grid; gap: 0.45rem; align-content: start; text-decoration: none; padding: 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: border-color 0.15s; }
+>>>>>>> Stashed changes
 .cls-card:hover { border-color: var(--accent); }
 .cls-card-title { font-family: var(--display); font-size: 1.2rem; font-weight: 500; padding-right: 4.75rem; min-height: 2.6rem; }
 .cls-card-sub { padding-right: 4.75rem; }
@@ -108,8 +112,8 @@
 .conn-list > div { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1rem; padding-block: 0.55rem; border-top: 1px solid var(--line); }
 .conn-list dt { font-family: var(--display); font-weight: 600; }
 .conn-list dd { margin: 0; color: var(--muted); }
-.cls-links a, .piece-used a, .rel a { color: var(--accent); text-decoration: none; font-family: var(--display); font-weight: 500; }
-.cls-links a:hover, .piece-used a:hover, .rel a:hover { text-decoration: underline; }
+.lnk { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; font-size: inherit; color: var(--accent); font-family: var(--display); font-weight: 500; text-align: left; }
+.lnk:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   .conn { grid-template-columns: 1fr; }
   .conn-list > div { grid-template-columns: 6.5rem minmax(0, 1fr); }
@@ -209,7 +213,15 @@
 .rel-label { font-family: var(--display); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 .rel ul { list-style: none; margin: 0.4rem 0 0; padding: 0; display: grid; gap: 0.3rem; }
 .rel-why { color: var(--muted); font-size: 0.85rem; margin-left: 0.6rem; }
-.top-link { font-family: var(--display); font-size: 0.85rem; color: var(--muted); text-decoration: none; }
+
+/* class modal: one class open at a time */
+.cls-modal { width: min(100% - 2rem, 60rem); max-width: none; max-height: calc(100dvh - 2rem); overflow-y: auto; padding: 0 clamp(1rem, 4vw, 2.5rem); border: 1px solid var(--line); border-radius: 16px; background: var(--bg); color: var(--ink); overscroll-behavior: contain; }
+.cls-modal::backdrop { background: rgb(0 0 0 / 0.45); }
+.cls-modal .cls { border-top: 0; padding-block: 0 clamp(1.5rem, 4vw, 2.5rem); }
+.cls-modal-bar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: flex-end; padding-top: 0.75rem; margin-bottom: -1.5rem; pointer-events: none; }
+.cls-modal-close { pointer-events: auto; width: 2.25rem; height: 2.25rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-size: 0.95rem; }
+.cls-modal-close:hover { border-color: var(--accent); }
+html:has(.cls-modal[open]) { overflow: hidden; }
 
 /* library */
 .lib-cat { margin-top: 2.5rem; }

@@ -11,7 +11,7 @@ import { colorModeScript } from "@repo/web/color-mode";
 import { consentRequired } from "@repo/web/consent";
 import { activeAssignment, type Assignment } from "@repo/web/experiments";
 import { organization, professionalService, website } from "@repo/web/json-ld";
-import { htmlLang, localizedPath, type Locale } from "@repo/web/locale";
+import { htmlLang, liveLocales, localizedPath, type Locale } from "@repo/web/locale";
 import { getContent } from "@/content";
 import { markets } from "@/content/market";
 import { fillPlan, formatPrice } from "@/lib/format";
@@ -62,7 +62,12 @@ export function Document({
         {/* Banner and header stick together; the header's own sticky is inert inside this wrapper. */}
         <div className="sticky top-0 z-40">
           <OfferBanner
-            text={fillPlan(t.pricing.banner.text, formatPrice(locale, market.currency, light.monthlyPrice), light.hoursPerMonth)}
+            text={fillPlan(
+              t.pricing.banner.text,
+              formatPrice(locale, market.currency, light.monthlyPrice),
+              light.hoursPerMonth,
+              formatPrice(locale, market.currency, light.regularPrice),
+            )}
             link={{ href: localizedPath(locale, "/pricing"), label: t.pricing.banner.link }}
           />
           <SiteHeader
@@ -86,7 +91,7 @@ export function Document({
           email={{ label: t.footer.contactLabel, address: site.contactEmail }}
           legal={t.footer.legal}
           legalLinks={footerLinks(locale, t)}
-          languageLink={languageLink ?? <LanguageLink locale={locale} buckets={buckets} labels={t.footer.languages} />}
+          languageLink={languageLink ?? (liveLocales.length > 1 ? <LanguageLink locale={locale} buckets={buckets} labels={t.footer.languages} /> : undefined)}
           extra={askConsent ? <ConsentSettingsButton label={t.consent.settings} /> : undefined}
         />
         {askConsent && <ConsentBanner labels={t.consent} policyHref={localizedPath(locale, "/privacy")} />}
@@ -94,8 +99,8 @@ export function Document({
         <JsonLd
           data={[
             organization({ name: site.name, url: site.url, email: site.contactEmail }),
-            website({ name: site.name, url: site.url, inLanguage: ["en-AU", "pl-PL"] }),
-            professionalService({ name: site.name, url: site.url, description: t.meta.siteDescription, areaServed: ["AU", "PL"], email: site.contactEmail }),
+            website({ name: site.name, url: site.url, inLanguage: liveLocales.map((l) => htmlLang[l]) }),
+            professionalService({ name: site.name, url: site.url, description: t.meta.siteDescription, areaServed: ["AU"], email: site.contactEmail }),
           ]}
         />
       </body>

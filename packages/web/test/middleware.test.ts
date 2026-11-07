@@ -6,7 +6,8 @@ import { createRoutingMiddleware } from "../src/routing/middleware";
 const experiments = defineExperiments({
   hero: { variants: { control: "boring-bits", "easy-mode": "easy-mode" }, weights: [50, 50], markets: ["en", "pl"] },
 });
-const middleware = createRoutingMiddleware({ experiments, random: () => 0.9 });
+// Both locales live, so the /pl cases exercise the cookie and redirect plumbing.
+const middleware = createRoutingMiddleware({ experiments, random: () => 0.9, live: ["en", "pl"] });
 const request = (url: string, headers: Record<string, string> = {}) => new NextRequest(url, { headers });
 
 describe("createRoutingMiddleware", () => {

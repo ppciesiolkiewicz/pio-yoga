@@ -1,6 +1,8 @@
 export const locales = ["en", "pl"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
+/** Locales the sites serve right now. Polish is on hold (English only): add "pl" back to bring it back. */
+export const liveLocales: readonly Locale[] = ["en"];
 
 /** Value for <html lang>. */
 export const htmlLang: Record<Locale, string> = { en: "en-AU", pl: "pl-PL" };

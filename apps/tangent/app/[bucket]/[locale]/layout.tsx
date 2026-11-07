@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { locales } from "@repo/web/locale";
+import { liveLocales } from "@repo/web/locale";
 import { Document } from "@/components/Document";
 import type { DesignKey } from "@/experiments";
 import { buckets, resolveParams, type RouteParams } from "@/lib/params";
@@ -11,7 +11,7 @@ type Props = { params: Promise<RouteParams> };
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return buckets.flatMap((bucket) => locales.map((locale) => ({ bucket, locale })));
+  return buckets.flatMap((bucket) => liveLocales.map((locale) => ({ bucket, locale })));
 }
 
 const themeColors: Record<DesignKey, { light: string; dark: string }> = {

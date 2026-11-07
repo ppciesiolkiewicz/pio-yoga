@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import type { Experiments } from "../experiments";
+import { liveLocales, type Locale } from "../locale";
 import { decideRoute, EXP_COOKIE, LOCALE_COOKIE } from "./decide";
 
 /**
@@ -7,7 +8,13 @@ import { decideRoute, EXP_COOKIE, LOCALE_COOKIE } from "./decide";
  *   export default createRoutingMiddleware({ experiments });
  *   export const config = { matcher: ["/((?!api|_next|_vercel|ingest|og|.*\\..*).*)"] };
  */
-export function createRoutingMiddleware(opts: { experiments: Experiments; random?: () => number; isKnownPath?: (rest: string) => boolean }) {
+export function createRoutingMiddleware(opts: {
+  experiments: Experiments;
+  random?: () => number;
+  isKnownPath?: (rest: string) => boolean;
+  /** Locales served; default liveLocales. */
+  live?: readonly Locale[];
+}) {
   return function middleware(req: NextRequest): NextResponse {
     const decision = decideRoute({
       pathname: req.nextUrl.pathname,
@@ -18,6 +25,7 @@ export function createRoutingMiddleware(opts: { experiments: Experiments; random
       experiments: opts.experiments,
       random: opts.random,
       isKnownPath: opts.isKnownPath,
+      live: opts.live ?? liveLocales,
       // Only real page loads may store the language. Next strips its own RSC/prefetch headers
       // before middleware, so use the browser's Sec-Fetch-Dest (missing = curl, bots: treat as a page).
       navigation:

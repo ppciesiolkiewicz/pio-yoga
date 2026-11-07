@@ -4,8 +4,8 @@ import { pl } from "../content/pl";
 import { allPaths, ogKey, pageTitle, pathFromOgKey, servicePaths, staticPaths } from "../lib/routes";
 
 describe("routes", () => {
-  it("lists 9 static pages and 5 service pages", () => {
-    expect(staticPaths).toHaveLength(9);
+  it("lists 6 static pages and 5 service pages", () => {
+    expect(staticPaths).toHaveLength(6);
     expect(servicePaths).toEqual([
       "/services/find-what-works",
       "/services/ai-assistants-automation",
@@ -13,7 +13,7 @@ describe("routes", () => {
       "/services/spreadsheets-data",
       "/services/migrations-integrations",
     ]);
-    expect(allPaths).toHaveLength(14);
+    expect(allPaths).toHaveLength(11);
   });
   it("round-trips OG keys", () => {
     expect(ogKey("/")).toBe("home");

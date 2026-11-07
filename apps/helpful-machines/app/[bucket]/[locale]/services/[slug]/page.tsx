@@ -74,7 +74,7 @@ export default async function ServicePage({ params }: Props) {
       <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />
       <JsonLd
         data={[
-          service({ name: item.title, description: item.summary, url: url(`/services/${slug}`), providerName: site.name, providerUrl: site.url, areaServed: ["AU", "PL"] }),
+          service({ name: item.title, description: item.summary, url: url(`/services/${slug}`), providerName: site.name, providerUrl: site.url, areaServed: ["AU"] }),
           breadcrumbList([
             { name: t.nav.home, url: url("/") },
             { name: t.nav.services, url: url("/services") },

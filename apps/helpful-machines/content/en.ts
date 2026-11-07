@@ -2,24 +2,24 @@
 export const en = {
   meta: {
     siteDescription:
-      "Helpful Machines finds what's slowing your small business down and fixes it, with AI, custom apps, tidy data or a better process. Plain English, small-business prices. Free first chat.",
+      "Your own tech consultant for small businesses. AI tools, custom apps and integrations, built for you. Start with a free review.",
     home: {
       title: "Helpful Machines · AI and custom apps for small businesses",
       description:
-        "Helpful Machines finds what's slowing your small business down and fixes it, with AI, custom apps, tidy data or a better process. Plain English, small-business prices. Free first chat.",
+        "Your own tech consultant for small businesses. AI tools, custom apps and integrations, built for you. Start with a free review.",
     },
     services: {
-      title: "Services · AI, custom apps, spreadsheets and integrations",
+      title: "Services · AI tools, custom apps and integrations",
       description:
-        "What Helpful Machines can do for your business: AI assistants and automation, custom apps and websites, spreadsheet and data clean-ups, migrations and integrations.",
+        "What Helpful Machines can build for your business: AI tools, custom apps and websites, integrations and migrations, and data you can rely on.",
     },
     howItWorks: {
-      title: "How it works · from free chat to finished",
-      description: "Four simple steps: a free chat, a fixed plan and quote, the build, and support afterwards.",
+      title: "How it works · from free review to finished",
+      description: "Four simple steps: a free review, a free written plan, the work, and a monthly check-in on what to improve next.",
     },
     pricing: {
-      title: "Pricing · dedicated monthly hours, price locked for a year",
-      description: "New clients get 4 or 10 dedicated hours every month improving their business, at a monthly price locked for 12 months. Cancel any time. Start with a free chat.",
+      title: "Pricing · 75% off for our first 5 clients",
+      description: "Your own consultant for 4 or 10 hours every month. Our first 5 clients get 75% off the usual price, locked for 12 months. Cancel any time. Start with a free review.",
     },
     work: {
       title: "Work · what we've built before",
@@ -30,8 +30,8 @@ export const en = {
       description: "Answers about cost, timelines, AI, data privacy and what happens after your project is finished.",
     },
     contact: {
-      title: "Contact · book a free chat",
-      description: "Book a free 30-minute chat or send a message. No jargon, no obligation.",
+      title: "Contact · book a free review",
+      description: "Book a free 30-minute review and get a written plan for your business. No jargon, no obligation.",
     },
     privacy: { title: "Privacy policy", description: "How Helpful Machines handles personal information and analytics." },
     terms: { title: "Terms", description: "The terms for working with Helpful Machines." },
@@ -43,7 +43,7 @@ export const en = {
     work: "Work",
     faq: "FAQ",
     contact: "Contact",
-    cta: "Book a free chat",
+    cta: "Book a free review",
     menu: "Menu",
     close: "Close menu",
     primary: "Main",
@@ -54,16 +54,28 @@ export const en = {
     colorMode: { group: "Colour mode", light: "Light", dark: "Dark", system: "System" },
   },
   hero: {
-    eyebrow: "Practical tech help for small businesses",
+    eyebrow: "Your own tech consultant for small businesses",
     title: {
-      control: ["AI that actually ", "does the boring bits", "."],
+      control: ["We'll find what we can do for you, ", "and do it better", "."],
       "easy-mode": ["Put your business on ", "easy mode", "."],
     },
-    lead: "We look at how your business actually runs, find what's costing you time and money, and fix it, with AI, custom apps, tidy data or simply a better process. Plain English, small-business prices.",
+    lead: "AI tools, custom apps and integrations, built around how you work. Tell us what's slowing you down, and we'll take it from there.",
     secondary: "See what we do",
-    note: "30 minutes · no jargon · no obligation",
-    chipsLabel: "What we help with",
-    chips: ["AI assistants", "Spreadsheets", "Custom apps", "Integrations"],
+    note: "Free review · no obligation",
+    chipsLabel: "What we build",
+    chips: ["AI tools", "Custom apps", "Integrations"],
+  },
+  landing: {
+    services: {
+      eyebrow: "What we do",
+      title: "What we can build for you",
+      items: [
+        { slug: "ai-assistants-automation", title: "AI tools", summary: "Smart assistants that take the repetitive work off your plate." },
+        { slug: "custom-apps-websites", title: "Custom apps", summary: "Made for your business, so every day runs smoother." },
+        { slug: "migrations-integrations", title: "Integrations", summary: "Your software working together, automatically." },
+        { slug: "find-what-works", title: "Your best path", summary: "Not sure where to start? We look at how you work and find what's worth doing first." },
+      ],
+    },
   },
   fixes: {
     eyebrow: "How we help",
@@ -73,7 +85,7 @@ export const en = {
         pain: "Too much of your week goes on admin.",
         fix: "We map where the time goes and remove the busywork, with automation, AI or a simpler way of working.",
       },
-      { pain: "Your tools don't talk to each other.", fix: "We connect them, or replace them with something that fits how you work." },
+      { pain: "Your tools don't talk to each other.", fix: "We connect them, or build a custom app that fits how you work and makes your day easier." },
       { pain: "Your numbers live in spreadsheets nobody trusts.", fix: "We tidy your data so decisions get easier." },
       { pain: "You're not sure which tech is worth paying for.", fix: "We tell you honestly, including when the answer is \"nothing\"." },
     ],
@@ -90,9 +102,9 @@ export const en = {
     items: {
       "ai-assistants-automation": {
         title: "AI assistants & automation",
-        summary: "Let AI handle the repetitive bits: emails, enquiries, quotes, notes and reports.",
+        summary: "AI that answers enquiries and drafts quotes, replies and reports in your tone.",
         intro:
-          "AI is good at first drafts and boring sorting. We set it up so it fits how you already work, with a person checking anything that matters.",
+          "AI is brilliant at first drafts. We set it up so it fits how you already work, with a person checking anything that matters.",
         problems: [
           "Your inbox is full of the same five questions.",
           "Quotes, notes or reports take hours to write up.",
@@ -102,7 +114,6 @@ export const en = {
           "Find the tasks where AI saves real time",
           "Set up assistants that know your products, prices and tone",
           "Connect them to your email, forms or tools",
-          "Keep a person in the loop for anything customer-facing",
         ],
         deliverables: ["A working assistant or automation", "A short guide for your team", "A month of tweaks after launch"],
         faq: [
@@ -112,11 +123,11 @@ export const en = {
       },
       "custom-apps-websites": {
         title: "Custom apps & websites",
-        summary: "Custom apps and websites built around how your business actually works.",
+        summary: "Custom apps that fit your business, not the other way round.",
         intro:
-          "Off-the-shelf software makes you work its way. A custom app works your way, and for many small businesses it costs less than you'd expect.",
+          "Off-the-shelf software makes you work its way. A custom app works your way, cuts the steps you repeat every day, and often costs less than you'd expect.",
         problems: [
-          "You pay for several tools that don't talk to each other.",
+          "Your software makes simple jobs slow.",
           "Your booking, ordering or job tracking is done by hand.",
           "Your website doesn't bring in enquiries.",
         ],
@@ -133,17 +144,17 @@ export const en = {
         ],
       },
       "spreadsheets-data": {
-        title: "Spreadsheets & data",
-        summary: "Turn messy spreadsheets into clear, reliable numbers.",
-        intro: "Most small businesses run on spreadsheets. We make them reliable, or move the important bits somewhere safer.",
-        problems: ["Formulas break and nobody knows why.", "The numbers in different files don't match.", "Reports take a day to put together."],
+        title: "Data & dashboards",
+        summary: "Clear, reliable numbers, without the spreadsheet wrangling.",
+        intro: "See how your business is doing at a glance. We make your numbers reliable and your reports automatic.",
+        problems: ["The numbers in different files don't match.", "Reports take a day to put together."],
         whatWeDo: ["Clean up and restructure spreadsheets", "Automate reports and dashboards", "Set up shared, backed-up data people can trust"],
         deliverables: ["Tidy spreadsheets or a simple database", "Automatic reports", "A short handover so anyone can maintain it"],
         faq: [{ question: "Do I have to stop using Excel or Google Sheets?", answer: "No. Often the best fix is a better spreadsheet." }],
       },
       "migrations-integrations": {
-        title: "Migrations & integrations",
-        summary: "Move to better tools and connect the ones you have.",
+        title: "Integrations & migrations",
+        summary: "Connect the tools you have, and move to better ones safely.",
         intro: "Switching systems or connecting them shouldn't mean weekends of copy and paste. We plan it, move it and check it.",
         problems: [
           "You're stuck on an old system you've outgrown.",
@@ -159,68 +170,85 @@ export const en = {
         faq: [{ question: "Will my business stop while you migrate?", answer: "No. We move things in stages and switch over when everything checks out." }],
       },
       "find-what-works": {
-        title: "Find what works",
+        title: "Your best path",
         summary: "Not sure what you need? We'll look at how you work and find the best fix.",
         intro:
-          "Sometimes the answer is AI, sometimes a custom app, sometimes a better spreadsheet, and sometimes nothing at all. We find out before you spend money.",
+          "Sometimes the answer is AI, sometimes a custom app, sometimes an integration, and sometimes nothing at all. We find out before you spend money, and the first review and plan are free.",
         problems: [
           "Everyone has an opinion about which tool to buy.",
           "You've spent money on software nobody uses.",
-          "You want to grow without hiring for admin.",
+          "You want to grow without hiring more people.",
         ],
         whatWeDo: [
           "Look at how work actually flows through your business",
           "Find the bottlenecks worth fixing",
           "Compare options honestly, including doing nothing",
         ],
-        deliverables: ["A short written plan in plain English", "Costs and time saved for each option", "A clear first step"],
-        faq: [{ question: "Do I have to hire you for the work afterwards?", answer: "No. The plan is yours to use however you like." }],
+        deliverables: ["A short written plan in plain English", "Rough costs and time saved for each option", "A clear first step"],
+        faq: [
+          { question: "Do I have to hire you for the work afterwards?", answer: "No. The plan is yours to use however you like." },
+          { question: "Do you get paid to recommend software?", answer: "No. We don't take commissions, so we recommend what's best for you, even if that's a tool you already have." },
+        ],
       },
     },
   },
   howItWorks: {
     eyebrow: "How it works",
-    title: "From free chat to finished",
-    intro: "No surprises. You know the price before any work starts.",
+    title: "Three simple steps",
+    intro: "You see the plan before you pay anything.",
     steps: [
-      { title: "Free chat", body: "Thirty minutes to talk about what's slowing you down. No jargon, no sales pitch." },
-      { title: "Plan and fixed quote", body: "A short written plan with a fixed price and timeline." },
-      { title: "Build", body: "We build it, show you progress every week and adjust as we go." },
-      { title: "Support", body: "Training for your team and help after launch, so it keeps working." },
+      { title: "Free review", body: "A 30-minute call about your business and what's slowing it down." },
+      { title: "A clear plan", body: "A free written plan: what to build, rough costs, and what to do first." },
+      { title: "We do it", body: "Choose a monthly plan and we get it done, one step at a time, with updates as we go." },
     ],
   },
   pricing: {
-    eyebrow: "New-client offer",
-    title: "Dedicated hours every month, at a price locked for a year",
+    eyebrow: "Founding-client offer",
+    title: "Your own consultant, 75% off for our first 5 clients",
     intro:
-      "Instead of one-off projects, you get dedicated time every month spent improving your business: finding what slows you down, then fixing it with a better process, AI, tidy data or custom apps. Every plan also includes a free idea session each month, where we look at your business together and pick what to improve next. Start in the next few weeks and your price stays the same for 12 months. No contract: cancel any time.",
-    badge: "New-client price · locked 12 months",
+      "Every month, a consultant works on your business: finding what slows you down, then fixing it with AI tools, custom apps or integrations. Every plan includes a free monthly idea session to pick what to improve next. Our first 5 clients pay 75% less than the usual price, locked for 12 months. No contract: cancel any time.",
+    badge: "Founding client · 75% off",
     perMonth: "/month",
+    regularPriceLabel: "Usual price",
     plans: {
       light: {
         name: "{hours} hours a month",
-        summary: "{hours} dedicated hours every month improving your business.",
-        features: ["One improvement at a time, start to finish", "Free monthly idea session, on top of your hours", "A short update on what changed", "Price locked for 12 months", "Cancel any time"],
+        summary: "One improvement at a time, start to finish.",
+        features: ["Free monthly idea session, on top of your hours", "A short update on what changed", "Founding price locked for 12 months", "Cancel any time"],
       },
       focus: {
         name: "{hours} hours a month",
-        summary: "{hours} dedicated hours every month improving your business.",
-        features: ["Bigger fixes, including custom apps", "Free monthly idea session, on top of your hours", "A short update on what changed", "Price locked for 12 months", "Cancel any time"],
+        summary: "Room for bigger fixes, including custom apps.",
+        features: ["Free monthly idea session, on top of your hours", "A short update on what changed", "Founding price locked for 12 months", "Cancel any time"],
       },
     },
     custom: {
       name: "Need more hours, or a one-off project?",
-      body: "Larger custom apps, migrations and integrations are quoted after a free chat.",
-      cta: "Book a free chat",
+      body: "Larger custom apps, migrations and integrations get a fixed quote after your free review.",
+      cta: "Book a free review",
     },
-    note: "Prices exclude GST. The new-client price stays the same for 12 months from your first month.",
+    note: "Prices exclude GST.",
+    offerTerms: {
+      title: "Offer terms",
+      items: [
+        "The founding price is for our first 5 clients who start a monthly plan. The offer ends when all 5 places are taken, or earlier if we close it.",
+        "Your founding price is locked for 12 months from your first paid month. It won't go up during that time.",
+        "If you switch between the 4-hour and 10-hour plans, you keep 75% off the usual price for the rest of your 12 months.",
+        "After 12 months, your plan moves to our usual price at that time. We'll tell you at least 30 days before, so you can change plan or cancel.",
+        "There's no minimum term. Cancel before your next month starts and you won't be charged again.",
+        "Unused hours don't carry over to the next month.",
+        "If you cancel and come back later, the usual price applies.",
+        "Prices exclude GST. These terms sit alongside our general terms and don't limit your rights under the Australian Consumer Law.",
+      ],
+      link: "See all terms",
+    },
     teaser: {
-      title: "{price} a month. Locked for a year.",
-      body: "New clients get {hours} dedicated hours every month improving their business, plus a free monthly idea session, for {price} a month. The price won't change for 12 months, and you can cancel any time.",
+      title: "Your own consultant from {price} a month",
+      body: "{hours} hours a month, plus a free monthly idea session. Our first 5 clients pay {price} instead of {fullPrice}, locked for 12 months. Cancel any time.",
       link: "See the offer",
     },
     banner: {
-      text: "New clients: {hours} hours a month improving your business + a free idea session, {price}/month, price locked for 12 months.",
+      text: "75% off for our first 5 clients: {hours} hours a month for {price} (usually {fullPrice}), locked for 12 months.",
       link: "See the offer",
     },
   },
@@ -228,7 +256,7 @@ export const en = {
     eyebrow: "The experience behind it",
     title: "More than ten years of fixing how businesses run",
     intro:
-      "Helpful Machines is led by Piotr Ciesiolkiewicz, a software engineer and problem-solver with a Master's in Computer Science and more than ten years in startups and global companies across Australia and Europe. That experience goes into every plan: we look at pricing, revenue, how teams work and what customers actually need, not just the technology.",
+      "Helpful Machines is led by Piotr Ciesiolkiewicz, a software engineer with a Master's in Computer Science and more than ten years in startups and global companies across Australia and Europe. Every plan looks at the whole business, not just the technology.",
     highlights: [
       { title: "Nokia", body: "Started out digging through gigabytes of logs to find why systems misbehaved, then built tools so others could find answers in minutes." },
       { title: "Highsnobiety", body: "Built product pages and a checkout that stayed fast and correct through huge limited-edition drops." },
@@ -294,7 +322,15 @@ export const en = {
     items: [
       {
         question: "How much does it cost?",
-        answer: "New clients pick a monthly plan of 4 or 10 dedicated hours, at a price locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote after a free chat.",
+        answer: "The review and written plan are free. If you want us to do the work, pick a monthly plan of 4 or 10 hours. Our first 5 clients get 75% off the usual price, locked for 12 months (see the pricing page). No contract: cancel any time. Bigger one-off projects get a fixed quote.",
+      },
+      {
+        question: "What's in the free review?",
+        answer: "A 30-minute call about how your business runs, then a short written plan: what's worth fixing, your options with rough costs, and what we'd do first. It's yours to keep, with no obligation.",
+      },
+      {
+        question: "Whose side are you on?",
+        answer: "Yours. We don't sell software or take commissions, so the only way we do well is when your business does. We recommend what's best for you, including doing nothing.",
       },
       { question: "How long does a project take?", answer: "Quick wins usually take a week or two. Custom apps usually take four to eight weeks." },
       { question: "I'm not technical. Is that a problem?", answer: "Not at all. We explain everything in plain English and handle the technical side." },
@@ -307,13 +343,13 @@ export const en = {
     ],
   },
   cta: {
-    title: "Let's make something easier",
-    body: "Book a free 30-minute chat. Bring the task that annoys you most.",
+    title: "Let's see what's possible",
+    body: "Book a free review. Tell us what's slowing you down, and leave with a plan.",
   },
   contact: {
     eyebrow: "Contact",
-    title: "Book a free chat",
-    intro: "Thirty minutes, no jargon, no obligation. Pick a time that suits you, or send a message and we'll reply within one business day.",
+    title: "Book a free review",
+    intro: "A 30-minute call about your business, then a short written plan. Free, no obligation. Pick a time, or send a message and we'll reply within one business day.",
     bookTitle: "Pick a time",
     bookBody: "See open times and book in a couple of clicks.",
     formTitle: "Or send a message",
@@ -343,7 +379,7 @@ export const en = {
     },
   },
   footer: {
-    tagline: "Practical AI and custom apps for small businesses.",
+    tagline: "Your own tech consultant for small businesses.",
     navLabel: "Footer",
     contactLabel: "Email",
     legal: "ABN 48 737 987 261",
@@ -388,7 +424,8 @@ export const en = {
   },
   terms: {
     title: "Terms",
-    updated: "Last updated: October 2026",
+    updated: "Last updated: November 2026",
+    offerHeading: "Founding-client offer",
     sections: [
       { heading: "Quotes", paragraphs: ["Every project starts with a written quote. Work begins once you accept it."] },
       { heading: "Payment", paragraphs: ["Invoices are due within 14 days unless we agree otherwise."] },

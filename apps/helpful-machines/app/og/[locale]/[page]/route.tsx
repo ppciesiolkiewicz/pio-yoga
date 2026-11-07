@@ -1,12 +1,12 @@
 import { ImageResponse } from "next/og";
-import { isLocale, locales } from "@repo/web/locale";
+import { isLocale, liveLocales } from "@repo/web/locale";
 import { getContent } from "@/content";
 import { allPaths, ogKey, pageTitle, pathFromOgKey } from "@/lib/routes";
 
 export const dynamic = "force-static";
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => allPaths.map((path) => ({ locale, page: ogKey(path) })));
+  return liveLocales.flatMap((locale) => allPaths.map((path) => ({ locale, page: ogKey(path) })));
 }
 
 export async function GET(_request: Request, { params }: { params: Promise<{ locale: string; page: string }> }) {

@@ -6,10 +6,31 @@ import type { Dictionary } from "@/content/en";
 type T = Dictionary["timer"];
 type SoundId = keyof T["sounds"];
 type Status = "idle" | "loading" | "running" | "paused" | "done";
-type Settings = { minutes: number; rounds: number; inner: boolean; innerAt: number; outerSound: SoundId; innerSound: SoundId };
+type Settings = {
+  minutes: number;
+  rounds: number;
+  inner: boolean;
+  innerAt: number;
+  outerSound: SoundId;
+  innerSound: SoundId;
+};
 
-const SOUND_IDS: SoundId[] = ["gong", "bowl", "deepBowl", "temple", "crystal", "rin"];
-const DEFAULTS: Settings = { minutes: 5, rounds: 6, inner: true, innerAt: 50, outerSound: "gong", innerSound: "deepBowl" };
+const SOUND_IDS: SoundId[] = [
+  "gong",
+  "bowl",
+  "deepBowl",
+  "temple",
+  "crystal",
+  "rin",
+];
+const DEFAULTS: Settings = {
+  minutes: 5,
+  rounds: 6,
+  inner: true,
+  innerAt: 50,
+  outerSound: "gong",
+  innerSound: "deepBowl",
+};
 const PRESETS = [1, 3, 5, 10, 15, 30];
 const MAX_MINUTES = 90;
 const MAX_ROUNDS = 60; // 0 = until stopped
@@ -43,7 +64,11 @@ function loadSettings(): Settings {
     const s = { ...DEFAULTS, ...JSON.parse(raw) } as Settings;
     if (!SOUND_IDS.includes(s.outerSound)) s.outerSound = DEFAULTS.outerSound;
     if (!SOUND_IDS.includes(s.innerSound)) s.innerSound = DEFAULTS.innerSound;
-    s.minutes = clamp(Math.round(s.minutes) || DEFAULTS.minutes, 1, MAX_MINUTES);
+    s.minutes = clamp(
+      Math.round(s.minutes) || DEFAULTS.minutes,
+      1,
+      MAX_MINUTES,
+    );
     s.rounds = clamp(Math.round(s.rounds) || 0, 0, MAX_ROUNDS);
     s.innerAt = clamp(Math.round(s.innerAt / 5) * 5 || 50, 5, 95);
     return s;
@@ -65,6 +90,10 @@ export default function GongTimer({ t }: { t: T }) {
   const timers = useRef<{ raf: number; tick: number }>({ raf: 0, tick: 0 });
   const wake = useRef<WakeLockSentinel | null>(null);
   const previewSrc = useRef<AudioBufferSourceNode | null>(null);
+  // Audio goes out through a hidden <audio> element: mobile browsers keep media elements
+  // playing with the screen locked, but suspend a bare AudioContext.
+  const out = useRef<AudioNode | null>(null);
+  const media = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => setS(loadSettings()), []);
   useEffect(() => {
@@ -73,15 +102,45 @@ export default function GongTimer({ t }: { t: T }) {
     } catch {}
   }, [s]);
 
-  const update = (patch: Partial<Settings>) => setS((prev) => ({ ...prev, ...patch }));
+  const update = (patch: Partial<Settings>) =>
+    setS((prev) => ({ ...prev, ...patch }));
 
   const ctx = useCallback(() => {
-    if (!ctxRef.current || ctxRef.current.state === "closed") ctxRef.current = new AudioContext();
+    if (!ctxRef.current || ctxRef.current.state === "closed") {
+      const ac = new AudioContext();
+      ctxRef.current = ac;
+      out.current = ac.destination;
+      media.current = null;
+      try {
+        const dest = ac.createMediaStreamDestination();
+        const el = new Audio();
+        el.srcObject = dest.stream;
+        out.current = dest;
+        media.current = el;
+      } catch {}
+    }
     return ctxRef.current;
   }, []);
 
-  // One in-flight request per sound, shared by the background preload, previews and Start.
-  const pending = useRef(new Map<SoundId, Promise<void>>());
+  /** Resume audio output; call from a user gesture. Falls back to direct output if the media element is refused. */
+  const wakeAudio = useCallback(async () => {
+    const ac = ctx();
+    try {
+      (
+        navigator as Navigator & { audioSession?: { type: string } }
+      ).audioSession!.type = "playback";
+    } catch {}
+    await ac.resume();
+    if (media.current) {
+      try {
+        await media.current.play();
+      } catch {
+        media.current = null;
+        out.current = ac.destination;
+      }
+    }
+    return ac;
+  }, [ctx]);
 
   const load = useCallback(
     async (ids: SoundId[]) => {
@@ -95,7 +154,10 @@ export default function GongTimer({ t }: { t: T }) {
               p = (async () => {
                 const res = await fetch(`/sounds/${id}.mp3`);
                 if (!res.ok) throw new Error(`sound ${id}: ${res.status}`);
-                buffers.current.set(id, await ac.decodeAudioData(await res.arrayBuffer()));
+                buffers.current.set(
+                  id,
+                  await ac.decodeAudioData(await res.arrayBuffer()),
+                );
               })();
               // A failed load can be retried by the next caller.
               p.catch(() => pending.current.delete(id));
@@ -120,14 +182,18 @@ export default function GongTimer({ t }: { t: T }) {
       load(SOUND_IDS).catch(() => {});
     };
     const schedule = () => {
-      idle = typeof window.requestIdleCallback === "function" ? window.requestIdleCallback(run, { timeout: 2000 }) : window.setTimeout(run, 200);
+      idle =
+        typeof window.requestIdleCallback === "function"
+          ? window.requestIdleCallback(run, { timeout: 2000 })
+          : window.setTimeout(run, 200);
     };
     if (document.readyState === "complete") schedule();
     else window.addEventListener("load", schedule, { once: true });
     return () => {
       cancelled = true;
       window.removeEventListener("load", schedule);
-      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle);
+      if (typeof window.cancelIdleCallback === "function")
+        window.cancelIdleCallback(idle);
       clearTimeout(idle);
     };
   }, [load]);
@@ -138,7 +204,7 @@ export default function GongTimer({ t }: { t: T }) {
     if (!ac || !buf) return null;
     const src = ac.createBufferSource();
     src.buffer = buf;
-    src.connect(ac.destination);
+    src.connect(out.current ?? ac.destination);
     src.onended = () => sources.current.delete(src);
     src.start(when);
     sources.current.add(src);
@@ -206,6 +272,12 @@ export default function GongTimer({ t }: { t: T }) {
         setStatus("done");
         stopLoops();
         releaseWake();
+        // Let the final gong ring out before releasing the media element.
+        const finished = run.current;
+        setTimeout(
+          () => run.current === finished && media.current?.pause(),
+          15000,
+        );
         return;
       }
       setElapsed(e);
@@ -218,12 +290,12 @@ export default function GongTimer({ t }: { t: T }) {
   async function start() {
     setError(false);
     // Usually the background preload has finished; only show "Loading sounds…" if it hasn't.
-    if (![s.outerSound, s.innerSound].every((id) => buffers.current.has(id))) setStatus("loading");
+    if (![s.outerSound, s.innerSound].every((id) => buffers.current.has(id)))
+      setStatus("loading");
     previewSrc.current?.stop();
     stopSources();
     try {
-      const ac = ctx();
-      await ac.resume();
+      const ac = await wakeAudio();
       await load([s.outerSound, s.innerSound]);
       run.current = { start: ac.currentTime + 0.15, until: 0, settings: s };
       schedule();
@@ -239,13 +311,14 @@ export default function GongTimer({ t }: { t: T }) {
 
   async function pause() {
     await ctxRef.current?.suspend();
+    media.current?.pause();
     stopLoops();
     releaseWake();
     setStatus("paused");
   }
 
   async function resume() {
-    await ctxRef.current?.resume();
+    await wakeAudio();
     setStatus("running");
     startLoops();
     holdWake();
@@ -255,6 +328,7 @@ export default function GongTimer({ t }: { t: T }) {
     stopLoops();
     stopSources();
     releaseWake();
+    media.current?.pause();
     ctxRef.current?.resume();
     setElapsed(0);
     setStatus("idle");
@@ -263,8 +337,7 @@ export default function GongTimer({ t }: { t: T }) {
   async function preview(id: SoundId) {
     if (status !== "idle" && status !== "done") return;
     try {
-      const ac = ctx();
-      await ac.resume();
+      const ac = await wakeAudio();
       await load([id]);
       previewSrc.current?.stop();
       previewSrc.current = play(id, ac.currentTime);
@@ -273,29 +346,43 @@ export default function GongTimer({ t }: { t: T }) {
     }
   }
 
-  // Re-take the wake lock when the page becomes visible again; clean up on unmount.
+  // Back in view: re-take the wake lock, restart audio if the system suspended it, and
+  // top up the schedule (background intervals may have been throttled).
   useEffect(() => {
     const onVis = () => {
-      if (document.visibilityState === "visible" && status === "running") holdWake();
+      if (document.visibilityState !== "visible" || status !== "running")
+        return;
+      holdWake();
+      const ac = ctxRef.current;
+      if (ac && ac.state !== "running") ac.resume().catch(() => {});
+      media.current?.play().catch(() => {});
+      schedule();
     };
     document.addEventListener("visibilitychange", onVis);
     return () => document.removeEventListener("visibilitychange", onVis);
-  }, [status]);
+  }, [status, schedule]);
   useEffect(
     () => () => {
       stopLoops();
       releaseWake();
+      media.current?.pause();
       ctxRef.current?.close().catch(() => {});
     },
     [],
   );
 
   // What the dial shows: the live run's settings while active, the form otherwise.
-  const active = status === "running" || status === "paused" || status === "done";
+  const active =
+    status === "running" || status === "paused" || status === "done";
   const cfg = active ? run.current.settings : s;
   const len = cfg.minutes * 60;
   const totalRounds = cfg.rounds;
-  const round = active ? Math.min(Math.floor(elapsed / len), totalRounds ? totalRounds - 1 : Infinity) : 0;
+  const round = active
+    ? Math.min(
+        Math.floor(elapsed / len),
+        totalRounds ? totalRounds - 1 : Infinity,
+      )
+    : 0;
   const inRound = active ? elapsed - round * len : 0;
   const progress = status === "done" ? 1 : inRound / len;
   const innerSec = (len * cfg.innerAt) / 100;
@@ -304,7 +391,9 @@ export default function GongTimer({ t }: { t: T }) {
   const nextLabel = nextInner ? t.nextInner : isLast ? t.nextEnd : t.nextRound;
   const nextIn = nextInner ? innerSec - inRound : len - inRound;
   const roundText = totalRounds
-    ? t.roundOf.replace("{n}", String(round + 1)).replace("{total}", String(totalRounds))
+    ? t.roundOf
+        .replace("{n}", String(round + 1))
+        .replace("{total}", String(totalRounds))
     : t.round.replace("{n}", String(round + 1));
   const marker = point(cfg.innerAt / 100);
   const locked = status !== "idle" && status !== "done";
@@ -324,7 +413,9 @@ export default function GongTimer({ t }: { t: T }) {
             transform="rotate(-90 170 170)"
           />
           <circle className="mark outer" cx="170" cy={170 - R} r="9" />
-          {cfg.inner && <circle className="mark inner" cx={marker.x} cy={marker.y} r="6" />}
+          {cfg.inner && (
+            <circle className="mark inner" cx={marker.x} cy={marker.y} r="6" />
+          )}
         </svg>
         <div className="gt-face">
           {status === "done" ? (
@@ -332,13 +423,23 @@ export default function GongTimer({ t }: { t: T }) {
           ) : (
             <>
               <div className="gt-time">{fmt(active ? len - inRound : len)}</div>
-              <div className="gt-round">{active ? roundText : totalRounds ? t.roundsTotal.replace("{n}", String(totalRounds)) : t.endless}</div>
+              <div className="gt-round">
+                {active
+                  ? roundText
+                  : totalRounds
+                    ? t.roundsTotal.replace("{n}", String(totalRounds))
+                    : t.endless}
+              </div>
               {active && (
                 <div className="gt-next">
                   {nextLabel} {fmt(nextIn)}
                 </div>
               )}
-              {!active && totalRounds > 0 && <div className="gt-next">{t.total} {fmt(totalRounds * len)}</div>}
+              {!active && totalRounds > 0 && (
+                <div className="gt-next">
+                  {t.total} {fmt(totalRounds * len)}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -349,7 +450,12 @@ export default function GongTimer({ t }: { t: T }) {
 
       <div className="gt-controls">
         {status === "idle" || status === "loading" ? (
-          <button className="btn primary gt-go" type="button" onClick={start} disabled={status === "loading"}>
+          <button
+            className="btn primary gt-go"
+            type="button"
+            onClick={start}
+            disabled={status === "loading"}
+          >
             {status === "loading" ? t.loading : t.start}
           </button>
         ) : status === "done" ? (
@@ -358,7 +464,11 @@ export default function GongTimer({ t }: { t: T }) {
           </button>
         ) : (
           <>
-            <button className="btn primary gt-go" type="button" onClick={status === "running" ? pause : resume}>
+            <button
+              className="btn primary gt-go"
+              type="button"
+              onClick={status === "running" ? pause : resume}
+            >
               {status === "running" ? t.pause : t.resume}
             </button>
             <button className="btn" type="button" onClick={reset}>
@@ -366,25 +476,58 @@ export default function GongTimer({ t }: { t: T }) {
             </button>
           </>
         )}
-        {error && <p className="form-msg" role="alert">{t.error}</p>}
+        {error && (
+          <p className="form-msg" role="alert">
+            {t.error}
+          </p>
+        )}
       </div>
 
       <form className="gt-panel" onSubmit={(e) => e.preventDefault()}>
         <fieldset disabled={locked}>
           <div className="gt-row">
-            <span className="gt-label" id="gt-len">{t.length}</span>
+            <span className="gt-label" id="gt-len">
+              {t.length}
+            </span>
             <div className="stepper" role="group" aria-labelledby="gt-len">
-              <button type="button" aria-label={t.shorter} onClick={() => update({ minutes: clamp(s.minutes - 1, 1, MAX_MINUTES) })} disabled={s.minutes <= 1}>
+              <button
+                type="button"
+                aria-label={t.shorter}
+                onClick={() =>
+                  update({ minutes: clamp(s.minutes - 1, 1, MAX_MINUTES) })
+                }
+                disabled={s.minutes <= 1}
+              >
                 −
               </button>
-              <NumberField label={t.length} value={s.minutes} min={1} max={MAX_MINUTES} unit={t.min} onCommit={(minutes) => update({ minutes })} />
-              <button type="button" aria-label={t.longer} onClick={() => update({ minutes: clamp(s.minutes + 1, 1, MAX_MINUTES) })} disabled={s.minutes >= MAX_MINUTES}>
+              <NumberField
+                label={t.length}
+                value={s.minutes}
+                min={1}
+                max={MAX_MINUTES}
+                unit={t.min}
+                onCommit={(minutes) => update({ minutes })}
+              />
+              <button
+                type="button"
+                aria-label={t.longer}
+                onClick={() =>
+                  update({ minutes: clamp(s.minutes + 1, 1, MAX_MINUTES) })
+                }
+                disabled={s.minutes >= MAX_MINUTES}
+              >
                 +
               </button>
             </div>
             <div className="chips" role="group" aria-label={t.presets}>
               {PRESETS.map((m) => (
-                <button type="button" key={m} className="chip" aria-pressed={s.minutes === m} onClick={() => update({ minutes: m })}>
+                <button
+                  type="button"
+                  key={m}
+                  className="chip"
+                  aria-pressed={s.minutes === m}
+                  onClick={() => update({ minutes: m })}
+                >
                   {m} {t.min}
                 </button>
               ))}
@@ -392,25 +535,58 @@ export default function GongTimer({ t }: { t: T }) {
           </div>
 
           <div className="gt-row">
-            <span className="gt-label" id="gt-rounds">{t.rounds}</span>
+            <span className="gt-label" id="gt-rounds">
+              {t.rounds}
+            </span>
             <div className="stepper" role="group" aria-labelledby="gt-rounds">
-              <button type="button" aria-label={t.fewer} onClick={() => update({ rounds: clamp((s.rounds || 1) - 1, 1, MAX_ROUNDS) })} disabled={s.rounds === 1}>
+              <button
+                type="button"
+                aria-label={t.fewer}
+                onClick={() =>
+                  update({ rounds: clamp((s.rounds || 1) - 1, 1, MAX_ROUNDS) })
+                }
+                disabled={s.rounds === 1}
+              >
                 −
               </button>
-              <NumberField label={t.rounds} value={s.rounds} min={1} max={MAX_ROUNDS} empty="∞" onCommit={(rounds) => update({ rounds })} />
-              <button type="button" aria-label={t.more} onClick={() => update({ rounds: clamp(s.rounds + 1, 1, MAX_ROUNDS) })} disabled={s.rounds >= MAX_ROUNDS}>
+              <NumberField
+                label={t.rounds}
+                value={s.rounds}
+                min={1}
+                max={MAX_ROUNDS}
+                empty="∞"
+                onCommit={(rounds) => update({ rounds })}
+              />
+              <button
+                type="button"
+                aria-label={t.more}
+                onClick={() =>
+                  update({ rounds: clamp(s.rounds + 1, 1, MAX_ROUNDS) })
+                }
+                disabled={s.rounds >= MAX_ROUNDS}
+              >
                 +
               </button>
             </div>
             <label className="check">
-              <input type="checkbox" checked={s.rounds === 0} onChange={(e) => update({ rounds: e.target.checked ? 0 : DEFAULTS.rounds })} />
+              <input
+                type="checkbox"
+                checked={s.rounds === 0}
+                onChange={(e) =>
+                  update({ rounds: e.target.checked ? 0 : DEFAULTS.rounds })
+                }
+              />
               {t.endless}
             </label>
           </div>
 
           <div className="gt-row">
             <label className="check gt-label">
-              <input type="checkbox" checked={s.inner} onChange={(e) => update({ inner: e.target.checked })} />
+              <input
+                type="checkbox"
+                checked={s.inner}
+                onChange={(e) => update({ inner: e.target.checked })}
+              />
               {t.inner}
             </label>
             {s.inner && (
@@ -426,7 +602,10 @@ export default function GongTimer({ t }: { t: T }) {
                   onChange={(e) => update({ innerAt: Number(e.target.value) })}
                 />
                 <span>
-                  {t.innerAtValue.replace("{time}", fmt((s.minutes * 60 * s.innerAt) / 100))}
+                  {t.innerAtValue.replace(
+                    "{time}",
+                    fmt((s.minutes * 60 * s.innerAt) / 100),
+                  )}
                   {s.innerAt === 50 && ` · ${t.halfway}`}
                 </span>
               </div>
@@ -488,7 +667,14 @@ function SoundPicker({
       <div className="chips">
         {SOUND_IDS.map((id) => (
           <label className="chip" key={id}>
-            <input type="radio" name={name} value={id} checked={value === id} onChange={() => onPick(id)} onClick={() => value === id && onPick(id)} />
+            <input
+              type="radio"
+              name={name}
+              value={id}
+              checked={value === id}
+              onChange={() => onPick(id)}
+              onClick={() => value === id && onPick(id)}
+            />
             {names[id]}
           </label>
         ))}
@@ -537,7 +723,11 @@ function NumberField({
         placeholder={empty}
         size={String(max).length}
         onFocus={(e) => e.currentTarget.select()}
-        onChange={(e) => setDraft(e.target.value.replace(/\D/g, "").slice(0, String(max).length))}
+        onChange={(e) =>
+          setDraft(
+            e.target.value.replace(/\D/g, "").slice(0, String(max).length),
+          )
+        }
         onBlur={commit}
         onKeyDown={(e) => {
           if (e.key === "Enter") {

@@ -13,15 +13,14 @@ export function bookingLink(locale: Locale, t: Content, location: string): CtaLi
 }
 
 export function navItems(locale: Locale, t: Content): NavItem[] {
+  // The landing page holds these sections, so the nav scrolls to them rather than opening separate pages.
+  const home = localizedPath(locale, "/");
   const items: [string, string][] = [
-    ["/services", t.nav.services],
-    ["/how-it-works", t.nav.howItWorks],
-    ["/pricing", t.nav.pricing],
-    ["/work", t.nav.work],
-    ["/faq", t.nav.faq],
-    ["/contact", t.nav.contact],
+    ["#services", t.nav.services],
+    ["#how-it-works", t.nav.howItWorks],
+    ["#pricing", t.nav.pricing],
   ];
-  return items.map(([path, label]) => ({ href: localizedPath(locale, path), label }));
+  return items.map(([hash, label]) => ({ href: `${home}${hash}`, label }));
 }
 
 export function footerLinks(locale: Locale, t: Content): NavItem[] {

@@ -12,9 +12,15 @@ export function PricingCard({
   headingLevel: Heading = "h3",
   newTabLabel,
   badge,
+  regularPrice,
+  regularPriceLabel = "Usual price",
 }: {
   name: string;
   price: string;
+  /** Usual price before a discount, shown struck through next to `price`. */
+  regularPrice?: string;
+  /** Screen-reader label for the struck-through price. */
+  regularPriceLabel?: string;
   /** Short promo label shown above the name, e.g. "New-client price". */
   badge?: string;
   summary: string;
@@ -30,7 +36,15 @@ export function PricingCard({
         <p className="mb-3 self-start rounded-full bg-highlight px-3 py-1 text-sm font-bold text-ink">{badge}</p>
       )}
       <Heading className="font-display text-2xl font-extrabold">{name}</Heading>
-      <p className="mt-2 font-display text-3xl font-extrabold">{price}</p>
+      <p className="mt-2 flex flex-wrap items-baseline gap-x-3 font-display text-3xl font-extrabold">
+        {price}
+        {regularPrice && (
+          <s className="text-lg font-bold text-muted">
+            <span className="sr-only">{regularPriceLabel}: </span>
+            {regularPrice}
+          </s>
+        )}
+      </p>
       <p className="mt-3 text-muted">{summary}</p>
       <ul className="mt-6 grid gap-2">
         {features.map((feature) => (

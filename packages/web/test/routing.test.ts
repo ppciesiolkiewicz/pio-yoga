@@ -226,3 +226,30 @@ describe("background requests (prefetch / RSC)", () => {
     }));
 });
 
+describe("decideRoute with Polish switched off", () => {
+  const en = (o: Partial<RouteInput>) => run({ live: ["en"], ...o });
+
+  it("sends old /pl links to the English page, keeping path and query", () =>
+    expect(en({ pathname: "/pl/services", search: "?utm_source=x" })).toEqual({
+      kind: "redirect",
+      status: 307,
+      location: "/services?utm_source=x",
+      setCookies: [],
+    }));
+
+  it("forgets a stored Polish choice", () =>
+    expect(en({ pathname: "/pl", cookies: { locale: "pl" } })).toEqual({
+      kind: "redirect",
+      status: 307,
+      location: "/",
+      setCookies: [{ name: "NEXT_LOCALE", value: "", maxAge: 0 }],
+    }));
+
+  it("does not send visitors in Poland, or with an old cookie, to /pl", () => {
+    expect(en({ pathname: "/services", country: "PL", cookies: { exp: "hero:control" } })).toMatchObject({ kind: "rewrite", pathname: "/control/en/services" });
+    expect(en({ country: "AU", cookies: { locale: "pl", exp: "hero:control" } })).toMatchObject({ kind: "rewrite", pathname: "/control/en" });
+  });
+
+  it("ignores ?locale=pl", () =>
+    expect(en({ pathname: "/about", search: "?locale=pl" })).toEqual({ kind: "redirect", status: 307, location: "/about", setCookies: [] }));
+});

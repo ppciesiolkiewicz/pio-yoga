@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { allBuckets } from "@repo/web/experiments";
-import { localizedPath, locales } from "@repo/web/locale";
+import { liveLocales, localizedPath } from "@repo/web/locale";
 import { absoluteUrl } from "@repo/web/seo";
 import { experiments } from "../experiments";
 import { site } from "../site.config";
@@ -26,6 +26,9 @@ function htmlFiles(dir: string): string[] {
   });
 }
 
+/** Polish is on hold (liveLocales): its assertions only run while it is live. */
+const polish = liveLocales.includes("pl");
+
 describe("Helpful Machines build output", () => {
   it("exists (run `pnpm --filter helpful-machines build` first)", () => expect(existsSync(root)).toBe(true));
 
@@ -34,27 +37,31 @@ describe("Helpful Machines build output", () => {
     expect(canonical(html("control", "en", "/pricing"))).toBe("https://helpfulmachines.com.au/pricing");
   });
 
+  it("builds no Polish pages while Polish is off", () => {
+    if (!polish) expect(existsSync(fileFor("control", "pl", "/"))).toBe(false);
+  });
+
   it("pre-renders every bucket × locale × page", () => {
-    for (const bucket of buckets) for (const locale of locales) for (const path of allPaths) {
+    for (const bucket of buckets) for (const locale of liveLocales) for (const path of allPaths) {
       expect(existsSync(fileFor(bucket, locale, path)), `${bucket}/${locale}${path}`).toBe(true);
     }
   });
 
   it("sets <html lang> and the design", () => {
     expect(html("control", "en", "/")).toMatch(/<html[^>]*lang="en-AU"/);
-    expect(html("control", "pl", "/")).toMatch(/<html[^>]*lang="pl-PL"/);
+    if (polish) expect(html("control", "pl", "/")).toMatch(/<html[^>]*lang="pl-PL"/);
     expect(html("easy-mode", "en", "/pricing")).toMatch(/<html[^>]*data-design="helpful-machines"/);
   });
 
   it("renders each hero variant in each market", () => {
-    expect(html("control", "en", "/")).toContain("does the boring bits");
+    expect(html("control", "en", "/")).toContain("and do it better");
     expect(html("easy-mode", "en", "/")).toContain("easy mode");
-    expect(html("control", "pl", "/")).toContain("robi nudną robotę");
-    expect(html("easy-mode", "pl", "/")).toContain("tryb łatwy");
+    if (polish) expect(html("control", "pl", "/")).toContain("robi nudną robotę");
+    if (polish) expect(html("easy-mode", "pl", "/")).toContain("tryb łatwy");
   });
 
   it("gives every bucket the same public canonical", () => {
-    for (const locale of locales) for (const path of ["/", "/services", "/services/custom-apps-websites", "/contact"]) {
+    for (const locale of liveLocales) for (const path of ["/", "/services", "/services/custom-apps-websites", "/contact"]) {
       const expected = absoluteUrl(siteUrl, localizedPath(locale, path));
       for (const bucket of buckets) expect(same(canonical(html(bucket, locale, path))), `${bucket}/${locale}${path}`).toBe(same(expected));
     }
@@ -62,7 +69,7 @@ describe("Helpful Machines build output", () => {
 
   it("has hreflang alternates for both markets and x-default", () => {
     const page = html("control", "en", "/pricing");
-    expect(page).toMatch(new RegExp(`hreflang="pl-PL" href="${absoluteUrl(siteUrl, "/pl/pricing")}"`, "i"));
+    if (polish) expect(page).toMatch(new RegExp(`hreflang="pl-PL" href="${absoluteUrl(siteUrl, "/pl/pricing")}"`, "i"));
     expect(page).toMatch(new RegExp(`hreflang="x-default" href="${absoluteUrl(siteUrl, "/pricing")}"`, "i"));
   });
 
@@ -79,25 +86,25 @@ describe("Helpful Machines build output", () => {
   });
 
   it("ships FAQ and service structured data", () => {
-    expect(html("control", "en", "/faq")).toContain('"@type":"FAQPage"');
-    expect(html("control", "pl", "/services/spreadsheets-data")).toContain('"@type":"Service"');
+    expect(html("control", "en", "/services/custom-apps-websites")).toContain('"@type":"FAQPage"');
+    if (polish) expect(html("control", "pl", "/services/spreadsheets-data")).toContain('"@type":"Service"');
   });
 
-  it("renders a branded, bilingual 404 page (not an empty error shell)", () => {
+  it("renders a branded, 404 page (not an empty error shell)", () => {
     const page = readFileSync(join(root, "_not-found.html"), "utf8");
     expect(page).not.toContain("__next_error__");
     expect(page).toMatch(/<html[^>]*data-design="helpful-machines"/);
     expect(page).toMatch(/<h1[^>]*>[^<]*Page not found/);
-    expect(page).toContain("Nie znaleziono strony");
-    expect(page).toContain('href="/pl"');
+    if (polish) expect(page).toContain("Nie znaleziono strony");
+    if (polish) expect(page).toContain('href="/pl"');
   });
 
   it("follows the copy rule in rendered Polish pages", () => {
-    expect(html("control", "pl", "/")).toContain("Dedykowane aplikacje");
+    if (polish) expect(html("control", "pl", "/")).toContain("Dedykowane aplikacje");
   });
 
   it("puts the brand in every page title", () => {
-    for (const locale of locales) for (const path of allPaths) {
+    for (const locale of liveLocales) for (const path of allPaths) {
       expect(html("control", locale, path).match(/<title>([^<]*)<\/title>/)?.[1], `${locale}${path}`).toContain("Helpful Machines");
     }
   });

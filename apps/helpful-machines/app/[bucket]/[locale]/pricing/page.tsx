@@ -4,6 +4,7 @@ import { PricingCard } from "@repo/ui/PricingCard";
 import { Section } from "@repo/ui/Section";
 import { ButtonLink } from "@repo/ui/SmartLink";
 import { Career } from "@/components/Career";
+import { localizedPath } from "@repo/web/locale";
 import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
@@ -28,7 +29,7 @@ export default async function PricingPage({ params }: Props) {
           {planKeys.map((key) => {
             const plan = market.plans[key];
             const copy = t.pricing.plans[key];
-            const fill = (text: string) => fillPlan(text, price(plan.monthlyPrice), plan.hoursPerMonth);
+            const fill = (text: string) => fillPlan(text, price(plan.monthlyPrice), plan.hoursPerMonth, price(plan.regularPrice));
             return (
               <PricingCard
                 key={key}
@@ -37,6 +38,8 @@ export default async function PricingPage({ params }: Props) {
                 badge={t.pricing.badge}
                 name={fill(copy.name)}
                 price={`${price(plan.monthlyPrice)}${t.pricing.perMonth}`}
+                regularPrice={`${price(plan.regularPrice)}${t.pricing.perMonth}`}
+                regularPriceLabel={t.pricing.regularPriceLabel}
                 summary={fill(copy.summary)}
                 features={copy.features}
                 cta={booking}
@@ -53,6 +56,21 @@ export default async function PricingPage({ params }: Props) {
           <ButtonLink link={{ ...booking, label: t.pricing.custom.cta }} variant="secondary" newTabLabel={t.nav.newTab} />
         </Card>
         <p className="mx-auto mt-6 max-w-4xl text-sm text-muted">{t.pricing.note}</p>
+        <section id="offer-terms" aria-labelledby="offer-terms-title" className="mx-auto mt-6 max-w-4xl text-sm text-muted">
+          <h2 id="offer-terms-title" className="font-bold text-ink">
+            {t.pricing.offerTerms.title}
+          </h2>
+          <ul className="mt-2 grid list-disc gap-1 pl-5">
+            {t.pricing.offerTerms.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <p className="mt-2">
+            <a href={localizedPath(locale, "/terms#founding-offer")} className="underline">
+              {t.pricing.offerTerms.link}
+            </a>
+          </p>
+        </section>
       </Section>
       <Career t={t} />
       <CtaBand title={t.cta.title} body={t.cta.body} cta={bookingLink(locale, t, "cta_band")} newTabLabel={t.nav.newTab} />

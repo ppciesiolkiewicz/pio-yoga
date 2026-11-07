@@ -3,6 +3,7 @@ import type { PieceCategory } from "@/content/flows";
 import { byFocus, byPeak, classes, isUse, partOf, pieces, practiceList, related, usedIn } from "@/content/flows";
 import { PHASES, PHASE_LABEL, PartView, StepView, groupByPhase } from "@/components/flows/FlowParts";
 import ClassCircle from "@/components/flows/ClassCircle";
+import { ClassLink, ClassModalProvider } from "@/components/flows/ClassModal";
 
 const ladderCount =
   pieces.filter((p) => p.category === "ladder").length +
@@ -26,7 +27,7 @@ function ClassLinks({ list }: { list: { slug: string; title: string }[] }) {
       {list.map((c, i) => (
         <span key={c.slug}>
           {i > 0 && ", "}
-          <a href={`#${c.slug}`}>{c.title}</a>
+          <ClassLink slug={c.slug}>{c.title}</ClassLink>
         </span>
       ))}
     </span>
@@ -130,7 +131,7 @@ export default function FlowNotebook() {
               </a>
             ))}
           </div>
-        </section>
+        </header>
 
         <section id="connections" className="fl-sec">
           <h2 className="sec-title">Connections</h2>
@@ -300,20 +301,148 @@ export default function FlowNotebook() {
                   })}
                 </div>
               </div>
-            );
-          })}
-        </section>
+              <div>
+                <dt>Building blocks</dt>
+                <dd>{pieces.length}</dd>
+              </div>
+              <div>
+                <dt>Ladders</dt>
+                <dd>{ladderCount}</dd>
+              </div>
+            </dl>
+            <ul className="legend" aria-label="Legend">
+              <li>
+                <span className="lg-dot new" /> new this round
+              </li>
+              <li>
+                <span className="lg-dot repeat" /> repeated from the round before
+              </li>
+              <li>
+                <span className="tag tag-optional">optional</span>
+              </li>
+              <li>
+                <span className="tag tag-dynamic">dynamic</span>
+              </li>
+              <li>
+                <span className="tag tag-peak">peak</span>
+              </li>
+              <li>
+                <span className="tag tag-unsure">?</span> check my reading
+              </li>
+              <li>
+                <span className="lg-bracket">×3</span> repeat the bracket
+              </li>
+            </ul>
+          </section>
 
-        <section id="practice" className="fl-sec">
-          <h2 className="sec-title">Practice list</h2>
-          <p className="lead">Poses to keep working on in your own practice.</p>
-          <ul className="practice">
-            {practiceList.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
-        </section>
-      </main>
-    </div>
+          <section id="classes" className="fl-sec">
+            <h2 className="sec-title">Classes</h2>
+            <div className="cls-grid">
+              {classes.map((c) => (
+                <ClassLink className="cls-card" slug={c.slug} key={c.slug}>
+                  <span className="cls-card-title">{c.title}</span>
+                  {c.subtitle && <span className="cls-card-sub">{c.subtitle}</span>}
+                  <span className="chips">
+                    {c.duration && <span className="chip chip-time">{c.duration}</span>}
+                    {c.peaks.map((p) => (
+                      <span className="chip chip-peak" key={p}>
+                        {p}
+                      </span>
+                    ))}
+                    {c.focus.slice(0, 3).map((f) => (
+                      <span className="chip" key={f}>
+                        {f}
+                      </span>
+                    ))}
+                  </span>
+                </ClassLink>
+              ))}
+            </div>
+          </section>
+
+          <section id="connections" className="fl-sec">
+            <h2 className="sec-title">Connections</h2>
+            <div className="conn">
+              <div>
+                <h3 className="conn-title">By peak pose</h3>
+                <dl className="conn-list">
+                  {peaks.map(([p, list]) => (
+                    <div key={p}>
+                      <dt>{p}</dt>
+                      <dd>
+                        <ClassLinks list={list} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <div>
+                <h3 className="conn-title">By focus</h3>
+                <dl className="conn-list">
+                  {focus.map(([f, list]) => (
+                    <div key={f}>
+                      <dt>{f}</dt>
+                      <dd>
+                        <ClassLinks list={list} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </section>
+
+          <section id="blocks" className="fl-sec">
+            <h2 className="sec-title">Building blocks</h2>
+            <p className="lead">Reusable pieces to mix into any class. Each one lists the classes that use it.</p>
+            {CATEGORY_ORDER.map((cat) => {
+              const list = pieces.filter((p) => p.category === cat);
+              if (!list.length) return null;
+              return (
+                <div className="lib-cat" key={cat}>
+                  <h3 className="lib-cat-title">{CATEGORY_LABEL[cat]}</h3>
+                  <div className={cat === "ladder" ? "lib-grid lib-wide" : "lib-grid"}>
+                    {list.map((p) => {
+                      const used = usedIn(p.id);
+                      return (
+                        <article className="piece" id={`block-${p.id}`} key={p.id}>
+                          <header className="piece-head">
+                            <h4>{p.title}</h4>
+                            {p.subtitle && <p className="cls-sub">{p.subtitle}</p>}
+                            <p className="piece-used">
+                              {used.length ? (
+                                <>
+                                  Used in <ClassLinks list={used} />
+                                </>
+                              ) : (
+                                "Not in a class yet. Mix it in."
+                              )}
+                            </p>
+                            {p.note && <p className="bnote">{p.note}</p>}
+                          </header>
+                          {p.steps.map((s, i) => (
+                            <StepView key={i} step={s} />
+                          ))}
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </section>
+
+          <section id="practice" className="fl-sec">
+            <h2 className="sec-title">Practice list</h2>
+            <p className="lead">Poses to keep working on in your own practice.</p>
+            <ul className="practice">
+              {practiceList.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </section>
+        </main>
+      </div>
+    </ClassModalProvider>
   );
 }

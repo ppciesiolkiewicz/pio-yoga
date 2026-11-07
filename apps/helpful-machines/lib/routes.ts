@@ -1,7 +1,7 @@
 import type { Content } from "../content/en";
 import { isServiceSlug, serviceSlugs } from "../content/services";
 
-export const staticPaths = ["/", "/services", "/how-it-works", "/pricing", "/work", "/faq", "/contact", "/privacy", "/terms"] as const;
+export const staticPaths = ["/", "/services", "/pricing", "/contact", "/privacy", "/terms"] as const;
 export type StaticPath = (typeof staticPaths)[number];
 export const servicePaths = serviceSlugs.map((slug) => `/services/${slug}`);
 export const allPaths: string[] = [...staticPaths, ...servicePaths];
@@ -9,10 +9,7 @@ export const allPaths: string[] = [...staticPaths, ...servicePaths];
 const metaKey: Record<StaticPath, keyof Omit<Content["meta"], "siteDescription">> = {
   "/": "home",
   "/services": "services",
-  "/how-it-works": "howItWorks",
   "/pricing": "pricing",
-  "/work": "work",
-  "/faq": "faq",
   "/contact": "contact",
   "/privacy": "privacy",
   "/terms": "terms",

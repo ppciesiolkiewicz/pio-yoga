@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { locales } from "@repo/web/locale";
+import { liveLocales } from "@repo/web/locale";
 import { Document } from "@/components/Document";
 import { buckets, resolveParams, type RouteParams } from "@/lib/params";
 import { site } from "@/site.config";
@@ -8,7 +8,7 @@ import { site } from "@/site.config";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return buckets.flatMap((bucket) => locales.map((locale) => ({ bucket, locale })));
+  return buckets.flatMap((bucket) => liveLocales.map((locale) => ({ bucket, locale })));
 }
 
 export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {

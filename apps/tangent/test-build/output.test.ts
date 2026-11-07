@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { allBuckets } from "@repo/web/experiments";
-import { localizedPath, locales } from "@repo/web/locale";
+import { liveLocales, localizedPath } from "@repo/web/locale";
 import { absoluteUrl } from "@repo/web/seo";
 import { experiments } from "../experiments";
 import { site } from "../site.config";
@@ -25,6 +25,9 @@ function htmlFiles(dir: string): string[] {
   });
 }
 
+/** Polish is on hold (liveLocales): its assertions only run while it is live. */
+const polish = liveLocales.includes("pl");
+
 describe("Tangent build output", () => {
   it("exists (run `pnpm --filter tangent build` first)", () => expect(existsSync(root)).toBe(true));
 
@@ -33,14 +36,18 @@ describe("Tangent build output", () => {
     expect(canonical(html("control", "en", "/about"))).toBe("https://tangentlabs.com.au/about");
   });
 
+  it("builds no Polish pages while Polish is off", () => {
+    if (!polish) expect(existsSync(fileFor("control", "pl", "/"))).toBe(false);
+  });
+
   it("pre-renders every bucket × locale × page", () => {
-    for (const bucket of buckets) for (const locale of locales) for (const path of allPaths) {
+    for (const bucket of buckets) for (const locale of liveLocales) for (const path of allPaths) {
       expect(existsSync(fileFor(bucket, locale, path)), `${bucket}/${locale}${path}`).toBe(true);
     }
   });
 
   it("gives each bucket its own design on every page", () => {
-    for (const locale of locales) for (const path of allPaths) {
+    for (const locale of liveLocales) for (const path of allPaths) {
       expect(html("control", locale, path)).toMatch(/<html[^>]*data-design="tangent-precision"/);
       expect(html("editorial", locale, path)).toMatch(/<html[^>]*data-design="tangent-editorial"/);
     }
@@ -49,17 +56,17 @@ describe("Tangent build output", () => {
   it("shows the same copy in both designs", () => {
     for (const bucket of buckets) {
       expect(html(bucket, "en", "/")).toContain("Connect the dots.");
-      expect(html(bucket, "pl", "/")).toContain("Połącz kropki.");
+      if (polish) expect(html(bucket, "pl", "/")).toContain("Połącz kropki.");
     }
   });
 
   it("sets <html lang>", () => {
     expect(html("control", "en", "/")).toMatch(/<html[^>]*lang="en-AU"/);
-    expect(html("editorial", "pl", "/work")).toMatch(/<html[^>]*lang="pl-PL"/);
+    if (polish) expect(html("editorial", "pl", "/work")).toMatch(/<html[^>]*lang="pl-PL"/);
   });
 
   it("gives both designs the same public canonical", () => {
-    for (const locale of locales) for (const path of ["/", "/services/fresh-look", "/work/onchain", "/about"]) {
+    for (const locale of liveLocales) for (const path of ["/", "/services/fresh-look", "/work/onchain", "/about"]) {
       const expected = same(absoluteUrl(siteUrl, localizedPath(locale, path)));
       for (const bucket of buckets) expect(same(canonical(html(bucket, locale, path))), `${bucket}/${locale}${path}`).toBe(expected);
     }
@@ -83,7 +90,7 @@ describe("Tangent build output", () => {
   it("credits case studies and ships structured data", () => {
     expect(html("control", "en", "/work/officeworks")).toContain("Work by Piotr Ciesiolkiewicz while working with Officeworks.");
     expect(html("control", "en", "/about")).toContain('"@type":"Person"');
-    expect(html("editorial", "pl", "/services/fresh-look")).toContain('"@type":"FAQPage"');
+    if (polish) expect(html("editorial", "pl", "/services/fresh-look")).toContain('"@type":"FAQPage"');
   });
 
   it("credits Piotr on every case-study card in the work index", () => {
@@ -91,16 +98,16 @@ describe("Tangent build output", () => {
     for (const client of ["ONCHAIN", "Officeworks", "Nokia Networks"]) expect(page).toContain(`Piotr's work at ${client}`);
   });
 
-  it("renders a branded, bilingual 404 page", () => {
+  it("renders a branded, 404 page", () => {
     const page = readFileSync(join(root, "_not-found.html"), "utf8");
     expect(page).not.toContain("__next_error__");
     expect(page).toMatch(/<html[^>]*data-design="tangent-precision"/);
     expect(page).toMatch(/<h1[^>]*>[^<]*Page not found/);
-    expect(page).toContain("Nie znaleziono strony");
+    if (polish) expect(page).toContain("Nie znaleziono strony");
   });
 
   it("puts the brand in every page title", () => {
-    for (const locale of locales) for (const path of allPaths) {
+    for (const locale of liveLocales) for (const path of allPaths) {
       expect(html("control", locale, path).match(/<title>([^<]*)<\/title>/)?.[1], `${locale}${path}`).toContain("Tangent");
     }
   });

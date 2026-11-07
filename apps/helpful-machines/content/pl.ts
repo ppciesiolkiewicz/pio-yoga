@@ -68,6 +68,18 @@ export const pl: Content = {
     chipsLabel: "W czym pomagamy",
     chips: ["Asystenci AI", "Arkusze", "Dedykowane aplikacje", "Integracje"],
   },
+  landing: {
+    services: {
+      eyebrow: "What we do",
+      title: "Built around you",
+      items: [
+        { slug: "ai-assistants-automation", title: "AI tools", summary: "Smart assistants that take the repetitive work off your plate." },
+        { slug: "custom-apps-websites", title: "Custom apps", summary: "Tools shaped around how you work, so your day gets easier." },
+        { slug: "migrations-integrations", title: "Integrations", summary: "Your software working together, automatically." },
+        { slug: "find-what-works", title: "Your best path", summary: "Not sure where to start? We find the best option and do it better." },
+      ],
+    },
+  },
   fixes: {
     eyebrow: "Jak pomagamy",
     title: "Znajdujemy to, co Cię spowalnia, i to naprawiamy.",
@@ -202,6 +214,7 @@ export const pl: Content = {
       "Zamiast jednorazowych projektów dostajesz co tydzień czas poświęcony na usprawnianie Twojej firmy: szukamy tego, co Cię spowalnia, i naprawiamy to lepszym procesem, AI, uporządkowanymi danymi albo aplikacjami na zamówienie. Zacznij w najbliższych tygodniach, a cena nie zmieni się przez 12 miesięcy.",
     badge: "Cena dla nowych klientów · gwarancja 12 miesięcy",
     perMonth: "/mies.",
+    regularPriceLabel: "Usual price",
     plans: {
       light: {
         name: "{hours} godziny tygodniowo",
@@ -220,6 +233,20 @@ export const pl: Content = {
       cta: "Umów bezpłatną rozmowę",
     },
     note: "Ceny netto (bez VAT). Cena dla nowych klientów nie zmienia się przez 12 miesięcy od pierwszego tygodnia współpracy.",
+    offerTerms: {
+      title: "Offer terms",
+      items: [
+        "The founding price is for our first 5 clients who start a monthly plan. The offer ends when all 5 places are taken, or earlier if we close it.",
+        "Your founding price is locked for 12 months from your first paid month. It won't go up during that time.",
+        "If you switch between the 4-hour and 10-hour plans, you keep 75% off the usual price for the rest of your 12 months.",
+        "After 12 months, your plan moves to our usual price at that time. We'll tell you at least 30 days before, so you can change plan or cancel.",
+        "There's no minimum term. Cancel before your next month starts and you won't be charged again.",
+        "Unused hours don't carry over to the next month.",
+        "If you cancel and come back later, the usual price applies.",
+        "Prices exclude GST. These terms sit alongside our general terms and don't limit your rights under the Australian Consumer Law.",
+      ],
+      link: "See all terms",
+    },
     teaser: {
       title: "{price} tygodniowo. Gwarancja ceny na rok.",
       body: "Nowi klienci dostają {hours} godziny co tydzień na usprawnianie swojej firmy za {price} tygodniowo, w cenie, która nie zmieni się przez 12 miesięcy.",
@@ -402,6 +429,7 @@ export const pl: Content = {
   terms: {
     title: "Warunki współpracy",
     updated: "Ostatnia aktualizacja: październik 2026",
+    offerHeading: "Founding-client offer",
     sections: [
       { heading: "Wycena", paragraphs: ["Każdy projekt zaczyna się od pisemnej wyceny. Pracę rozpoczynamy po jej akceptacji."] },
       { heading: "Płatność", paragraphs: ["Faktury są płatne w ciągu 14 dni, chyba że ustalimy inaczej."] },

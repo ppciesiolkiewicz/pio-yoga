@@ -13,7 +13,7 @@ export function formatPrice(locale: Locale, currency: "AUD" | "PLN", amount: num
   return new Intl.NumberFormat(locale, options(currency)).format(amount);
 }
 
-/** Fills {price} and {hours} in a copy string from a plan. */
-export function fillPlan(text: string, price: string, hours: number) {
-  return text.replace("{price}", price).replace("{hours}", String(hours));
+/** Fills {price}, {fullPrice} and {hours} in a copy string from a plan. */
+export function fillPlan(text: string, price: string, hours: number, fullPrice = "") {
+  return text.replace("{price}", price).replace("{fullPrice}", fullPrice).replace("{hours}", String(hours));
 }

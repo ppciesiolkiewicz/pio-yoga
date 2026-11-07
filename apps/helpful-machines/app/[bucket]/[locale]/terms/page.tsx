@@ -14,7 +14,10 @@ export default async function TermsPage({ params }: Props) {
   const { t } = await resolveParams(params);
   return (
     <Section id="terms" headingLevel="h1" title={t.terms.title}>
-      <Prose updated={t.terms.updated} sections={t.terms.sections} />
+      <Prose
+        updated={t.terms.updated}
+        sections={[...t.terms.sections, { id: "founding-offer", heading: t.terms.offerHeading, paragraphs: t.pricing.offerTerms.items }]}
+      />
     </Section>
   );
 }

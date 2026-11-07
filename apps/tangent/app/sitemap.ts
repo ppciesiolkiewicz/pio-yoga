@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { liveLocales } from "@repo/web/locale";
 import { buildSitemap } from "@repo/web/seo";
 import { allPaths } from "@/lib/routes";
 import { site } from "@/site.config";
@@ -6,6 +7,6 @@ import { site } from "@/site.config";
 export default function sitemap(): MetadataRoute.Sitemap {
   return buildSitemap(
     site.url,
-    allPaths.map((path) => ({ path, priority: path === "/" ? 1 : path === "/privacy" || path === "/terms" ? 0.2 : 0.7 })),
+    allPaths.map((path) => ({ path, locales: liveLocales, priority: path === "/" ? 1 : path === "/privacy" || path === "/terms" ? 0.2 : 0.7 })),
   );
 }

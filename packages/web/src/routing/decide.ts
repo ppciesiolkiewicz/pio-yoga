@@ -1,5 +1,5 @@
 import { assign, bucketFor, controlBucket, serializeAssignment, type Experiments } from "../experiments";
-import { defaultLocale, isLocale, localizedPath, normalizePath, splitLocale, type Locale } from "../locale";
+import { defaultLocale, isLocale, localizedPath, locales, normalizePath, splitLocale, type Locale } from "../locale";
 
 export const LOCALE_COOKIE = "NEXT_LOCALE";
 export const EXP_COOKIE = "exp";
@@ -25,6 +25,8 @@ export type RouteInput = {
   navigation?: boolean;
   /** Locale-less public paths the app serves. Unknown paths get the root 404. Omit to allow all. */
   isKnownPath?: (rest: string) => boolean;
+  /** Locales currently served; links to any other locale redirect to English. Omit to serve all. */
+  live?: readonly Locale[];
 };
 export type RouteDecision =
   | { kind: "pass" }
@@ -72,12 +74,13 @@ export function decideRoute(input: RouteInput): RouteDecision {
 
   const { locale, rest, explicitDefault } = splitLocale(pathname);
   const params = new URLSearchParams(input.search);
+  const live = input.live ?? locales;
 
   // 1. Explicit language choice via ?locale=… (footer link; works without JS).
   const requested = params.get("locale");
   if (requested !== null) {
     params.delete("locale");
-    const chosen = isLocale(requested) ? requested : null;
+    const chosen = isLocale(requested) && live.includes(requested) ? requested : null;
     return {
       kind: "redirect",
       status: 307,
@@ -91,14 +94,20 @@ export function decideRoute(input: RouteInput): RouteDecision {
     return { kind: "redirect", status: 308, location: withQuery(localizedPath(defaultLocale, rest), params), setCookies: [] };
   }
 
+  // 2b. A switched-off locale: send old links to the English page and forget a stored choice.
+  if (!live.includes(locale)) {
+    const forget = input.cookies.locale ? [{ name: LOCALE_COOKIE, value: "", maxAge: 0 }] : [];
+    return { kind: "redirect", status: 307, location: withQuery(localizedPath(defaultLocale, rest), params), setCookies: forget };
+  }
+
   // 3. Bots: no redirects, no cookies, always control.
   if (isBot(input.userAgent)) {
     return { kind: "rewrite", pathname: internalPath(controlBucket(experiments), locale, rest), setCookies: [] };
   }
 
   // 4. Preferred market: a stored choice wins; otherwise visitors in Poland prefer /pl.
-  const cookieLocale = isLocale(input.cookies.locale) ? input.cookies.locale : null;
-  const preferred = cookieLocale ?? (input.country?.toUpperCase() === "PL" ? "pl" : null);
+  const cookieLocale = isLocale(input.cookies.locale) && live.includes(input.cookies.locale) ? input.cookies.locale : null;
+  const preferred = cookieLocale ?? (live.includes("pl") && input.country?.toUpperCase() === "PL" ? "pl" : null);
   if (locale === defaultLocale && preferred === "pl") {
     return { kind: "redirect", status: 307, location: withQuery(localizedPath("pl", rest), params), setCookies: [] };
   }

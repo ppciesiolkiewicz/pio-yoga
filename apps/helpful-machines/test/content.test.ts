@@ -61,7 +61,18 @@ describe("Helpful Machines content", () => {
         expect(plan.hoursPerMonth).toBeGreaterThan(0);
       }
     }
-    expect(markets.en.plans).toEqual({ light: { monthlyPrice: 89, hoursPerMonth: 4 }, focus: { monthlyPrice: 219, hoursPerMonth: 10 } });
+    expect(markets.en.plans).toEqual({
+      light: { monthlyPrice: 89, regularPrice: 360, hoursPerMonth: 4 },
+      focus: { monthlyPrice: 219, regularPrice: 880, hoursPerMonth: 10 },
+    });
+  });
+
+  it("founding price is 75% off the usual price", () => {
+    for (const key of planKeys) {
+      const { monthlyPrice, regularPrice } = markets.en.plans[key];
+      expect(regularPrice).toBeGreaterThan(monthlyPrice);
+      expect(Math.abs(1 - monthlyPrice / regularPrice - 0.75)).toBeLessThan(0.01);
+    }
   });
 
   it("Polish privacy text matches what analytics really does before consent", () => {
@@ -77,6 +88,7 @@ describe("Helpful Machines content", () => {
       for (const text of [dict.pricing.teaser.body, dict.pricing.banner.text]) expect(text).toContain("{hours}");
       for (const key of planKeys) expect(dict.pricing.plans[key].name).toContain("{hours}");
     }
+    for (const text of [en.pricing.teaser.body, en.pricing.banner.text]) expect(text).toContain("{fullPrice}");
   });
 
   it("Polish copy uses neutral forms and the reviewed wording", () => {

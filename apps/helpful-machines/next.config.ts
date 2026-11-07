@@ -14,6 +14,14 @@ const config: NextConfig = {
   async rewrites() {
     return posthogRewrites();
   },
+  // Pages folded into the landing page (or the services pages): keep old links working.
+  async redirects() {
+    return [
+      { source: "/how-it-works", destination: "/#how-it-works", permanent: true },
+      { source: "/work", destination: "/", permanent: true },
+      { source: "/faq", destination: "/services", permanent: true },
+    ];
+  },
   async headers() {
     const headers = securityHeaders({ dev: process.env.NODE_ENV === "development", https: process.env.VERCEL === "1" });
     return [{ source: "/(.*)", headers }];
