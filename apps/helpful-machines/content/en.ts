@@ -215,12 +215,12 @@ export const en = {
       light: {
         name: "{hours} hours a week",
         summary: "One improvement at a time, start to finish.",
-        features: ["Free monthly idea session, on top of your hours", "A short update on what changed", "Founding price locked for 12 months", "Cancel any time"],
+        features: ["Free monthly idea session, on top of your hours", "Regular updates: what we did and what comes next", "Founding price locked for 12 months", "Cancel any time"],
       },
       focus: {
         name: "{hours} hours a week",
         summary: "Room for bigger fixes, including custom apps.",
-        features: ["Free monthly idea session, on top of your hours", "A short update on what changed", "Founding price locked for 12 months", "Cancel any time"],
+        features: ["Free monthly idea session, on top of your hours", "Regular updates: what we did and what comes next", "Founding price locked for 12 months", "Cancel any time"],
       },
     },
     custom: {

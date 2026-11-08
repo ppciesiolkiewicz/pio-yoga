@@ -11,6 +11,7 @@ import { Founder } from "@/components/Founder";
 import { HeroDecor } from "@/components/HeroDecor";
 import { GeometricVisual } from "@/components/GeometricVisual";
 import { ServiceIcon } from "@/components/ServiceIcon";
+import { ServicesDecor } from "@/components/ServicesDecor";
 import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
@@ -58,7 +59,13 @@ export default async function HomePage({ params }: Props) {
         </div>
       </div>
 
-      <Section id="services" className="hm-band hm-band-sky" eyebrow={t.landing.services.eyebrow} title={t.landing.services.title}>
+      <Section
+        id="services"
+        className="hm-band hm-band-sky"
+        eyebrow={t.landing.services.eyebrow}
+        title={t.landing.services.title}
+        decor={<ServicesDecor />}
+      >
         <ul className="grid gap-5 sm:grid-cols-2">
           {t.landing.services.items.map((item) => (
             <li key={item.slug}>
