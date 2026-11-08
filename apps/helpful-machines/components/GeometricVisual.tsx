@@ -61,12 +61,25 @@ function mix(a: number[], b: number[], t: number) {
   return a.map((v, i) => Math.round(v + (b[i] - v) * t));
 }
 
+const SHADOW = [60, 24, 70];
+const HIGHLIGHT = [255, 250, 235];
+const PALETTE = ["#ff5a36", "#ff7ab6", "#b98cff", "#6aa8ff", "#5fd0c2", "#ffc94a"].map(hexToRgb);
+
+/** Colour at position `t` (wraps around) on the cyclic palette. */
+function paletteAt(t: number) {
+  const x = (((t % 1) + 1) % 1) * PALETTE.length;
+  const i = Math.floor(x);
+  return mix(PALETTE[i], PALETTE[(i + 1) % PALETTE.length], x - i);
+}
+
 type Body = {
   shape: Shape;
   radius: number;
   pos: (t: number) => Vec;
   rot: (t: number) => Vec;
   wire?: boolean;
+  /** Facets take palette colours (by facing direction) instead of the accent ramp. */
+  colorful?: boolean;
 };
 
 const LIGHT: Vec = (() => {
@@ -109,12 +122,14 @@ export function GeometricVisual() {
       {
         shape: oct,
         radius: 0.28,
+        colorful: true,
         pos: (t) => [Math.cos(t * 0.8) * 1.9, Math.sin(t * 0.8) * 0.5 - 0.2, Math.sin(t * 0.8) * 1.9],
         rot: (t) => [t * 1.2, t * 0.9, 0],
       },
       {
         shape: oct,
         radius: 0.16,
+        colorful: true,
         pos: (t) => [Math.cos(-t * 0.6 + 2) * 1.6, Math.cos(t * 0.6) * 0.9 + 0.3, Math.sin(-t * 0.6 + 2) * 1.6],
         rot: (t) => [t * 1.5, -t * 1.1, t * 0.4],
       },
@@ -174,7 +189,7 @@ export function GeometricVisual() {
 
     const draw = (t: number) => {
       ctx.clearRect(0, 0, size, size);
-      type Poly = { pts: [number, number][]; depth: number; shade: number; wire: boolean };
+      type Poly = { pts: [number, number][]; depth: number; shade: number; wire: boolean; colorful: boolean; hue: number };
       const polys: Poly[] = [];
 
       for (const body of bodies) {
@@ -203,6 +218,9 @@ export function GeometricVisual() {
             depth: center[2],
             shade: body.wire ? (facing > 0 ? 1 : 0.4) : shade,
             wire: !!body.wire,
+            colorful: !!body.colorful,
+            // which palette colour this facet gets: by the direction it faces, drifting slowly so colours roll across the form
+            hue: Math.atan2(n[1], n[0]) / (2 * Math.PI) + 0.5 + n[2] * 0.15 + t * 0.02,
           });
         }
       }
@@ -217,12 +235,26 @@ export function GeometricVisual() {
         ctx.closePath();
         const [lr, lg, lb] = colors.line;
         if (p.wire) {
-          ctx.strokeStyle = `rgba(${lr},${lg},${lb},${0.18 * p.shade})`;
-          ctx.lineWidth = 1;
+          // Same look as the page's decorative lines: a thin coloured outline with a soft glow.
+          ctx.save();
+          ctx.globalAlpha = 0.85 * p.shade;
+          // each facet's outline takes its own palette colour, so the shell reads multicolour and the hues roll slowly
+          const [cr, cg, cb] = paletteAt(p.hue);
+          ctx.strokeStyle = `rgb(${cr},${cg},${cb})`;
+          ctx.shadowColor = `rgba(${cr},${cg},${cb},0.8)`;
+          ctx.shadowBlur = 10;
+          ctx.lineWidth = 1.25;
           ctx.stroke();
+          ctx.restore();
           continue;
         }
-        const rgb = p.shade < 0.5 ? mix(colors.dark, colors.mid, p.shade * 2) : mix(colors.mid, colors.light, (p.shade - 0.5) * 2);
+        let rgb: number[];
+        if (p.colorful) {
+          const base = paletteAt(p.hue);
+          rgb = p.shade < 0.5 ? mix(mix(base, SHADOW, 0.5), base, p.shade * 2) : mix(base, HIGHLIGHT, (p.shade - 0.5) * 0.7);
+        } else {
+          rgb = p.shade < 0.5 ? mix(colors.dark, colors.mid, p.shade * 2) : mix(colors.mid, colors.light, (p.shade - 0.5) * 2);
+        }
         ctx.fillStyle = `rgb(${rgb.join(",")})`;
         ctx.fill();
         ctx.strokeStyle = `rgba(${lr},${lg},${lb},0.55)`;

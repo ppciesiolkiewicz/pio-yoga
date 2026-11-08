@@ -11,6 +11,7 @@ import { Founder } from "@/components/Founder";
 import { HeroDecor } from "@/components/HeroDecor";
 import { GeometricVisual } from "@/components/GeometricVisual";
 import { ServiceIcon } from "@/components/ServiceIcon";
+import { LinesDecor } from "@/components/LinesDecor";
 import { ServicesDecor } from "@/components/ServicesDecor";
 import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
@@ -92,6 +93,7 @@ export default async function HomePage({ params }: Props) {
       <Section
         id="pricing"
         className="hm-band hm-band-lilac"
+        decor={<LinesDecor variant="pricing" />}
         eyebrow={t.pricing.eyebrow}
         title={fillPlan(t.pricing.teaser.title, price(light.monthlyPrice), light.hoursPerWeek, price(light.regularPrice))}
         intro={fillPlan(t.pricing.teaser.body, price(light.monthlyPrice), light.hoursPerWeek, price(light.regularPrice))}

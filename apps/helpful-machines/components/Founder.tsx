@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { Section } from "@repo/ui/Section";
 import type { Content } from "@/content";
+import { LinesDecor } from "@/components/LinesDecor";
 import { linkedIn } from "@/components/Career";
 
 /** Home-page strip that puts a face to the business and links to the full career section on the pricing page. */
 export function Founder({ t, careerHref }: { t: Content; careerHref: string }) {
   const f = t.founder;
   return (
-    <Section id="founder" className="hm-band" eyebrow={f.eyebrow} title={f.title}>
+    <Section id="founder" className="hm-band" eyebrow={f.eyebrow} title={f.title} decor={<LinesDecor variant="founder" />}>
       <div className="flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start">
         <Image
           src="/images/founder.jpg"
