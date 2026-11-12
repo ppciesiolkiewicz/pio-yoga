@@ -193,6 +193,8 @@ export const pl: Dictionary = {
     sec: "s",
     restShorter: "O 5 sekund krócej",
     restLonger: "O 5 sekund dłużej",
+    keyStart: "Początek rundy",
+    keyEnd: "Koniec rundy",
     inBreak: "Przerwa",
     nextBreak: "Przerwa za",
     start: "Start",

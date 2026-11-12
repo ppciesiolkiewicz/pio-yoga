@@ -191,6 +191,8 @@ export const en = {
     sec: "s",
     restShorter: "5 seconds shorter",
     restLonger: "5 seconds longer",
+    keyStart: "Round starts",
+    keyEnd: "Round ends",
     inBreak: "Break",
     nextBreak: "Break in",
     start: "Start",

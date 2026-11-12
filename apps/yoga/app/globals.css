@@ -219,10 +219,16 @@ main > section:last-child { border-bottom: 0; }
 .gt-dial svg { width: 100%; height: auto; display: block; overflow: visible; }
 .gt-dial .track { fill: none; stroke: var(--line); stroke-width: 6; }
 .gt-dial .arc { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; }
-.gt-dial .arc.rest { stroke: var(--muted); }
+.gt-dial path { fill: none; }
+.gt-dial .track.rest { stroke: var(--muted); stroke-width: 3; stroke-dasharray: 2 9; stroke-linecap: round; opacity: 0.6; }
+.gt-dial .arc.rest { stroke-width: 3; stroke-dasharray: 2 9; }
 .gt-dial circle.mark { stroke: var(--bg); stroke-width: 3; }
-.gt-dial .mark.outer { fill: var(--sun); background: var(--sun); }
-.gt-dial .mark.inner { fill: var(--ink); background: var(--ink); }
+.gt-dial .mark.outer, .dot.outer { fill: var(--sun); background: var(--sun); }
+.gt-dial .mark.inner, .dot.inner { fill: var(--ink); background: var(--ink); }
+.gt-dial .mark.end, .dot.end { fill: var(--accent); background: var(--accent); }
+.gt-key { flex-basis: 100%; order: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.1rem; margin: 0.25rem 0 0; padding: 0; list-style: none; font-family: var(--display); font-size: 0.85rem; color: var(--muted); }
+.gt-key li { display: inline-flex; align-items: center; gap: 0.45rem; }
+.gt-key .dash { width: 18px; height: 3px; background: repeating-linear-gradient(90deg, var(--muted) 0 3px, transparent 3px 7px); }
 .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .gt-face { position: absolute; inset: 18%; display: grid; place-content: center; justify-items: center; text-align: center; gap: 0.5rem; font-family: var(--display); }
 .gt-time { font-size: clamp(3rem, 11vw, 4.6rem); font-weight: 400; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }

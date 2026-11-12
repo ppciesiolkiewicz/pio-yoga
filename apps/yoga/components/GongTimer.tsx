@@ -39,7 +39,6 @@ const HORIZON = 15 * 60; // seconds of gongs scheduled ahead, so throttled backg
 const STORE = "gong-timer-v3";
 
 const R = 150;
-const C = 2 * Math.PI * R;
 
 function clamp(n: number, lo: number, hi: number) {
   return Math.min(hi, Math.max(lo, n));
@@ -56,6 +55,16 @@ function fmt(seconds: number) {
 function point(fraction: number) {
   const a = fraction * 2 * Math.PI - Math.PI / 2;
   return { x: 170 + R * Math.cos(a), y: 170 + R * Math.sin(a) };
+}
+
+/** SVG path along the dial from fraction f0 to f1 (clockwise from the top); null when empty. */
+function arc(f0: number, f1: number) {
+  if (f1 - f0 <= 1e-4) return null;
+  if (f1 - f0 >= 1 - 1e-4)
+    return `M 170 ${170 - R} A ${R} ${R} 0 1 1 170 ${170 + R} A ${R} ${R} 0 1 1 170 ${170 - R}`;
+  const a = point(f0);
+  const b = point(f1);
+  return `M ${a.x} ${a.y} A ${R} ${R} 0 ${f1 - f0 > 0.5 ? 1 : 0} 1 ${b.x} ${b.y}`;
 }
 
 /** The gongs of round `k` (0-based), in seconds from the start of the run. */
@@ -389,8 +398,9 @@ export default function GongTimer({ t }: { t: T }) {
     : 0;
   const inRound = active ? elapsed - round * cycle : 0;
   const resting = status !== "done" && inRound >= len;
-  const progress =
-    status === "done" ? 1 : resting ? 1 - (inRound - len) / cfg.rest : inRound / len;
+  // The dial is one round and its break: solid while you practise, dashed for the break.
+  const roundEnd = len / cycle;
+  const played = status === "done" ? len : inRound;
   const innerSec = (len * cfg.innerAt) / 100;
   const nextInner = cfg.inner && inRound < innerSec;
   const isLast = totalRounds > 0 && round === totalRounds - 1;
@@ -407,26 +417,35 @@ export default function GongTimer({ t }: { t: T }) {
         .replace("{n}", String(round + 1))
         .replace("{total}", String(totalRounds))
     : t.round.replace("{n}", String(round + 1));
-  const marker = point(cfg.innerAt / 100);
+  const marker = point((cfg.innerAt / 100) * roundEnd);
+  const endMarker = point(roundEnd);
   const locked = status !== "idle" && status !== "done";
 
   return (
     <div className="gt">
       <div className="gt-dial">
         <svg viewBox="0 0 340 340" aria-hidden="true">
-          <circle className="track" cx="170" cy="170" r={R} />
-          <circle
-            className={resting ? "arc rest" : "arc"}
-            cx="170"
-            cy="170"
-            r={R}
-            strokeDasharray={C}
-            strokeDashoffset={C * (1 - progress)}
-            transform="rotate(-90 170 170)"
-          />
+          <path className="track" d={arc(0, roundEnd) ?? undefined} />
+          {cfg.rest > 0 && (
+            <path className="track rest" d={arc(roundEnd, 1) ?? undefined} />
+          )}
+          {arc(0, Math.min(played, len) / cycle) && (
+            <path className="arc" d={arc(0, Math.min(played, len) / cycle)!} />
+          )}
+          {resting && arc(roundEnd, inRound / cycle) && (
+            <path className="arc rest" d={arc(roundEnd, inRound / cycle)!} />
+          )}
           <circle className="mark outer" cx="170" cy={170 - R} r="9" />
           {cfg.inner && (
             <circle className="mark inner" cx={marker.x} cy={marker.y} r="6" />
+          )}
+          {cfg.rest > 0 && (
+            <circle
+              className="mark end"
+              cx={endMarker.x}
+              cy={endMarker.y}
+              r="7"
+            />
           )}
         </svg>
         <div className="gt-face">
@@ -471,6 +490,30 @@ export default function GongTimer({ t }: { t: T }) {
       </div>
 
       <div className="gt-controls">
+        <ul className="gt-key">
+          <li>
+            <span className="dot outer" aria-hidden="true" />
+            {t.keyStart}
+          </li>
+          {cfg.inner && (
+            <li>
+              <span className="dot inner" aria-hidden="true" />
+              {t.inner}
+            </li>
+          )}
+          {cfg.rest > 0 && (
+            <>
+              <li>
+                <span className="dot end" aria-hidden="true" />
+                {t.keyEnd}
+              </li>
+              <li>
+                <span className="dash" aria-hidden="true" />
+                {t.inBreak}
+              </li>
+            </>
+          )}
+        </ul>
         {status === "idle" || status === "loading" ? (
           <button
             className="btn primary gt-go"
