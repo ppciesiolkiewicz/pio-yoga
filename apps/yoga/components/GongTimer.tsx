@@ -4,38 +4,39 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Dictionary } from "@/content/en";
 
 type T = Dictionary["timer"];
-type SoundId = keyof T["sounds"];
 type Status = "idle" | "loading" | "running" | "paused" | "done";
 type Settings = {
   minutes: number;
   rounds: number;
   inner: boolean;
   innerAt: number;
-  outerSound: SoundId;
-  innerSound: SoundId;
+  /** Seconds of silence between rounds. The inner gong is placed within the round only. */
+  rest: number;
 };
 
-const SOUND_IDS: SoundId[] = [
-  "gong",
-  "bowl",
-  "deepBowl",
-  "temple",
-  "crystal",
-  "rin",
-];
+// Fixed sounds (files in public/sounds): a round starts with BEGIN, the inner gong is INNER,
+// and END closes a round before a break and at the finish. With no break, the next BEGIN
+// stands in for END so two gongs never ring at once.
+const BEGIN = "gong";
+const INNER = "deepBowl";
+const END = "bowl";
+type SoundId = typeof BEGIN | typeof INNER | typeof END;
+const SOUND_IDS: SoundId[] = [BEGIN, INNER, END];
+
 const DEFAULTS: Settings = {
   minutes: 5,
-  rounds: 6,
+  rounds: 0,
   inner: true,
   innerAt: 50,
-  outerSound: "gong",
-  innerSound: "deepBowl",
+  rest: 0,
 };
 const PRESETS = [1, 3, 5, 10, 15, 30];
 const MAX_MINUTES = 90;
 const MAX_ROUNDS = 60; // 0 = until stopped
+const MAX_REST = 600;
+const REST_STEP = 5;
 const HORIZON = 15 * 60; // seconds of gongs scheduled ahead, so throttled background tabs keep ringing
-const STORE = "gong-timer-v2";
+const STORE = "gong-timer-v3";
 
 const R = 150;
 const C = 2 * Math.PI * R;
@@ -57,13 +58,29 @@ function point(fraction: number) {
   return { x: 170 + R * Math.cos(a), y: 170 + R * Math.sin(a) };
 }
 
+/** The gongs of round `k` (0-based), in seconds from the start of the run. */
+function roundGongs(cfg: Settings, k: number) {
+  const len = cfg.minutes * 60;
+  const base = k * (len + cfg.rest);
+  const last = cfg.rounds > 0 && k === cfg.rounds - 1;
+  const gongs: { t: number; id: SoundId }[] = [{ t: base, id: BEGIN }];
+  if (cfg.inner) gongs.push({ t: base + (len * cfg.innerAt) / 100, id: INNER });
+  if (cfg.rest > 0 || last) gongs.push({ t: base + len, id: END });
+  return gongs;
+}
+
+/** Seconds from the first gong to the last; Infinity until stopped. */
+function totalLength(cfg: Settings) {
+  return cfg.rounds
+    ? cfg.rounds * (cfg.minutes * 60 + cfg.rest) - cfg.rest
+    : Infinity;
+}
+
 function loadSettings(): Settings {
   try {
     const raw = localStorage.getItem(STORE);
     if (!raw) return DEFAULTS;
     const s = { ...DEFAULTS, ...JSON.parse(raw) } as Settings;
-    if (!SOUND_IDS.includes(s.outerSound)) s.outerSound = DEFAULTS.outerSound;
-    if (!SOUND_IDS.includes(s.innerSound)) s.innerSound = DEFAULTS.innerSound;
     s.minutes = clamp(
       Math.round(s.minutes) || DEFAULTS.minutes,
       1,
@@ -71,6 +88,7 @@ function loadSettings(): Settings {
     );
     s.rounds = clamp(Math.round(s.rounds) || 0, 0, MAX_ROUNDS);
     s.innerAt = clamp(Math.round(s.innerAt / 5) * 5 || 50, 5, 95);
+    s.rest = clamp(Math.round(s.rest) || 0, 0, MAX_REST);
     return s;
   } catch {
     return DEFAULTS;
@@ -85,11 +103,12 @@ export default function GongTimer({ t }: { t: T }) {
 
   const ctxRef = useRef<AudioContext | null>(null);
   const buffers = useRef(new Map<SoundId, AudioBuffer>());
+  const pending = useRef(new Map<SoundId, Promise<void>>());
   const sources = useRef(new Set<AudioBufferSourceNode>());
-  const run = useRef({ start: 0, until: 0, settings: DEFAULTS });
+  // `k`/`i`: the next gong to schedule (round, index within roundGongs).
+  const run = useRef({ start: 0, k: 0, i: 0, settings: DEFAULTS });
   const timers = useRef<{ raf: number; tick: number }>({ raf: 0, tick: 0 });
   const wake = useRef<WakeLockSentinel | null>(null);
-  const previewSrc = useRef<AudioBufferSourceNode | null>(null);
   // Audio goes out through a hidden <audio> element: mobile browsers keep media elements
   // playing with the screen locked, but suspend a bare AudioContext.
   const out = useRef<AudioNode | null>(null);
@@ -216,23 +235,21 @@ export default function GongTimer({ t }: { t: T }) {
     const ac = ctxRef.current;
     if (!ac) return;
     const { start, settings: cfg } = run.current;
-    const len = cfg.minutes * 60;
-    const total = cfg.rounds ? cfg.rounds * len : Infinity;
-    const end = Math.min(ac.currentTime - start + HORIZON, total);
-    let t = run.current.until;
-    while (t <= end) {
-      const round = Math.floor(t / len + 1e-9);
-      const offset = t - round * len;
-      if (offset < 1e-6) {
-        play(cfg.outerSound, start + t);
-        if (t === total) break;
-        t = cfg.inner ? t + (len * cfg.innerAt) / 100 : t + len;
-      } else {
-        play(cfg.innerSound, start + t);
-        t = (round + 1) * len;
+    const end = ac.currentTime - start + HORIZON;
+    let { k, i } = run.current;
+    while (!cfg.rounds || k < cfg.rounds) {
+      const gongs = roundGongs(cfg, k);
+      if (i >= gongs.length) {
+        k++;
+        i = 0;
+        continue;
       }
+      if (gongs[i].t > end) break;
+      play(gongs[i].id, start + gongs[i].t);
+      i++;
     }
-    run.current.until = t === total ? Infinity : t;
+    run.current.k = k;
+    run.current.i = i;
   }, [play]);
 
   const stopSources = () => {
@@ -266,7 +283,7 @@ export default function GongTimer({ t }: { t: T }) {
       if (!ac) return;
       const { start, settings: cfg } = run.current;
       const e = Math.max(0, ac.currentTime - start);
-      const total = cfg.rounds ? cfg.rounds * cfg.minutes * 60 : Infinity;
+      const total = totalLength(cfg);
       if (e >= total) {
         setElapsed(total);
         setStatus("done");
@@ -290,14 +307,12 @@ export default function GongTimer({ t }: { t: T }) {
   async function start() {
     setError(false);
     // Usually the background preload has finished; only show "Loading sounds…" if it hasn't.
-    if (![s.outerSound, s.innerSound].every((id) => buffers.current.has(id)))
-      setStatus("loading");
-    previewSrc.current?.stop();
+    if (!SOUND_IDS.every((id) => buffers.current.has(id))) setStatus("loading");
     stopSources();
     try {
       const ac = await wakeAudio();
-      await load([s.outerSound, s.innerSound]);
-      run.current = { start: ac.currentTime + 0.15, until: 0, settings: s };
+      await load(SOUND_IDS);
+      run.current = { start: ac.currentTime + 0.15, k: 0, i: 0, settings: s };
       schedule();
       setElapsed(0);
       setStatus("running");
@@ -334,18 +349,6 @@ export default function GongTimer({ t }: { t: T }) {
     setStatus("idle");
   }
 
-  async function preview(id: SoundId) {
-    if (status !== "idle" && status !== "done") return;
-    try {
-      const ac = await wakeAudio();
-      await load([id]);
-      previewSrc.current?.stop();
-      previewSrc.current = play(id, ac.currentTime);
-    } catch {
-      setError(true);
-    }
-  }
-
   // Back in view: re-take the wake lock, restart audio if the system suspended it, and
   // top up the schedule (background intervals may have been throttled).
   useEffect(() => {
@@ -376,19 +379,28 @@ export default function GongTimer({ t }: { t: T }) {
     status === "running" || status === "paused" || status === "done";
   const cfg = active ? run.current.settings : s;
   const len = cfg.minutes * 60;
+  const cycle = len + cfg.rest;
   const totalRounds = cfg.rounds;
   const round = active
     ? Math.min(
-        Math.floor(elapsed / len),
+        Math.floor(elapsed / cycle),
         totalRounds ? totalRounds - 1 : Infinity,
       )
     : 0;
-  const inRound = active ? elapsed - round * len : 0;
-  const progress = status === "done" ? 1 : inRound / len;
+  const inRound = active ? elapsed - round * cycle : 0;
+  const resting = status !== "done" && inRound >= len;
+  const progress =
+    status === "done" ? 1 : resting ? 1 - (inRound - len) / cfg.rest : inRound / len;
   const innerSec = (len * cfg.innerAt) / 100;
   const nextInner = cfg.inner && inRound < innerSec;
   const isLast = totalRounds > 0 && round === totalRounds - 1;
-  const nextLabel = nextInner ? t.nextInner : isLast ? t.nextEnd : t.nextRound;
+  const nextLabel = nextInner
+    ? t.nextInner
+    : isLast
+      ? t.nextEnd
+      : cfg.rest
+        ? t.nextBreak
+        : t.nextRound;
   const nextIn = nextInner ? innerSec - inRound : len - inRound;
   const roundText = totalRounds
     ? t.roundOf
@@ -404,7 +416,7 @@ export default function GongTimer({ t }: { t: T }) {
         <svg viewBox="0 0 340 340" aria-hidden="true">
           <circle className="track" cx="170" cy="170" r={R} />
           <circle
-            className="arc"
+            className={resting ? "arc rest" : "arc"}
             cx="170"
             cy="170"
             r={R}
@@ -422,29 +434,39 @@ export default function GongTimer({ t }: { t: T }) {
             <p className="gt-done">{t.done}</p>
           ) : (
             <>
-              <div className="gt-time">{fmt(active ? len - inRound : len)}</div>
+              <div className="gt-time">
+                {fmt(active ? (resting ? cycle - inRound : len - inRound) : len)}
+              </div>
               <div className="gt-round">
-                {active
+                {resting
+                  ? t.inBreak
+                  : active
                   ? roundText
                   : totalRounds
                     ? t.roundsTotal.replace("{n}", String(totalRounds))
                     : t.endless}
               </div>
-              {active && (
+              {active && !resting && (
                 <div className="gt-next">
                   {nextLabel} {fmt(nextIn)}
                 </div>
               )}
               {!active && totalRounds > 0 && (
                 <div className="gt-next">
-                  {t.total} {fmt(totalRounds * len)}
+                  {t.total} {fmt(totalLength(cfg))}
                 </div>
               )}
             </>
           )}
         </div>
         <p className="sr-only" aria-live="polite">
-          {status === "done" ? t.done : active ? roundText : ""}
+          {status === "done"
+            ? t.done
+            : resting
+              ? t.inBreak
+              : active
+                ? roundText
+                : ""}
         </p>
       </div>
 
@@ -612,74 +634,46 @@ export default function GongTimer({ t }: { t: T }) {
             )}
           </div>
 
-          <SoundPicker
-            legend={t.outerSound}
-            dot="outer"
-            name="outer-sound"
-            value={s.outerSound}
-            names={t.sounds}
-            onPick={(id) => {
-              update({ outerSound: id });
-              preview(id);
-            }}
-          />
-          {s.inner && (
-            <SoundPicker
-              legend={t.innerSound}
-              dot="inner"
-              name="inner-sound"
-              value={s.innerSound}
-              names={t.sounds}
-              onPick={(id) => {
-                update({ innerSound: id });
-                preview(id);
-              }}
-            />
-          )}
+          <div className="gt-row">
+            <span className="gt-label" id="gt-rest">
+              {t.rest}
+            </span>
+            <div className="stepper" role="group" aria-labelledby="gt-rest">
+              <button
+                type="button"
+                aria-label={t.restShorter}
+                onClick={() =>
+                  update({ rest: clamp(s.rest - REST_STEP, 0, MAX_REST) })
+                }
+                disabled={s.rest <= 0}
+              >
+                −
+              </button>
+              <NumberField
+                label={t.rest}
+                value={s.rest}
+                min={0}
+                max={MAX_REST}
+                unit={t.sec}
+                onCommit={(rest) => update({ rest })}
+              />
+              <button
+                type="button"
+                aria-label={t.restLonger}
+                onClick={() =>
+                  update({ rest: clamp(s.rest + REST_STEP, 0, MAX_REST) })
+                }
+                disabled={s.rest >= MAX_REST}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
           <p className="small">{t.hint}</p>
         </fieldset>
       </form>
     </div>
-  );
-}
-
-function SoundPicker({
-  legend,
-  dot,
-  name,
-  value,
-  names,
-  onPick,
-}: {
-  legend: string;
-  dot: "outer" | "inner";
-  name: string;
-  value: SoundId;
-  names: T["sounds"];
-  onPick: (id: SoundId) => void;
-}) {
-  return (
-    <fieldset className="gt-row gt-sounds">
-      <legend className="gt-label">
-        <span className={`dot ${dot}`} aria-hidden="true" />
-        {legend}
-      </legend>
-      <div className="chips">
-        {SOUND_IDS.map((id) => (
-          <label className="chip" key={id}>
-            <input
-              type="radio"
-              name={name}
-              value={id}
-              checked={value === id}
-              onChange={() => onPick(id)}
-              onClick={() => value === id && onPick(id)}
-            />
-            {names[id]}
-          </label>
-        ))}
-      </div>
-    </fieldset>
   );
 }
 
