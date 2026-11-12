@@ -31,6 +31,11 @@ export function Career({ t }: { t: Content }) {
             <Card className="h-full">
               <p className="font-display text-xl font-bold">{item.title}</p>
               <p className="mt-2 text-muted">{item.body}</p>
+              {item.url && (
+                <a href={item.url} rel="noopener noreferrer" className="mt-2 inline-flex min-h-11 items-center font-bold underline decoration-2 underline-offset-4">
+                  {item.url.replace(/^https?:\/\//, "")}
+                </a>
+              )}
             </Card>
           </li>
         ))}

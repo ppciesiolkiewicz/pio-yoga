@@ -275,6 +275,11 @@ export const en = {
       { title: "Lysn", body: "Built configurable pricing and Medicare gap payments, giving the business new ways to charge and clients new ways to pay." },
       { title: "ONCHAIN", body: "Built card payments and a subscription engine that prices in dollars and charges in crypto." },
       {
+        title: "attunr",
+        body: "His own product: daily guitar practice with AI practice plans and drills for hands, ears and timing. Growing into software for music schools.",
+        url: "https://www.attunr.app",
+      },
+      {
         title: "Ideas from outside the box",
         body: "1st prize at RegHack Downunder 2017 and a GovHack 2017 award. Away from screens: circus, dance and music, which keep the ideas fresh and the solutions creative.",
       },

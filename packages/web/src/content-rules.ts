@@ -8,8 +8,8 @@ const EN_ALLOWED_BEFORE = /(?<![\p{L}\p{N}])custom(?:[\s-]+[\p{L}-]+)?[\s-]+$/iu
 const PL_APP = /(?<![\p{L}\p{N}])aplikacj\p{L}*/giu;
 const PL_ALLOWED_BEFORE = /(?<![\p{L}\p{N}])dedykowan\p{L}*\s+$/iu;
 const PL_ALLOWED_AFTER = /^(?:\s+\p{L}+){0,3}\s+na\s+zamówienie(?![\p{L}])/iu;
-/** Slugs and paths are identifiers, not copy. */
-const SLUG = /^(?:\/\S*|[a-z0-9]+(?:-[a-z0-9]+)+)$/;
+/** Slugs, paths and URLs are identifiers, not copy. */
+const SLUG = /^(?:https?:\/\/\S+|\/\S*|[a-z0-9]+(?:-[a-z0-9]+)+)$/;
 
 function scan(text: string, re: RegExp, allowed: (before: string, after: string) => boolean): Match[] {
   const out: Match[] = [];
