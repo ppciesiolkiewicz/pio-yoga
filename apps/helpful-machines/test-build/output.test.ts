@@ -50,8 +50,10 @@ describe("Helpful Machines build output", () => {
   });
 
   it("renders each hero variant", () => {
-    expect(html("control", "en", "/")).toContain("and do it better");
+    expect(html("control", "en", "/")).toContain("See what agents can do");
+    expect(html("do-it-better", "en", "/")).toContain("and do it better");
     expect(html("easy-mode", "en", "/")).toContain("easy mode");
+    expect(html("easy-mode", "en", "/")).not.toContain("See what agents can do");
   });
 
   it("gives every bucket the same public canonical", () => {

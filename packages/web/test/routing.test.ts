@@ -253,3 +253,50 @@ describe("decideRoute with Polish switched off", () => {
   it("ignores ?locale=pl", () =>
     expect(en({ pathname: "/about", search: "?locale=pl" })).toEqual({ kind: "redirect", status: 307, location: "/about", setCookies: [] }));
 });
+
+describe("decideRoute with on-request variants", () => {
+  const exps = defineExperiments({
+    hero: { variants: { control: "agents", "easy-mode": "easy-mode", old: "old" }, weights: [100, 0, 0], markets: ["en"], onRequest: ["easy-mode"] },
+  });
+  const hm = (o: Partial<RouteInput>) => run({ experiments: exps, live: ["en"], ...o });
+
+  it("gives everyone control by default", () =>
+    expect(hm({ random: () => 0.99 })).toMatchObject({ kind: "rewrite", pathname: "/control/en" }));
+
+  it("?hero=<number> stores the variant and redirects to the clean URL, keeping other params", () =>
+    expect(hm({ pathname: "/pricing", search: "?hero=2&utm_source=x" })).toEqual({
+      kind: "redirect",
+      status: 307,
+      location: "/pricing?utm_source=x",
+      setCookies: [expCookie("hero:easy-mode")],
+    }));
+
+  it("keeps a requested variant on later visits", () =>
+    expect(hm({ cookies: { exp: "hero:easy-mode" } })).toEqual({ kind: "rewrite", pathname: "/easy-mode/en", setCookies: [] }));
+
+  it("accepts the variant key as well as its number", () =>
+    expect(hm({ search: "?hero=easy-mode" })).toMatchObject({ kind: "redirect", location: "/", setCookies: [expCookie("hero:easy-mode")] }));
+
+  it("?hero=1 goes back to the main version", () =>
+    expect(hm({ search: "?hero=1", cookies: { exp: "hero:easy-mode" } })).toEqual({
+      kind: "redirect",
+      status: 307,
+      location: "/",
+      setCookies: [expCookie("hero:control")],
+    }));
+
+  it("ignores unknown and switched-off variants", () => {
+    expect(hm({ search: "?hero=nope" })).toMatchObject({ kind: "rewrite", pathname: "/control/en" });
+    expect(hm({ search: "?hero=old" })).toMatchObject({ kind: "rewrite", pathname: "/control/en" });
+    for (const value of ["3", "0", "4", "02", "2.0", "-1", ""]) {
+      expect(hm({ search: `?hero=${value}` }), value).toMatchObject({ kind: "rewrite", pathname: "/control/en" });
+    }
+  });
+
+  it("bots always get control, whatever the query says", () =>
+    expect(hm({ search: "?hero=2", userAgent: "Mozilla/5.0 (compatible; Googlebot/2.1)" })).toEqual({
+      kind: "rewrite",
+      pathname: "/control/en",
+      setCookies: [],
+    }));
+});

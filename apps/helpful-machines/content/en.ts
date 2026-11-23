@@ -1,17 +1,25 @@
+/** Hero copy for the earlier "tech consultant" headlines, opened with ?hero=2 or ?hero=3. */
+const consultantHero = {
+  eyebrow: "Your own tech consultant for small businesses",
+  lead: "AI tools, custom apps and integrations, built around how you work. Tell us what's slowing you down, and we'll take it from there.",
+  secondary: "See what we do",
+  note: "Free review · no obligation",
+};
+
 /** English (Australia). The type source for every other locale. Rule: "custom apps", never "apps" alone. */
 export const en = {
   meta: {
     siteDescription:
-      "Your own tech consultant for small businesses. AI tools, custom apps and integrations, built for you. Start with a free review.",
+      "AI agents that answer enquiries, draft quotes and keep your tools in sync, set up for your company. Start with a free review.",
     home: {
-      title: "Helpful Machines · AI and custom apps for small businesses",
+      title: "Helpful Machines · AI agents, set up for your company",
       description:
-        "Your own tech consultant for small businesses. AI tools, custom apps and integrations, built for you. Start with a free review.",
+        "AI agents that answer enquiries, draft quotes and keep your tools in sync, set up for your company. Start with a free review.",
     },
     services: {
-      title: "Services · AI tools, custom apps and integrations",
+      title: "Services · AI agents, custom apps and integrations",
       description:
-        "What Helpful Machines can build for your business: AI tools, custom apps and websites, integrations and migrations, and data you can rely on.",
+        "What Helpful Machines can build for your business: AI agents, custom apps and websites, integrations and migrations, and data you can rely on.",
     },
     howItWorks: {
       title: "How it works · from free review to finished",
@@ -54,23 +62,26 @@ export const en = {
     colorMode: { group: "Colour mode", light: "Light", dark: "Dark", system: "System" },
   },
   hero: {
-    eyebrow: "Your own tech consultant for small businesses",
+    eyebrow: "Done-for-you AI agents for small businesses",
     title: {
-      control: ["We'll find what we can do for you, ", "and do it better", "."],
+      control: ["We set up ", "AI agents", " for your company."],
+      "do-it-better": ["We'll find what we can do for you, ", "and do it better", "."],
       "easy-mode": ["Put your business on ", "easy mode", "."],
     },
-    lead: "AI tools, custom apps and integrations, built around how you work. Tell us what's slowing you down, and we'll take it from there.",
-    secondary: "See what we do",
-    note: "Free review · no obligation",
+    /** Hero copy a variant replaces. Control uses the copy around this. */
+    overrides: { "do-it-better": consultantHero, "easy-mode": consultantHero },
+    lead: "Hand your repetitive work to agents that answer enquiries, draft quotes and keep your tools in sync. We build them around how you work, and nothing important goes out without your OK.",
+    secondary: "See what agents can do",
+    note: "Free 30-minute review · no obligation",
     chipsLabel: "What we build",
-    chips: ["AI tools", "Custom apps", "Integrations"],
+    chips: ["AI agents", "Custom apps", "Integrations"],
   },
   landing: {
     services: {
       eyebrow: "What we do",
       title: "What we can build for you",
       items: [
-        { slug: "ai-assistants-automation", title: "AI tools", summary: "Smart assistants that take the repetitive work off your plate." },
+        { slug: "ai-assistants-automation", title: "AI agents", summary: "They take the repetitive work off your plate. We set them up and look after them." },
         { slug: "custom-apps-websites", title: "Custom apps", summary: "Made for your business, so every day runs smoother." },
         { slug: "migrations-integrations", title: "Integrations", summary: "Your software working together, automatically." },
         { slug: "find-what-works", title: "Your best path", summary: "Not sure where to start? We look at how you work and find what's worth doing first." },
@@ -101,10 +112,10 @@ export const en = {
     faqTitle: "Questions",
     items: {
       "ai-assistants-automation": {
-        title: "AI assistants & automation",
-        summary: "AI that answers enquiries and drafts quotes, replies and reports in your tone.",
+        title: "AI agents & automation",
+        summary: "AI agents that answer enquiries and draft quotes, replies and reports in your tone.",
         intro:
-          "AI is brilliant at first drafts. We set it up so it fits how you already work, with a person checking anything that matters.",
+          "An AI agent can take a whole task off your plate, not just one step of it. We set agents up so they fit how you already work, with a person checking anything that matters.",
         problems: [
           "Your inbox is full of the same five questions.",
           "Quotes, notes or reports take hours to write up.",
@@ -112,10 +123,10 @@ export const en = {
         ],
         whatWeDo: [
           "Find the tasks where AI saves real time",
-          "Set up assistants that know your products, prices and tone",
+          "Set up agents that know your products, prices and tone",
           "Connect them to your email, forms or tools",
         ],
-        deliverables: ["A working assistant or automation", "A short guide for your team", "A month of tweaks after launch"],
+        deliverables: ["A working agent or automation", "A short guide for your team", "A month of tweaks after launch"],
         faq: [
           { question: "Will AI send things to customers without me seeing them?", answer: "Only if you want it to. By default, it drafts and you approve." },
           { question: "Is my data used to train AI models?", answer: "We use business plans of AI services that don't train on your data, and we tell you exactly where it goes." },
@@ -395,7 +406,7 @@ export const en = {
     },
   },
   footer: {
-    tagline: "Your own tech consultant for small businesses.",
+    tagline: "AI agents, set up for your company.",
     navLabel: "Footer",
     contactLabel: "Email",
     legal: "ABN 48 737 987 261",

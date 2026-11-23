@@ -39,6 +39,24 @@ test.describe("Helpful Machines routing", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Put your business on easy mode.");
   });
 
+  test("new visitors get the AI agents headline", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("We set up AI agents for your company.");
+    await expect(page.getByRole("link", { name: "See what agents can do" })).toBeVisible();
+  });
+
+  test("?hero=<number> opens an earlier headline, keeps it, and ?hero=1 goes back", async ({ page }) => {
+    await page.goto("/?hero=2");
+    await expect(page).toHaveURL(/:3001\/$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("We'll find what we can do for you, and do it better.");
+    await page.reload();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("We'll find what we can do for you, and do it better.");
+    await page.goto("/?hero=3");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Put your business on easy mode.");
+    await page.goto("/?hero=1");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("We set up AI agents for your company.");
+  });
+
   test("unknown pages get the branded 404", async ({ page }) => {
     const res = await page.goto("/nope");
     expect(res?.status()).toBe(404);

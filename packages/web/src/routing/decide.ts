@@ -1,4 +1,4 @@
-import { assign, bucketFor, controlBucket, serializeAssignment, type Experiments } from "../experiments";
+import { assign, bucketFor, controlBucket, requestedVariant, serializeAssignment, type Experiments } from "../experiments";
 import { defaultLocale, isLocale, localizedPath, locales, normalizePath, splitLocale, type Locale } from "../locale";
 
 export const LOCALE_COOKIE = "NEXT_LOCALE";
@@ -119,6 +119,22 @@ export function decideRoute(input: RouteInput): RouteDecision {
 
   // 5. Bucketing + rewrite to the pre-rendered bucket (or to the root 404 for unknown paths).
   const { assignment, changed } = assign(experiments, input.cookies.exp, input.random ?? Math.random);
+
+  // 5a. A variant asked for by number or key (?hero=2): remember it and show the clean URL.
+  let asked = false;
+  for (const [name, def] of Object.entries(experiments)) {
+    const value = params.get(name);
+    const variant = value === null ? null : requestedVariant(def, value);
+    if (variant === null) continue;
+    assignment[name] = variant;
+    params.delete(name);
+    asked = true;
+  }
+  if (asked) {
+    setCookies.push({ name: EXP_COOKIE, value: serializeAssignment(assignment), maxAge: EXP_MAX_AGE });
+    return { kind: "redirect", status: 307, location: withQuery(localizedPath(locale, rest), params), setCookies };
+  }
+
   if (changed) {
     const value = serializeAssignment(assignment);
     setCookies.push({ name: EXP_COOKIE, value, maxAge: value ? EXP_MAX_AGE : 0 });

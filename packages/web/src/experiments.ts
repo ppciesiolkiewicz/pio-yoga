@@ -8,6 +8,12 @@ export type ExperimentDef = {
   weights: readonly number[];
   /** Markets where the experiment runs; elsewhere visitors see control. */
   markets: readonly Locale[];
+  /**
+   * Variants nobody is assigned at random (weight 0) but that stay built and can be opened
+   * with `?<experiment>=<number>`: variants are numbered from 1 in the order they're defined,
+   * so `/?hero=1` is control and `/?hero=2` the next one. The variant key works too.
+   */
+  onRequest?: readonly string[];
 };
 export type Experiments = Record<string, ExperimentDef>;
 /** Experiment key → assigned variant key. */
@@ -30,14 +36,34 @@ export function defineExperiments<T extends Experiments>(defs: T): T {
     if (def.weights.length !== keys.length) fail("needs one weight per variant");
     if (def.weights.some((w) => !Number.isInteger(w) || w < 0)) fail("weights must be whole numbers ≥ 0");
     if (def.weights.reduce((a, b) => a + b, 0) !== 100) fail("weights must sum to 100");
+    for (const k of def.onRequest ?? []) {
+      if (!keys.includes(k)) fail(`on-request variant "${k}" is not a variant`);
+      if (k === CONTROL) fail(`"${CONTROL}" is always available and can't be on request`);
+      if (weightOf(def, k) !== 0) fail(`on-request variant "${k}" must have weight 0`);
+    }
     for (const m of def.markets) if (!(locales as readonly string[]).includes(m)) fail(`unknown market "${m}"`);
   }
   return defs;
 }
 
+/**
+ * The variant a `?<experiment>=<value>` query asks for, or null. The value is the variant's number
+ * (1 = control, then in definition order) or its key; variants that are switched off give null.
+ */
+export function requestedVariant(def: ExperimentDef, value: string): string | null {
+  const key = /^[1-9]\d{0,2}$/.test(value) && !Object.hasOwn(def.variants, value) ? variantKeys(def)[Number(value) - 1] : value;
+  return key !== undefined && canRequest(def, key) ? key : null;
+}
+
 const sortedNames = (exps: Experiments) => Object.keys(exps).sort();
 const variantKeys = (def: ExperimentDef) => Object.keys(def.variants);
 const weightOf = (def: ExperimentDef, key: string) => def.weights[variantKeys(def).indexOf(key)] ?? 0;
+const onRequest = (def: ExperimentDef, key: string) => (def.onRequest ?? []).includes(key);
+
+/** Variants a visitor can ask for by name: control, anything with traffic, and on-request variants. */
+export function canRequest(def: ExperimentDef, key: string): boolean {
+  return Object.hasOwn(def.variants, key) && (key === CONTROL || weightOf(def, key) > 0 || onRequest(def, key));
+}
 
 export function pickVariant(def: ExperimentDef, random: () => number): string {
   const keys = variantKeys(def);
@@ -78,7 +104,8 @@ export function assign(
   for (const name of sortedNames(exps)) {
     const def = exps[name]!;
     const current = previous[name];
-    assignment[name] = current && weightOf(def, current) > 0 ? current : pickVariant(def, random);
+    const keep = current !== undefined && (weightOf(def, current) > 0 || onRequest(def, current));
+    assignment[name] = keep ? current : pickVariant(def, random);
   }
   return { assignment, changed: serializeAssignment(assignment) !== (cookie ?? "") };
 }
@@ -100,14 +127,14 @@ export function controlBucket(exps: Experiments): string {
   return names.length === 0 ? DEFAULT_BUCKET : names.map(() => CONTROL).join(".");
 }
 
-/** Every bucket to pre-render: all live variants plus control (always built, bots get it). */
+/** Every bucket to pre-render: live and on-request variants plus control (always built, bots get it). */
 export function allBuckets(exps: Experiments): string[] {
   const names = sortedNames(exps);
   if (names.length === 0) return [DEFAULT_BUCKET];
   let combos: string[][] = [[]];
   for (const name of names) {
     const def = exps[name]!;
-    const live = variantKeys(def).filter((k) => k === CONTROL || weightOf(def, k) > 0);
+    const live = variantKeys(def).filter((k) => canRequest(def, k));
     combos = combos.flatMap((combo) => live.map((v) => [...combo, v]));
   }
   return combos.map((c) => c.join("."));

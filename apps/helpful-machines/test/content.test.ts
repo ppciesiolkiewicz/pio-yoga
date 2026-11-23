@@ -33,6 +33,19 @@ describe("Helpful Machines content", () => {
     for (const parts of Object.values(en.hero.title)) expect(parts).toHaveLength(3);
   });
 
+  it("leads with AI agents and keeps the earlier headlines on request", () => {
+    expect(en.hero.title.control.join("")).toBe("We set up AI agents for your company.");
+    expect(experiments.hero.weights).toEqual([100, 0, 0]);
+    expect([...experiments.hero.onRequest].sort()).toEqual(Object.keys(en.hero.overrides).sort());
+  });
+
+  it("only overrides hero copy for on-request variants and real hero fields", () => {
+    for (const [variant, copy] of Object.entries(en.hero.overrides)) {
+      expect(experiments.hero.onRequest, variant).toContain(variant);
+      for (const key of Object.keys(copy)) expect(typeof (en.hero as Record<string, unknown>)[key], `${variant}.${key}`).toBe("string");
+    }
+  });
+
   it("has whole positive weekly plans in the market currency", () => {
     expect(markets.en.currency).toBe("AUD");
     for (const key of planKeys) {
