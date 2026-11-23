@@ -144,3 +144,24 @@ describe("activeAssignment", () => {
   it("drops unknown variants and experiments", () =>
     expect(activeAssignment(one, { hero: "gone", old: "control" }, "en")).toEqual({}));
 });
+
+describe("on-request variants", () => {
+  const def = { variants: { control: "a", b: "b", c: "c" }, weights: [100, 0, 0], markets: ["en"], onRequest: ["b"] } as const;
+  const exps = defineExperiments({ hero: def });
+
+  it("are built and can be asked for, but are never picked at random", () => {
+    expect(allBuckets(exps)).toEqual(["control", "b"]);
+    for (const r of [0, 0.5, 0.999]) expect(assign(exps, undefined, () => r).assignment).toEqual({ hero: "control" });
+  });
+
+  it("are kept once a visitor has one, unlike other weight-0 variants", () => {
+    expect(assign(exps, "hero:b", () => 0).assignment).toEqual({ hero: "b" });
+    expect(assign(exps, "hero:c", () => 0).assignment).toEqual({ hero: "control" });
+  });
+
+  it("must be real, weight-0, non-control variants", () => {
+    expect(() => defineExperiments({ hero: { ...def, onRequest: ["nope"] } })).toThrow(/not a variant/);
+    expect(() => defineExperiments({ hero: { ...def, onRequest: ["control"] } })).toThrow(/always available/);
+    expect(() => defineExperiments({ hero: { ...def, weights: [50, 50, 0] } })).toThrow(/weight 0/);
+  });
+});

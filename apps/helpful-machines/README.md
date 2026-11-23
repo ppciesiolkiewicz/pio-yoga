@@ -26,7 +26,7 @@ pnpm --filter helpful-machines build && pnpm --filter helpful-machines test:buil
 ## PostHog (EU)
 
 1. Create a project in the **EU** region and set `NEXT_PUBLIC_POSTHOG_KEY`. Events go through `/ingest` on this domain.
-2. Create an experiment with feature-flag key **`hero`** and variants **`control`** and **`easy-mode`** (50/50). The site assigns variants itself (edge middleware) and reports them as `$feature_flag_called` events and `$feature/hero` properties, and the site disables PostHog's own flag evaluation (`advanced_disable_feature_flags`) so it can't override the assignment.
+2. Create an experiment with feature-flag key **`hero`** and variants **`control`** (the AI agents message), **`do-it-better`** and **`easy-mode`**. Everyone gets `control` (100/0/0). The two earlier headlines are on request: variants are numbered in the order they're defined, so open `/?hero=2` (`do-it-better`) or `/?hero=3` (`easy-mode`) to see one (it sticks for 90 days), and `/?hero=1` to go back. The variant key works too (`/?hero=easy-mode`). To split traffic again, give them weights in `experiments.ts` and take them out of `onRequest`. The site assigns variants itself (edge middleware) and reports them as `$feature_flag_called` events and `$feature/hero` properties, and the site disables PostHog's own flag evaluation (`advanced_disable_feature_flags`) so it can't override the assignment.
 3. Primary metric: `booking_opened` or `form_submitted` (`success: true`). Secondary: `cta_click`, `scroll_depth`.
 4. To end the test, set the winner's weight in `experiments.ts`. To ship a non-control winner, make it the default copy and delete the experiment.
 

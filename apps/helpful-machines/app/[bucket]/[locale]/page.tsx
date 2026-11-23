@@ -13,6 +13,7 @@ import { GeometricVisual } from "@/components/GeometricVisual";
 import { ServiceIcon } from "@/components/ServiceIcon";
 import { LinesDecor } from "@/components/LinesDecor";
 import { ServicesDecor } from "@/components/ServicesDecor";
+import type { Content } from "@/content";
 import { planKeys } from "@/content/market";
 import { fillPlan, priceFormatter } from "@/lib/format";
 import { bookingLink } from "@/lib/links";
@@ -20,6 +21,12 @@ import { meta } from "@/lib/metadata";
 import { resolveParams, type RouteParams } from "@/lib/params";
 
 type Props = { params: Promise<RouteParams> };
+type HeroVariant = keyof Content["hero"]["title"];
+
+/** The assigned hero variant, or control when the assignment has no headline. */
+function heroVariant(t: Content, assigned: string | undefined): HeroVariant {
+  return assigned !== undefined && Object.hasOwn(t.hero.title, assigned) ? (assigned as HeroVariant) : "control";
+}
 
 export async function generateMetadata({ params }: Props) {
   const { locale, t } = await resolveParams(params);
@@ -29,8 +36,10 @@ export async function generateMetadata({ params }: Props) {
 /** One scrolling page: the navbar links jump to the sections below. */
 export default async function HomePage({ params }: Props) {
   const { locale, assignment, t, market } = await resolveParams(params);
-  const variant = assignment.hero === "easy-mode" ? "easy-mode" : "control";
+  const variant = heroVariant(t, assignment.hero);
   const [before, highlighted, after] = t.hero.title[variant];
+  const overrides: Partial<Record<HeroVariant, Partial<Content["hero"]>>> = t.hero.overrides;
+  const hero = { ...t.hero, ...overrides[variant] };
   const price = await priceFormatter(market.currency);
   const { light } = market.plans;
   const href = (path: string) => localizedPath(locale, path);
@@ -42,7 +51,7 @@ export default async function HomePage({ params }: Props) {
         <HeroDecor />
         <div className="relative z-10">
           <Hero
-            eyebrow={t.hero.eyebrow}
+            eyebrow={hero.eyebrow}
             title={
               <span className="select-none">
                 {before}
@@ -50,10 +59,10 @@ export default async function HomePage({ params }: Props) {
                 {after}
               </span>
             }
-            lead={t.hero.lead}
+            lead={hero.lead}
             primary={bookingLink(locale, t, "hero")}
-            secondary={{ href: "#services", label: t.hero.secondary }}
-            note={t.hero.note}
+            secondary={{ href: "#services", label: hero.secondary }}
+            note={hero.note}
             newTabLabel={t.nav.newTab}
             visual={<GeometricVisual />}
           />
